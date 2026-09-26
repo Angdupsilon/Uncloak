@@ -74,12 +74,11 @@ unused_parents = [r[0] for r in q("select name from parents pa where not exists 
 check("referential","parents used by an entity", not unused_parents, f"unused={unused_parents}")
 
 # ---------- value rules ----------
-bad = q("select event_type, source, count(*) from evidence_events group by 1,2 order by 1,2")
-allowed = config.EVENT_TYPES
-check("values","event_type allowed", all(et in allowed for et,_,_ in bad), str(bad))
-check("values","source allowed", all(s in config.SOURCES for _,s,_ in bad))
-mism = [(et,s,n) for et,s,n in bad if allowed.get(et) != s]
-check("values","event_type/source pairing matches spec", not mism, str(mism))
+bad = q("select e.event_type, e.source, p.state, count(*) from evidence_events e join projects p using (project_id) group by 1,2,3 order by 1,2,3")
+check("values","event_type allowed", all(et in config.EVENT_SOURCES for et,_,_,_ in bad), str(bad))
+check("values","source allowed", all(s in config.SOURCES for _,s,_,_ in bad))
+mism = [(et,s,st,n) for et,s,st,n in bad if not config.source_allowed(et, s, st)]
+check("values","event_type/source pairing matches spec for the project's state", not mism, str(mism))
 n = one("select count(*) from evidence_events where event_type in ('building_registered','square_footage') and (value_num is null or value_num <= 0)")
 check("values","costs / sq ft present and positive", n == 0, f"bad rows={n}")
 n = one("select count(*) from evidence_events where event_type='tenant_named' and coalesce(payload->>'tenant','')=''")
@@ -206,10 +205,15 @@ check("ercot","every row links to an ercot.com document", len(er) > 0 and all((r
 # ---------- seed parity ----------
 # data/seed always loads; data/seed_national is counted only when the database holds its rows.
 seed_dirs = ["data/seed"] + (["data/seed_national"] if one("select count(*) from evidence_events where event_type='site_mapped'") else [])
+# State importers' directories (data/seed_states/<source>/) count when their events are loaded.
+for d in sorted((config.ROOT / "data" / "seed_states").glob("*/evidence_events.csv")):
+    if one("select count(*) from evidence_events where payload->>'_origin' = %s", f"seed_csv:{d.parent.name}"):
+        seed_dirs.append(str(d.parent.relative_to(config.ROOT)))
 seed_ev = pd.concat([pd.read_csv(config.ROOT / d / "evidence_events.csv", dtype=str, keep_default_na=False) for d in seed_dirs])
 valid = seed_ev[~seed_ev.apply(lambda r: "<<FILL" in "|".join(r.values), axis=1)]
 check("parity","DB events == loadable seed rows", len(valid) == one("select count(*) from evidence_events"), f"seed={len(valid)} db={one('select count(*) from evidence_events')} dirs={seed_dirs}")
-seed_pr = pd.concat([pd.read_csv(config.ROOT / d / "projects.csv", dtype=str, keep_default_na=False) for d in seed_dirs])
+seed_pr = pd.concat([pd.read_csv(config.ROOT / d / "projects.csv", dtype=str, keep_default_na=False) for d in seed_dirs
+                     if (config.ROOT / d / "projects.csv").exists()])
 check("parity","DB projects == seed projects with a name", (~seed_pr.name.str.contains('<<FILL')).sum() == one("select count(*) from projects"))
 n = one("select count(*) from evidence_events where event_type='site_mapped' and value_num is not null and value_num <= 0")
 check("values","atlas footprints positive where stated", n == 0, f"bad={n}")

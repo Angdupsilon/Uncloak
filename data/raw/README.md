@@ -204,6 +204,51 @@ county with n balancing authorities gives each n rows with confidence 1/n: 1,460
 tagged, 511 of them in counties with several. The two Puerto Rico sites get no tag because EIA-861 has
 no territory there, which the UI shows as "not published here".
 
+## `va_deq_air_permits_2026-09-26.csv`
+
+Virginia Department of Environmental Quality, "Issued Air Permits for Data Centers" (list dated
+"as of September 21, 2026"):
+https://www.deq.virginia.gov/news-info/shortcuts/permits/air/issued-air-permits-for-data-centers
+(retrieved 2026-09-26). 194 permits, one row each, with the columns DEQ publishes: air site name,
+registration number, permit issuance date, program type, city/county and regional office, plus the
+permit document link behind each registration number. `issue_date` is the published date in ISO form.
+
+### How it was verified
+
+DEQ's CDN answers scripted requests with 403, so the page was opened in a browser and its table read
+from the page. The saved rows were then checked against the page: the SHA-256 of the 194 rows as
+JSON matched on both sides (`81352dac…127259`), so the file is an exact copy of the table.
+
+Two errors in DEQ's own table are kept as published and noted in the `note` column:
+
+- Permit 74333-1 (Amazon IAD-45) has the issue date "03/26-2026"; it is read as 2026-03-26.
+- Permits 74331-1 (Westfax 4-5A) and 74333-1 link the same document. It can't be attributed to either
+  without reading it, so neither permit is matched from it.
+
+### Permit documents (pending)
+
+The permit PDFs (generator count and MW, facility address or coordinates) also answer scripted requests
+with 403 and were not downloaded. `etl/import_va_deq_air.py` reads them through
+`data/raw/va_deq_permit_details.csv` (`permit_no, facility_address, lat, lon, generator_count,
+generator_mw_total, detail_source, reviewed_by`) once they are read. Until then no permit is matched:
+the list names only a county, and the matching rule needs the operator plus a location within 250 m.
+
+## `va_deq_review.csv`
+
+Every DEQ permit with its match status and basis, written by `etl/import_va_deq_air.py`:
+
+- `needs_permit_location` (99): the facility name names an operator with a mapped site in the same
+  county (`candidate_sites`), so the permit document's location decides the match.
+- `unmatched` (95): no operator named in the facility name has a mapped Virginia site in that county
+  (many permittees are property LLCs such as "Digital Western Lands LLC" whose name doesn't state a
+  brand; a brand is never inferred), or the document link is shared (above).
+- `confirmed`: operator in the permit name and the permit's location within 250 m of exactly one
+  same-operator site. These become `permit_filed` events (source `VA_DEQ`, value = generator MW when
+  the permit states it) in `data/seed_states/va_deq/evidence_events.csv`.
+
+A VA permit counts toward the evidence index the way a TCEQ permit does: `config.EVENT_SOURCES` pairs
+`permit_filed` with TCEQ in Texas and VA_DEQ in Virginia, and the air-permit factor scores the role.
+
 ## `us_source_catalog.csv`
 
 Candidate public sources for coverage outside Texas, one row per source, with its role

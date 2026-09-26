@@ -40,6 +40,12 @@ export const SOURCES = {
     url: "https://records.tceq.texas.gov/",
     what: "Environmental permit filings (for example, backup generators) linked to a site.",
   },
+  VA_DEQ: {
+    name: "Virginia Department of Environmental Quality, issued air permits for data centers",
+    short: "Virginia DEQ",
+    url: "https://www.deq.virginia.gov/news-info/shortcuts/permits/air/issued-air-permits-for-data-centers",
+    what: "Air permits DEQ has issued to data centers, mostly for backup diesel generators, with the permit document for each.",
+  },
   ERCOT: {
     name: "ERCOT large-load interconnection reports",
     short: "ERCOT",

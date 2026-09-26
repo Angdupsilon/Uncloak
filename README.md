@@ -98,10 +98,13 @@ python etl/import_tdlr.py --file data/raw/tdlr_data_centers_2026-09-26.csv
 python etl/import_locations.py
 python etl/import_im3_atlas.py                      # national layer -> data/seed_national/
 python etl/import_grid_regions.py                   # county FIPS + EIA-861 grid-operator lookup (needs pyarrow, shapely)
-python etl/run_all.py --dir data/seed --dir data/seed_national
+python etl/import_va_deq_air.py                     # Virginia DEQ air permits -> data/seed_states/va_deq/
+python etl/run_all.py --dir data/seed --dir data/seed_national --dir data/seed_states/va_deq
 ```
 
-`--dir` can repeat; directories load in order. The national layer adds one project per mapped
+`--dir` can repeat; directories load in order. State importers write only evidence events on
+existing projects to `data/seed_states/<source>/`, and each such directory keeps its own reload marker,
+so loading it never removes the atlas or Texas events on the same project. The national layer adds one project per mapped
 data center with a `site_mapped` event (source `OSM`, footprint sq ft as the value, 0 scoring
 points), its state, and its OSM operator tag as the entity (`resolved_by = OSM_OPERATOR`).
 Texas atlas sites that may duplicate an existing Texas project are held back and listed in
@@ -160,7 +163,7 @@ boundary file and simplified). The dashboard's **Area** picker focuses the map o
    (`ts,project_name,source,event_type,value_num,payload_json,source_url`). Allowed
    `event_type`s: `building_registered` (value = construction USD), `square_footage`,
    `tenant_named` (`{"tenant": "..."}`), `inspection_done`, `certified`, `permit_filed`
-   (`{"permit_id": "..."}`), `status_change` (`{"status": "..."}`), `site_mapped` (value =
+   (`{"permit_id": "..."}`; source TCEQ in Texas, VA_DEQ in Virginia), `status_change` (`{"status": "..."}`), `site_mapped` (value =
    atlas footprint sq ft; national layer only). Unknown types fail the load.
 5. `python etl/run_all.py --dir data/seed`
 
@@ -195,7 +198,7 @@ scores.
 | `value_over_500m` | 15 | registered value ≥ $500M |
 | `tenant_named` | 20 | ≥1 `tenant_named` |
 | `comptroller_certified` | 15 | ≥1 `certified` |
-| `tceq_permit` | 15 | ≥1 `permit_filed` |
+| `tceq_permit` | 15 | ≥1 `permit_filed` (any state's air-permit record: TCEQ in Texas, VA_DEQ in Virginia) |
 | `inspection_done` | 5 | ≥1 `inspection_done` |
 
 The evidence score is points ÷ 100. Uncloak labels it an **"Evidence index (uncalibrated)"**

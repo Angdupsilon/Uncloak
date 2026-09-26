@@ -24,6 +24,15 @@ import config
 from common import clean, connect, is_fill, parse_payload, to_float
 
 ORIGIN = "seed_csv"  # payload marker so reloading replaces only rows this script inserted
+# data/seed and data/seed_national keep the original marker; any other directory (the state
+# importers' data/seed_states/<source>/) gets its own, so loading it never removes another
+# directory's events on the same project.
+SHARED_ORIGIN_DIRS = {"seed", "seed_national", "sample"}
+
+
+def origin_for(directory: Path) -> str:
+    name = directory.resolve().name
+    return ORIGIN if name in SHARED_ORIGIN_DIRS else f"{ORIGIN}:{name}"
 DEFAULT_STATE = "TX"
 
 
@@ -148,7 +157,7 @@ def load_projects(cur, df: pd.DataFrame, sample: bool) -> tuple[int, set[str]]:
     return n, skipped
 
 
-def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
+def load_events(cur, df: pd.DataFrame, skipped_projects: set[str], origin: str = ORIGIN) -> int:
     if df.empty:
         return 0
     # Validate every row before touching the table.
@@ -161,8 +170,10 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
         rows = ", ".join(f"row {i + 2}={v!r}" for i, v in bad["source"].items())
         raise SystemExit(f"evidence_events.csv: unknown source ({rows}). Allowed: {sorted(config.SOURCES)}")
 
-    cur.execute("SELECT name, project_id FROM projects")
-    ids = dict(cur.fetchall())
+    cur.execute("SELECT name, project_id, state FROM projects")
+    fetched = cur.fetchall()
+    ids = {n: pid for n, pid, _ in fetched}
+    states = {n: st for n, _, st in fetched}
     rows, touched = [], set()
     for i, row in df.iterrows():
         pname = row["project_name"].strip()
@@ -177,8 +188,9 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
             warn(f"{where}: ts missing or <<FILL>>, skipped")
             continue
         etype, source = row["event_type"].strip(), row["source"].strip()
-        if config.EVENT_TYPES[etype] != source:
-            warn(f"{where}: event_type {etype} usually comes from {config.EVENT_TYPES[etype]}, got {source}")
+        if not config.source_allowed(etype, source, states[pname]):
+            raise SystemExit(f"{where}: {source} does not publish {etype} records for {states[pname]} "
+                             f"(allowed: {config.EVENT_SOURCES[etype]})")
         if is_fill(row.get("value_num")):
             warn(f"{where}: value_num is <<FILL>>, skipped")
             continue
@@ -186,7 +198,7 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
             payload = parse_payload(row.get("payload_json"))
         except (json.JSONDecodeError, ValueError) as e:
             raise SystemExit(f"{where}: bad payload_json: {e}")
-        payload["_origin"] = ORIGIN
+        payload["_origin"] = origin
         ts = pd.Timestamp(ts_raw)
         ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
         rows.append((ts.to_pydatetime(), ids[pname], source, etype, to_float(row.get("value_num")),
@@ -197,7 +209,7 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
     all_projects = [ids[p.strip()] for p in df["project_name"] if p.strip() in ids]
     if all_projects:
         cur.execute("DELETE FROM evidence_events WHERE project_id = ANY(%s) AND payload->>'_origin' = %s",
-                    (list(set(all_projects)), ORIGIN))
+                    (list(set(all_projects)), origin))
     with cur.copy("COPY evidence_events (ts, project_id, source, event_type, value_num, payload, source_url) FROM STDIN") as cp:
         for r in rows:
             cp.write_row(r)
@@ -241,7 +253,7 @@ def main(directory: Path, reset: bool = False, purge: bool = True) -> None:
         print(f"  entities: {load_entities(cur, read_csv(directory, 'entities.csv'))}")
         n, skipped = load_projects(cur, read_csv(directory, 'projects.csv'), sample)
         print(f"  projects: {n}")
-        print(f"  events:   {load_events(cur, read_csv(directory, 'evidence_events.csv'), skipped)}")
+        print(f"  events:   {load_events(cur, read_csv(directory, 'evidence_events.csv'), skipped, origin_for(directory))}")
         print(f"  ercot:    {load_ercot(cur, read_csv(directory, 'ercot_queue.csv'))}")
 
 

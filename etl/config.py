@@ -15,24 +15,48 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(ROOT / ".env")
 
-# Allowed evidence event types -> expected source (spec section 4.3).
-EVENT_TYPES: dict[str, str] = {
-    "building_registered": "TDLR",
-    "square_footage": "TDLR",
-    "tenant_named": "TDLR",
-    "inspection_done": "TDLR",
-    "certified": "COMPTROLLER",
-    "permit_filed": "TCEQ",
-    "status_change": "OTHER",
+# Allowed evidence event types -> the source that publishes that record in each state. The Texas
+# entry is the original spec pairing (section 4.3). Another state adds its own record of the same
+# kind: a Virginia DEQ generator air permit is a `permit_filed` event, as a TCEQ permit is in Texas.
+# "*" means any state. A pairing not listed here fails the load.
+EVENT_SOURCES: dict[str, dict[str, str]] = {
+    "building_registered": {"TX": "TDLR"},
+    "square_footage": {"TX": "TDLR"},
+    "tenant_named": {"TX": "TDLR"},
+    "inspection_done": {"TX": "TDLR"},
+    "certified": {"TX": "COMPTROLLER"},
+    "permit_filed": {"TX": "TCEQ", "VA": "VA_DEQ"},
+    "status_change": {"*": "OTHER"},
     # National layer: a data center mapped in the IM3 Open Source Data Center Atlas
     # (OpenStreetMap). value_num = building footprint in sq ft. No scoring factor uses it.
-    "site_mapped": "OSM",
+    "site_mapped": {"*": "OSM"},
 }
-SOURCES = {"TDLR", "COMPTROLLER", "TCEQ", "OSM", "OTHER"}
+# The evidence role each event type plays (docs/us-expansion-plan.md section 5). A factor scores a
+# role, so a permit from any state's air agency counts the same way.
+EVENT_ROLES: dict[str, str] = {
+    "building_registered": "building_record", "square_footage": "building_record",
+    "tenant_named": "tenant_named", "inspection_done": "inspection", "certified": "incentive_registry",
+    "permit_filed": "air_permit", "status_change": "status", "site_mapped": "dc_location_layer",
+}
+# Texas pairing, kept for callers that only know Texas records.
+EVENT_TYPES: dict[str, str] = {et: m.get("TX", m.get("*")) for et, m in EVENT_SOURCES.items()}
+SOURCES = {src for m in EVENT_SOURCES.values() for src in m.values()}
+# The state whose records each source publishes (None: any state).
+SOURCE_STATE: dict[str, str | None] = {"TDLR": "TX", "COMPTROLLER": "TX", "TCEQ": "TX", "VA_DEQ": "VA",
+                                       "OSM": None, "OTHER": None}
+
+
+def source_allowed(event_type: str, source: str, state: str) -> bool:
+    """True when `source` publishes `event_type` records for projects in `state`."""
+    pairs = EVENT_SOURCES.get(event_type, {})
+    return pairs.get(state) == source or pairs.get("*") == source
+
+
 RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "TDLR_OWNER", "OSM_OPERATOR", "MANUAL"}
 
-# Checklist factors (spec section 6). Order is display order. Every factor comes from a Texas
-# record type (TDLR, Comptroller, TCEQ), so a site outside Texas cannot earn points yet.
+# Checklist factors (spec section 6). Order is display order. Most factors come from a Texas record
+# type (TDLR, Comptroller); the air-permit factor counts any state's permit_filed record (role
+# air_permit: TCEQ in Texas, DEQ in Virginia).
 #   min_count: factor is true when the project has >= min_count events of event_type
 #   min_sum:   factor is true when the sum of value_num over event_type >= min_sum
 FACTORS: list[dict] = [
@@ -46,8 +70,9 @@ FACTORS: list[dict] = [
      "rule": "A tenant is named in a TDLR record"},
     {"key": "comptroller_certified", "points": 15, "event_type": "certified", "min_count": 1,
      "rule": "Certified by the Texas Comptroller data-center program"},
-    {"key": "tceq_permit", "points": 15, "event_type": "permit_filed", "min_count": 1,
-     "rule": "A TCEQ air permit has been filed"},
+    # The key stays tceq_permit so stored Texas factor flags are unchanged.
+    {"key": "tceq_permit", "points": 15, "event_type": "permit_filed", "min_count": 1, "role": "air_permit",
+     "rule": "A state air permit for the site has been filed (TCEQ in Texas, DEQ in Virginia)"},
     {"key": "inspection_done", "points": 5, "event_type": "inspection_done", "min_count": 1,
      "rule": "A TDLR inspection has been completed"},
 ]

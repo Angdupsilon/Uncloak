@@ -41,7 +41,7 @@ const EVENT_NOUN: Record<string, [string, string]> = {
   tenant_named: ["tenant named", "tenants named"],
   inspection_done: ["inspection done", "inspections done"],
   certified: ["Comptroller certification", "Comptroller certifications"],
-  permit_filed: ["TCEQ permit filed", "TCEQ permits filed"],
+  permit_filed: ["air permit filed", "air permits filed"],
   status_change: ["status change", "status changes"],
   site_mapped: ["atlas mapping", "atlas mappings"],
 };
@@ -57,7 +57,9 @@ export function describeEvent(e: EvidenceEvent): string {
     case "square_footage":
       return `Square footage${e.value_num != null ? `: ${Math.round(e.value_num).toLocaleString()} sq ft` : ""}`;
     case "permit_filed":
-      return `TCEQ permit filed${p.permit_id ? ` (${String(p.permit_id)})` : ""}`;
+      return `${e.source === "VA_DEQ" ? "Virginia DEQ air permit" : "TCEQ permit filed"}${p.permit_id ? ` (${String(p.permit_id)})` : ""}${
+        e.source === "VA_DEQ" && e.value_num != null ? ` · ${Math.round(e.value_num).toLocaleString()} MW of generators` : ""
+      }`;
     case "certified":
       return "Comptroller certified";
     case "inspection_done":
