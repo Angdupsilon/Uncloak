@@ -232,7 +232,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
     () => "Ctrl",
   );
 
-  const [legendOpen, setLegendOpen] = useState(true);
+  const [legendOpen, setLegendOpen] = useState(false);
   const highlight = useMemo(() => (highlightIds ? new Set(highlightIds) : null), [highlightIds]);
   const located = projects.filter((p) => p.lat != null && p.lon != null);
   const unlocated = projects.length - located.length;
