@@ -5,7 +5,8 @@ Research date: 2026-09-26. The machine-readable catalog is
 
 > **Update (same day):** the IM3 atlas (1,382 sites) and the EIA-860/860M, EPA CEMS, EIA-930,
 > FERC 714 and EIA-861 tables were downloaded through GitHub and the Catalyst Cooperative PUDL
-> mirror. See [`us-expansion-plan.md`](us-expansion-plan.md) section 1.
+> mirror. The expansion plan uses only the data-center-specific parts; grid-wide tables are set
+> aside (see [`us-expansion-plan.md`](us-expansion-plan.md), section 0 and appendix).
 >
 > **Verification status.** Section 1 was computed from the files in this repo. The sources in
 > sections 2–4 were identified and described from search results for the publishers' own pages
