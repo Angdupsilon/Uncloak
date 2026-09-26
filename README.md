@@ -1,15 +1,18 @@
-# GridSight
+# Uncloak
 
-A live intelligence dashboard for Texas data-center electricity demand. It assembles
-data-center projects from public records (TDLR, Texas Comptroller, TCEQ), resolves shell
-LLCs to their parent companies, scores how likely each project is to be built, and compares
-evidence-weighted demand with ERCOT's large-load queue. The difference is **shadow load**.
+Uncloak is an independent research tool for Texas data-center public records. Search by
+organization, place, ZIP code, or question to find recorded sites, the entities behind them,
+and the evidence supporting each result. Every site, date, and dollar figure links back to its
+source record; values we calculate are labeled as estimates, and missing values are shown as
+**Unavailable**, never zero.
 
-Every score is stored as a time series, so the whole dashboard can be rewound to any past
-week (the **Time Machine**). **Ask GridSight** (Gemini function calling) answers questions
-from the database and filters the map.
+The public site focuses on search, organization and site profiles, nearby-site lookup, the
+ERCOT queue timeline, and a transparent methodology. Its advanced dashboard adds a map,
+evidence history, organization filters, and a weekly **Time Machine**. **Ask Uncloak** uses
+Gemini function calling over read-only database tools—never free-form SQL.
 
-Built for HackGT with **Tiger Data** (TimescaleDB on Tiger Cloud) and **Gemini**.
+Uncloak is built with Next.js, Python, and **Tiger Data** (TimescaleDB on Tiger Cloud), with
+Gemini powering the optional question-answering experience.
 
 > **Data honesty.** Every number in the UI comes from the database. `data/sample/` holds a
 > small, clearly fake dataset (every name starts with `SAMPLE`, every `source_url` is
@@ -20,8 +23,6 @@ Built for HackGT with **Tiger Data** (TimescaleDB on Tiger Cloud) and **Gemini**
 ---
 
 ## Repository layout
-
-This repository root is the `gridsight/` directory from the build spec.
 
 ```
 db/          001_schema.sql, 002_timescale.sql, 003_readonly_role.sql
@@ -43,7 +44,7 @@ cp .env.example .env    # then fill in the values
 |---|---|---|
 | `DATABASE_URL` | ETL, `psql` | Tiger Cloud owner connection string (`...?sslmode=require`) |
 | `DATABASE_URL_RO` | web | Same host, `gridsight_ro` role (read-only, 3 s statement timeout) |
-| `GEMINI_API_KEY` | web | Ask GridSight. Without it, the chat replies that it isn't configured |
+| `GEMINI_API_KEY` | web | Ask Uncloak. Without it, the question-answering experience explains that it is not configured |
 | `GEMINI_MODEL` | web | Gemini model id |
 | `MW_COST_PER_MW_USD` | ETL | Optional override. The default in `etl/config.py` is $17.6M/MW from the Cushman & Wakefield 2026 Data Center Development Cost Guide (US & Canada all-in average) |
 | `BACKFILL_START` | ETL | First date of the weekly score backfill. Default `2024-01-01` |
@@ -135,11 +136,11 @@ The map works without it.
    (`{"permit_id": "..."}`), `status_change` (`{"status": "..."}`). Unknown types fail the load.
 5. `python etl/run_all.py --dir data/seed`
 
-The pipeline also builds a canonical physical-site layer, preserves location method/precision/
-confidence, normalizes observed TDLR lifecycle states, snapshots sourced ownership resolution,
-and records source freshness. `capacity_observations.csv` and `ercot_project_links.csv` are
-intentionally empty until a public source supports a project-level value or queue match; the
-loader never converts a guess into a sourced fact.
+The pipeline also builds a canonical physical-site layer, preserves location method, precision,
+and confidence, normalizes observed TDLR lifecycle states, snapshots sourced ownership
+resolution, and records source freshness. `capacity_observations.csv` and
+`ercot_project_links.csv` are intentionally empty until a public source supports a
+project-level value or queue match; the loader never converts a guess into a sourced fact.
 
 TDLR discovery is no longer limited to the phrase “data center.” Supply repeatable project,
 owner, code-name, or address searches with `--query`, or a reviewed list with `--queries-file`:
@@ -155,9 +156,9 @@ name, or an event date or value) are skipped and listed in the output.
 ## Scoring
 
 `etl/config.py` holds the weights (below), the `$ per MW` constant and the backfill start.
-Each backfill writes this configuration to the `scoring_config` table, and the UI's
-**How scoring works** popover reads it from `/api/config`. The popover always matches the
-stored scores.
+Each backfill writes this configuration to the `scoring_config` table. The methodology page and
+advanced dashboard read it from `/api/config`, so the displayed rules always match the stored
+scores.
 
 | factor | points | rule |
 |---|---|---|
@@ -169,8 +170,8 @@ stored scores.
 | `tceq_permit` | 15 | ≥1 `permit_filed` |
 | `inspection_done` | 5 | ≥1 `inspection_done` |
 
-The evidence score is points ÷ 100. The UI labels it **"Evidence index (uncalibrated)"** and
-never calls it a probability. Tiers: verified ≥ 0.7, likely ≥ 0.4, otherwise low
+The evidence score is points ÷ 100. Uncloak labels it an **"Evidence index (uncalibrated)"**
+and never calls it a probability. Tiers: verified ≥ 0.7, likely ≥ 0.4, otherwise low
 (`web/lib/constants.ts`). `mw_est` is total registered cost ÷ `MW_COST_PER_MW_USD`.
 
 A score dated D uses only evidence dated on or before D (whole day, UTC). The backfill writes a
@@ -192,10 +193,10 @@ one event by then.
   `ALTER TABLE evidence_events SET (timescaledb.compress, ...)` and `add_compression_policy`
   lines. Enable them for native columnar compression of older evidence.
 
-## Public research pages
+## Public research experience
 
-The site opens on a search-first public experience (`web/app/(public)/`). The expert dashboard
-moved to `/dashboard`, unchanged, and accepts deep links (`?parent=Google&site=12`).
+The site opens on the search-first public experience (`web/app/(public)/`). The advanced
+dashboard is available at `/dashboard` and accepts deep links (`?parent=Google&site=12`).
 
 | Route | What it shows |
 |---|---|
@@ -204,10 +205,12 @@ moved to `/dashboard`, unchanged, and accepts deep links (`?parent=Google&site=1
 | `/org`, `/org/[slug]` | Organization index and profile: summary, sourced key figures, context, sources, then sites / trend / entities / comparison tabs |
 | `/site/[id]` | Site profile: what it is, who is behind it, location basis, evidence history with a link to each record |
 | `/near?q=` or `?lat=&lon=` | Sites within a radius, list + map, with distance and why each appears |
+| `/queue` | ERCOT large-load queue history alongside the records represented in Uncloak |
+| `/ask?q=` | Read-only, evidence-grounded answers to analytical questions |
 | `/methodology` | Sources, linking, scoring, MW estimate, missing data, double counting, coverage limits |
 
 Every public figure comes from `web/lib/publicQueries.ts` (one site query shared by all pages)
-and is explained in one place, `web/lib/metrics.ts`, as **documented**, **GridSight estimate** or
+and is explained in one place, `web/lib/metrics.ts`, as **documented**, **Uncloak estimate** or
 **context**. Missing values read "Unavailable", never 0. Headquarters are not in the dataset and
 every site is labeled a facility. Place lookup (`web/lib/geocode.ts`) uses the U.S. Census geocoder
 for street addresses and OpenStreetMap Nominatim for places and ZIPs. When those lookups are
@@ -216,8 +219,9 @@ The public pages follow `web/DESIGN.md` (scoped under `.rw` in `globals.css`).
 
 ## API
 
-All endpoints accept `as_of=YYYY-MM-DD` (default today, UTC) and echo it back. All SQL is in
-`web/lib/queries.ts`, parameterized, and runs as the read-only role.
+Time-aware data endpoints accept `as_of=YYYY-MM-DD` (default today, UTC); endpoints that return
+an as-of dataset echo it back. All SQL is in `web/lib/queries.ts`, parameterized, and runs as
+the read-only role.
 
 - `GET /api/summary`: ERCOT queue (latest row on or before `as_of`), `found_gw`, `realistic_gw`, `shadow_gw`, `projects`, `weekly[]`
 - `GET /api/projects?parent=&county=&min_prob=&max_prob=&min_cost=&has_permit=&ids=`
@@ -230,7 +234,7 @@ All endpoints accept `as_of=YYYY-MM-DD` (default today, UTC) and echo it back. A
 - `GET /api/orgs/[slug]`: organization profile (sites, entities, weekly trend, sources, comparison)
 - `GET /api/geocode?q=` and `GET /api/near?q=|lat=&lon=&radius_mi=&county=`: place lookup and nearby sites
 
-Ask GridSight gives Gemini four tools (`filter_projects`, `get_project_timeline`, `get_summary`,
+Ask Uncloak gives Gemini four tools (`filter_projects`, `get_project_timeline`, `get_summary`,
 `compare_parents`) that call the same query functions. It never gives Gemini free-form SQL, and
 it allows up to 4 tool rounds.
 
@@ -259,10 +263,10 @@ it allows up to 4 tool rounds.
 - `db/003_readonly_role.sql` takes the role password as a psql variable (`-v ro_password=...`).
 - Metro bounding boxes for `filter_projects` are approximate and live in `web/lib/queries.ts`
   (`METROS`).
-- **Testing caveat:** the ETL, the API and the UI were tested end to end on local PostgreSQL 17
+- **Testing caveat:** the ETL, API, and UI were tested end to end on local PostgreSQL 17
   with small stand-ins for `create_hypertable`, `time_bucket`, `last()` and
   `refresh_continuous_aggregate`. They were **not** run against a real TimescaleDB / Tiger Cloud
-  instance, so run `db/001` and `db/002` against Tiger Cloud first. Ask GridSight was tested at
+  instance, so run `db/001` and `db/002` against Tiger Cloud first. Ask Uncloak was tested at
   the tool-dispatch level only, because no Gemini key was available.
 
 ## Optional deployment inputs
