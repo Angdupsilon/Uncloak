@@ -70,10 +70,9 @@ function Swatch({ color, hollow }: { color: string; hollow?: boolean }) {
   );
 }
 
-/** One row of the reconciliation: label, value, context, and a shared comparison bar. */
+/** One row of the reconciliation: label, value, and a shared comparison bar. */
 function Row({
   label,
-  detail,
   gw,
   of,
   color,
@@ -81,7 +80,6 @@ function Row({
   showShare = true,
 }: {
   label: string;
-  detail?: string;
   gw: number;
   of: number | null;
   color: string;
@@ -102,7 +100,6 @@ function Row({
         {/* Minimum 2px so a real but tiny share is still visible as "something". */}
         <div className="h-full rounded-full" style={{ width: `max(2px, ${pct}%)`, background: color }} />
       </div>
-      {detail && <p className="mt-1 text-[11px] leading-4 text-[#8a8a8a]">{detail}</p>}
     </div>
   );
 }
@@ -136,19 +133,13 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
     >
       {/* 1. The headline: how much requested load is still waiting on ERCOT. */}
       <section>
-        <div className="ub-body-md-strong text-[#5e5e5e]">Awaiting ERCOT approval to energize</div>
+        <div className="ub-body-md-strong text-[#5e5e5e]">ERCOT approval status</div>
         {hasQueue ? (
           <>
             <div className="ub-display-xl mt-1 tabular-nums">{fmtShare(requested - approved, requested)}</div>
             <p className="ub-body-sm text-[#5e5e5e]">
-              <span className="font-medium text-black">{fmtGW(requested - approved)}</span> of {fmtGW(requested)} requested remains unapproved.
+              <span className="font-medium text-black">{fmtGW(requested - approved)}</span> of {fmtGW(requested)} still needs approval to turn on.
             </p>
-            {e?.approved_ts && e.approved_ts.slice(0, 10) !== e.ts.slice(0, 10) && (
-              <p className="mt-1 text-[11px] leading-4 text-[#8a8a8a]">
-                Queue reported {fmtDate(e.ts)}. Approval figure reported {fmtDate(e.approved_ts)}
-                {e.peak_ts ? `; peak-usage figure reported ${fmtDate(e.peak_ts)}.` : "."}
-              </p>
-            )}
           </>
         ) : (
           <p className="ub-body-sm mt-1 text-[#5e5e5e]">No ERCOT queue data on or before this date.</p>
@@ -161,14 +152,14 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           <div className="mt-2 space-y-0.5 text-[12px] leading-4 text-[#5e5e5e]">
             {energized != null && (
               <div className="flex items-center gap-2">
-                <Swatch color={INK.energized} /> Observed using power (peak) · {fmtGW(energized)}
+                <Swatch color={INK.energized} /> Using power (highest observed) · {fmtGW(energized)}
               </div>
             )}
             <div className="flex items-center gap-2">
-              <Swatch color={INK.approved} /> Approved, not operating · {fmtGW(Math.max(0, approved - (energized ?? 0)))}
+              <Swatch color={INK.approved} /> Approved to turn on · {fmtGW(Math.max(0, approved - (energized ?? 0)))}
             </div>
             <div className="flex items-center gap-2">
-              <Swatch color={INK.phantom} hollow /> Awaiting ERCOT approval · {fmtGW(requested - approved)}
+              <Swatch color={INK.phantom} hollow /> Not approved yet · {fmtGW(requested - approved)}
             </div>
           </div>
           <div className="mt-0.5 text-[11px] leading-4 text-[#afafaf]">Each square = {fmtGW(requested / WAFFLE_CELLS, 2)} (0.1% of requests)</div>
@@ -179,7 +170,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           a gap here is our coverage, not evidence that load is speculative. */}
       <section className="border-t border-[#efefef] pt-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="ub-body-md-strong text-[#5e5e5e]">Public-record capacity estimates</div>
+          <div className="ub-body-md-strong text-[#5e5e5e]">Projects found in public records</div>
           {spark.length > 1 && !noMw && (
             <div className="h-7 w-16 shrink-0" aria-label="Weekly evidence-weighted vs found GW">
               <ResponsiveContainer width="100%" height="100%">
@@ -203,8 +194,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           <div className="mt-2 space-y-2">
             {hasQueue && (
               <Row
-                label="ERCOT approval baseline"
-                detail="System-wide approval-to-energize total; it is not matched project by project."
+                label="ERCOT approved total"
                 gw={approved}
                 of={approved}
                 color={INK.approved}
@@ -214,7 +204,6 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
             {s.found_gw != null && (
               <Row
                 label="Estimated project capacity"
-                detail="Cost-derived total for projects found in public records; not a project-level ERCOT match."
                 gw={s.found_gw}
                 of={hasQueue ? approved : null}
                 color={INK.found}
@@ -223,8 +212,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
             )}
             {s.realistic_gw != null && (
               <Row
-                label="Evidence-weighted estimate"
-                detail="Estimated project capacity weighted by each project's evidence score."
+                label="Capacity with stronger records"
                 gw={s.realistic_gw}
                 of={hasQueue ? approved : s.found_gw}
                 color={INK.weighted}
@@ -235,7 +223,8 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
         )}
         <p className="mt-1.5 text-[12px] leading-4 text-[#5e5e5e]">
           {s.projects} projects · {s.projects_with_mw} with cost data.
-          {hasQueue && s.found_gw != null && " Percentages compare each estimate with ERCOT's system-wide approval total; they do not indicate a project match."}
+          {s.found_gw != null && " Project estimates use construction costs. The darker estimate gives less weight to projects with weaker records."}
+          {hasQueue && s.found_gw != null && " Percentages compare these estimates with ERCOT's approved total."}
         </p>
       </section>
 
