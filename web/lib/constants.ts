@@ -11,17 +11,6 @@ export const TIER_COLORS: Record<Tier, string> = {
   low: "#C62828",
 };
 
-/**
- * Map-only tier palette. The print-dark TIER_COLORS above go muddy on the dark
- * basemap, so the map uses lifted, higher-luminance variants of the same hues.
- * Same semantic meaning, tuned for a dark canvas.
- */
-export const TIER_COLORS_MAP: Record<Tier, string> = {
-  verified: "#34D399",
-  likely: "#FBBF24",
-  low: "#FB7185",
-};
-
 export const TIER_LABELS: Record<Tier, string> = {
   verified: "Verified",
   likely: "Likely",
@@ -46,16 +35,8 @@ export const UI = {
   markerMinRadiusPx: 5,
   markerRadiusPerSqrtMw: 1.1,
   markerMaxRadiusPx: 40,
-  /** Soft outer glow drawn behind each marker, as a multiple of core radius. */
-  markerHaloScale: 2.4,
   txCenter: [31.0, -99.3] as [number, number],
   txZoom: 6,
-  /** Texas bounding box, fitted on mount so framing adapts to the panel size
-   *  instead of depending on a fixed zoom that only looks right at one width. */
-  txBounds: [
-    [25.84, -106.65],
-    [36.5, -93.51],
-  ] as [[number, number], [number, number]],
   fitPaddingPx: 40,
   fitMaxZoom: 10,
 };

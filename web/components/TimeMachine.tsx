@@ -42,13 +42,13 @@ function TipContent({ active, payload }: { active?: boolean; payload?: { payload
   if (!active || !payload?.length) return null;
   const p = payload[0].payload;
   return (
-    <div className="max-w-[240px] rounded-md border border-[#e2e2e2] bg-white px-3 py-2 text-xs shadow">
+    <div className="max-w-[240px] rounded-md border border-slate-200 bg-white px-3 py-2 text-xs shadow">
       <div className="font-semibold">{fmtDate(p.ts)}</div>
       <div>
         Evidence score {fmtPct(p.probability)} · {fmtMW(p.mw_est)}
       </div>
       {p.added.map((line) => (
-        <div key={line} className="text-black">
+        <div key={line} className="text-slate-700">
           {line}
         </div>
       ))}
@@ -58,7 +58,7 @@ function TipContent({ active, payload }: { active?: boolean; payload?: { payload
 
 export default function TimeMachine({ scores, events }: { scores: ScorePoint[]; events: EvidenceEvent[] }) {
   if (!scores.length) {
-    return <div className="rounded-md bg-black px-3 py-6 text-center text-xs text-[#5e5e5e]">No score history on or before this date.</div>;
+    return <div className="rounded-md bg-slate-50 px-3 py-6 text-center text-xs text-slate-500">No score history on or before this date.</div>;
   }
   const data = buildPoints(scores, events);
   return (

@@ -6,7 +6,7 @@ import type { Summary } from "@/lib/types";
 function Source({ url, label }: { url: string | null | undefined; label: string }) {
   if (isLink(url)) {
     return (
-      <a href={url} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-black">
+      <a href={url} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-slate-900">
         {label}
       </a>
     );
@@ -30,27 +30,27 @@ function Card({
   accent?: string;
 }) {
   return (
-    <div className="ub-card flex min-w-0 flex-1 flex-col px-5 py-5 transition-shadow hover:shadow-[var(--shadow-float)]">
-      <div className="ub-body-md-strong text-[#5e5e5e]">{title}</div>
+    <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-[var(--border-soft)] bg-white px-4 py-3.5 shadow-[var(--shadow-1)] transition-shadow hover:shadow-[var(--shadow-2)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">{title}</div>
       <div className="mt-1.5 flex items-end justify-between gap-3">
-        <div className={`ub-display-xl tabular-nums ${accent ?? "text-black"}`}>{value}</div>
+        <div className={`text-[28px] font-semibold leading-none tracking-tight tabular-nums ${accent ?? "text-slate-900"}`}>{value}</div>
         {children}
       </div>
-      {sub && <div className="ub-body-sm mt-2 truncate text-[#5e5e5e]">{sub}</div>}
-      <div className="ub-caption mt-auto truncate pt-2.5 text-[#afafaf]">{foot}</div>
+      {sub && <div className="mt-2 truncate text-xs leading-snug text-slate-600">{sub}</div>}
+      <div className="mt-auto truncate pt-2 text-[11px] text-slate-400">{foot}</div>
     </div>
   );
 }
 
 export default function SummaryBar({ summary, loading, error }: { summary: Summary | null; loading: boolean; error: string | null }) {
   if (error && !summary) {
-    return <div className="ub-card ub-body-md px-5 py-4 text-black">Summary unavailable: {error}</div>;
+    return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">Summary unavailable: {error}</div>;
   }
   if (!summary) {
     return (
       <div className="flex gap-4">
         {["ERCOT queue", "Found on map", "Evidence-weighted", "Shadow load"].map((t) => (
-          <div key={t} className="h-[148px] flex-1 animate-pulse rounded-2xl bg-[#efefef]" />
+          <div key={t} className="h-[112px] flex-1 animate-pulse rounded-xl border border-[var(--border-soft)] bg-slate-100" />
         ))}
       </div>
     );
@@ -97,6 +97,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
       <Card
         title="Evidence-weighted demand"
         value={fmtGW(s.realistic_gw, 2)}
+        accent="text-emerald-800"
         sub="Σ evidence score × estimated MW"
         foot={<>As of {fmtDate(s.as_of)} · Evidence index (uncalibrated)</>}
       >
@@ -108,10 +109,10 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
                 <Tooltip
                   labelFormatter={(v) => fmtMonth(Number(v))}
                   formatter={(v, name) => [fmtGW(Number(v), 2), name === "found" ? "Found" : "Weighted"]}
-                  contentStyle={{ fontSize: 11, background: "#ffffff", border: "none", borderRadius: 12, boxShadow: "0 2px 6px rgb(0 0 0 / 0.12)", color: "#000000" }}
+                  contentStyle={{ fontSize: 11 }}
                 />
-                <Area dataKey="found" type="stepAfter" stroke="#afafaf" fill="#f3f3f3" isAnimationActive={false} />
-                <Area dataKey="realistic" type="stepAfter" stroke="#000000" fill="#e2e2e2" isAnimationActive={false} />
+                <Area dataKey="found" type="stepAfter" stroke="#94a3b8" fill="#e2e8f0" isAnimationActive={false} />
+                <Area dataKey="realistic" type="stepAfter" stroke="#047857" fill="#a7f3d0" isAnimationActive={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -120,6 +121,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
       <Card
         title="Shadow load"
         value={fmtGW(s.shadow_gw)}
+        accent="text-rose-800"
         sub="ERCOT requested − found on map"
         foot={
           s.ercot ? (
