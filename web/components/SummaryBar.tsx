@@ -58,7 +58,13 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
 
   const s = summary;
   const noMw = s.projects > 0 && s.projects_with_mw === 0;
-  const spark = s.weekly.map((w) => ({ t: Date.parse(w.week), realistic: w.realistic_gw, found: w.found_gw }));
+  // Older cached/deployed API responses may predate the weekly series. Keep a
+  // version-skewed response from crashing the whole dashboard during replay.
+  const spark = (Array.isArray(s.weekly) ? s.weekly : []).map((w) => ({
+    t: Date.parse(w.week),
+    realistic: w.realistic_gw,
+    found: w.found_gw,
+  }));
 
   return (
     <div className={`flex h-full flex-col gap-3 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}>
