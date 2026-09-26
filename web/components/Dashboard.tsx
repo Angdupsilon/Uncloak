@@ -22,6 +22,7 @@ export default function Dashboard({
   initialParent = null,
   initialSiteId = null,
   initialState = null,
+  initialRecordsOnly = false,
   embedded = false,
 }: {
   today: string;
@@ -29,6 +30,8 @@ export default function Dashboard({
   initialSiteId?: number | null;
   /** USPS code to focus the map on; null shows the whole country. */
   initialState?: string | null;
+  /** Start with atlas-only sites (no public record yet) hidden. */
+  initialRecordsOnly?: boolean;
   /** Rendered inside a public profile: no page header, no floating Ask launcher, fixed height. */
   embedded?: boolean;
 }) {
@@ -39,13 +42,18 @@ export default function Dashboard({
   const [highlight, setHighlight] = useState<number[] | null>(null);
   const [region, setRegion] = useState<string | null>(initialState);
   const [fitRequest, setFitRequest] = useState(0);
+  const [recordsOnly, setRecordsOnly] = useState(initialRecordsOnly);
 
   const config = useJson<ScoringConfig>("/api/config");
   const summary = useJson<Summary>(`/api/summary?as_of=${asOf}`);
   const projects = useJson<{ as_of: string; projects: Project[] }>(`/api/projects?as_of=${asOf}`);
-  const parents = useJson<{ parents: ParentRow[] }>(`/api/parents?as_of=${asOf}${region ? `&state=${region}` : ""}`);
+  const parents = useJson<{ parents: ParentRow[] }>(
+    `/api/parents?as_of=${asOf}${region ? `&state=${region}` : ""}${recordsOnly ? "&records=1" : ""}`,
+  );
 
-  const allProjects = useMemo(() => projects.data?.projects ?? [], [projects.data]);
+  const loadedProjects = useMemo(() => projects.data?.projects ?? [], [projects.data]);
+  // "Public-record sites only" hides atlas-only sites: those whose only evidence is the IM3 atlas mapping.
+  const allProjects = useMemo(() => (recordsOnly ? loadedProjects.filter((p) => p.has_records) : loadedProjects), [loadedProjects, recordsOnly]);
   const projectList = useMemo(() => (region ? allProjects.filter((p) => p.state === region) : allProjects), [allProjects, region]);
   const showingSample = projectList.some((p) => p.is_sample);
 
@@ -188,6 +196,32 @@ export default function Dashboard({
             setHighlight(null);
           }}
         />
+        <button
+          type="button"
+          role="switch"
+          aria-checked={recordsOnly}
+          onClick={() => {
+            setRecordsOnly((v) => !v);
+            setHighlight(null);
+          }}
+          title="Hide sites whose only record is the IM3 data-center atlas (OpenStreetMap) mapping"
+          className="flex shrink-0 items-center gap-2 text-[13px] text-[#5e5e5e]"
+        >
+          <span
+            aria-hidden
+            className={`relative h-5 w-9 rounded-full transition-colors ${recordsOnly ? "bg-black" : "bg-[#d4d4d4]"}`}
+          >
+            <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${recordsOnly ? "translate-x-4" : "translate-x-0.5"}`} />
+          </span>
+          <span className="text-left leading-4">
+            <span className="block font-medium text-black">Public-record sites only</span>
+            <span className="block text-[11px]">
+              {recordsOnly
+                ? `${allProjects.length.toLocaleString()} of ${loadedProjects.length.toLocaleString()} sites`
+                : `${(loadedProjects.length - loadedProjects.filter((p) => p.has_records).length).toLocaleString()} atlas-only shown`}
+            </span>
+          </span>
+        </button>
         <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
         <div className="min-w-0 flex-1">
           <ParentFilter

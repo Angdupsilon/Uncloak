@@ -344,7 +344,7 @@ export async function getLoadReports(asOf: string, region: string | null): Promi
 // Parents
 // ---------------------------------------------------------------------------
 
-export async function getParents(asOf: string, state: string | null = null): Promise<ParentRow[]> {
+export async function getParents(asOf: string, state: string | null = null, recordsOnly = false): Promise<ParentRow[]> {
   if (state && !/^[A-Za-z]{2}$/.test(state)) throw new BadRequest("state must be a 2-letter USPS code");
   return query<ParentRow>(
     `SELECT COALESCE(q.parent, $2) AS name, q.parent_color AS color,
@@ -353,10 +353,10 @@ export async function getParents(asOf: string, state: string | null = null): Pro
             SUM(q.mw_est) FILTER (WHERE q.probability >= $3) AS mw_verified,
             COUNT(*) AS projects
      FROM (${PROJECTS_AS_OF}) q
-     WHERE $4::text IS NULL OR q.state = $4
+     WHERE ($4::text IS NULL OR q.state = $4) AND (NOT $5::boolean OR q.has_records)
      GROUP BY q.parent, q.parent_color
      ORDER BY SUM(q.probability * q.mw_est) DESC NULLS LAST, COUNT(*) DESC, 1`,
-    [asOf, UNRESOLVED_PARENT, TIER_THRESHOLDS.verified, state ? state.toUpperCase() : null],
+    [asOf, UNRESOLVED_PARENT, TIER_THRESHOLDS.verified, state ? state.toUpperCase() : null, recordsOnly],
   );
 }
 

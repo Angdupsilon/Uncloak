@@ -6,6 +6,6 @@ export async function GET(req: NextRequest) {
   return jsonHandler(async () => {
     const sp = req.nextUrl.searchParams;
     const as_of = parseAsOf(sp.get("as_of"));
-    return { as_of, parents: await getParents(as_of, sp.get("state")) };
+    return { as_of, parents: await getParents(as_of, sp.get("state"), sp.get("records") === "1") };
   });
 }

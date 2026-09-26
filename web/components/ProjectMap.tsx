@@ -391,7 +391,7 @@ export default function ProjectMap({ projects, region = null, selectedId, onSele
               ))}
             </div>
             <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">
-              Each dot is one project from public records or the IM3 data-center atlas. Size reflects estimated MW (enlarged); color = evidence tier, which uses Texas record types only.
+              Each dot is one project from public records or the IM3 data-center atlas. Size reflects estimated MW (enlarged); color = evidence tier from the public records loaded for each state (deepest in Texas).
             </div>
             {unlocated > 0 && (
               <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">

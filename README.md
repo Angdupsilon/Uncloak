@@ -273,7 +273,9 @@ should be reviewed before anyone relies on it.
 ## Public research experience
 
 The site opens on the search-first public experience (`web/app/(public)/`). The advanced
-dashboard is available at `/dashboard` and accepts deep links (`?parent=Google&site=12`).
+dashboard is available at `/dashboard` and accepts deep links (`?parent=Google&site=12`, `?state=VA`,
+`?records=1`). Its **Public-record sites only** switch hides atlas-only sites (sites whose only
+evidence is the IM3 atlas mapping), and the organization filter counts follow it.
 
 | Route | What it shows |
 |---|---|
@@ -306,7 +308,7 @@ the read-only role.
 - `GET /api/projects/[id]/timeline`: project, score history and events up to `as_of`
 - `GET /api/load-reports?region=&as_of=`: the regions with a load report, and one region's figures (ERCOT by default), each with its scope (`data_centers`, `data_centers_and_crypto`, `large_loads_all`), publisher, date and quote. Never summed across publishers
 - `GET /api/queue-timeline`: weekly ERCOT queue (carried forward from the latest report) vs. found and evidence-weighted GW, shadow load, week-over-week change, projects up/new, plus raw ERCOT report points
-- `GET /api/parents`: MW total / evidence-weighted / in verified projects, by parent
+- `GET /api/parents?state=&records=1`: MW total / evidence-weighted / in verified projects, by parent (`records=1` counts only sites with a public record)
 - `GET /api/config`: scoring weights, `$ per MW`, tier thresholds, backfill start
 - `POST /api/ask` `{question, as_of}`: `{answer, map_filter, open_timeline, tool_calls}`
 - `GET /api/search?q=`: typed search hits for the public search box
