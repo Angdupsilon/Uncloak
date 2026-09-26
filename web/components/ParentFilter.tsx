@@ -80,10 +80,14 @@ export default function ParentFilter({
     return { inline: [...head, ...pinned], overflow: rows.filter((p) => !headNames.has(p.name)) };
   }, [parents, active]);
 
+  // The directory is a complete company picker, including the companies that
+  // are already visible as pills in the bar. The overflow count below still
+  // reflects only the companies hidden from the inline bar.
   const filtered = useMemo(() => {
+    const directory = parents ?? [];
     const needle = q.trim().toLowerCase();
-    return needle ? overflow.filter((p) => p.name.toLowerCase().includes(needle)) : overflow;
-  }, [overflow, q]);
+    return needle ? directory.filter((p) => p.name.toLowerCase().includes(needle)) : directory;
+  }, [parents, q]);
 
   if (!parents) {
     return <div className="text-[14px] text-[#afafaf]">{loading ? "Loading parents…" : "No parent data"}</div>;

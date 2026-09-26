@@ -60,7 +60,7 @@ are missing, for example the Lancium/Abilene campus and Stargate Shackelford.
 
 Hand-reviewed links from TDLR project numbers to Comptroller registry sites.
 
-- `confirmed` (47 records, 23 sites): the records share a specific legal entity or site code.
+- `confirmed` (48 records, 24 sites): the records share a specific legal entity or site code.
   For example, owner Sharka LLC is the same in both, or SAT82 falls within "SAT 80-85". These
   records become evidence on the registry site.
 - `probable` (17 records): a plausible link without a shared entity, such as Amazon "Pecos
@@ -69,6 +69,19 @@ Hand-reviewed links from TDLR project numbers to Comptroller registry sites.
   the import.
 
 Big-company names alone (Microsoft, Amazon, CyrusOne) never count as a match.
+
+## `project_locations.csv`
+
+Reviewed location enrichment for registry projects whose Comptroller records publish no
+address. Each row retains its source, review status, and matching basis. `verified` rows use a
+primary government record; `corroborated` rows are exact project-name matches in a cited
+public-record compilation. Coordinates for shared campuses may be slightly offset so separate
+projects remain visible on the map.
+
+`etl/import_locations.py` validates project identity, provenance, Texas bounds, and duplicate
+rows before filling only projects that do not already have coordinates. `candidate` and
+`partial` rows are retained for research but are not applied. Primary TDLR locations always
+take precedence; rerun this importer after regenerating seeds from Comptroller and TDLR data.
 
 ## `ercot_large_load_queue.csv`
 

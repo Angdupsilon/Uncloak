@@ -83,8 +83,13 @@ import adds to its sites:
 ```bash
 python etl/import_comptroller.py --file data/raw/comptroller_data_centers_2026-09-26.csv
 python etl/import_tdlr.py --file data/raw/tdlr_data_centers_2026-09-26.csv
+python etl/import_locations.py
 python etl/run_all.py --dir data/seed
 ```
+
+Run the location import after the two source importers: those importers intentionally rebuild
+their project rows, while `import_locations.py` reapplies the separately reviewed, sourced
+location crosswalk. Candidate and partial locations in the crosswalk are never mapped.
 
 Geocoding uses the U.S. Census batch geocoder first, then OpenStreetMap Nominatim (1 request/s).
 An OSM result is only accepted when its house number and county match the address.
@@ -93,6 +98,7 @@ Individual steps:
 
 ```bash
 python etl/load_seed.py --dir data/seed
+python etl/import_locations.py                           # reapply reviewed public locations
 python etl/load_tceq.py --file path/to/tceq_bulk.csv   # set column names at the top of the script first
 python etl/geocode.py
 python etl/score.py                                   # backfill + refresh

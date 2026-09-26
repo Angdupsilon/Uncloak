@@ -130,12 +130,6 @@ function VectorBasemap() {
     const layer = maplibreGL({ style: "https://tiles.openfreemap.org/styles/liberty" });
     layer.addTo(map);
 
-    // MapLibre options carry no `attribution`, so credit goes on Leaflet's own
-    // control alongside the rest of the map chrome.
-    const credit =
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &middot; <a href="https://openfreemap.org">OpenFreeMap</a>';
-    map.attributionControl?.addAttribution(credit);
-
     // Place labels ship small for a full-screen map; this dashboard shows the
     // whole state in a panel, so bump every symbol layer's text size.
     const gl = layer.getMaplibreMap();
@@ -151,7 +145,6 @@ function VectorBasemap() {
     else gl.once("styledata", enlarge);
 
     return () => {
-      map.attributionControl?.removeAttribution(credit);
       map.removeLayer(layer);
     };
   }, [map]);
