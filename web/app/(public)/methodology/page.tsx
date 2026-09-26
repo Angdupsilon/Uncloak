@@ -40,6 +40,7 @@ const TOC = [
   ["counting", "Avoiding double counting"],
   ["limits", "Coverage limits"],
   ["spare-capacity", "Spare connection capacity"],
+  ["illustrations", "Illustrations"],
   ["metrics", "Every metric, explained"],
 ] as const;
 
@@ -243,6 +244,26 @@ export default async function Methodology() {
                 <SpareCapacityMethod />
               </Section>
 
+              <Section id="illustrations" title="Illustrations">
+                <p>
+                  Some pages show a generated image of a construction stage: bare land, a graded site, steel going up, finished buildings. They are labeled{" "}
+                  <strong className="font-semibold text-black">AI illustration</strong> wherever they appear.
+                </p>
+                <p className="mt-3">
+                  One image per stage, generated once and reused across every site. Which one a site shows is decided by that site&apos;s own records, so it
+                  changes as the evidence does, including when you move the date back.
+                </p>
+                <p className="mt-3">
+                  They are not photographs of any site, never contribute to the evidence index, and no number here is derived from them. Prompt, model, date and
+                  file hash for each are recorded in{" "}
+                  <code className="rounded bg-[var(--canvas-soft)] px-1 py-0.5 text-[13px]">public/illustrations/manifest.json</code>.
+                </p>
+                <p className="mt-3">
+                  One stage, <strong className="font-semibold text-black">energized</strong>, is never shown: no source here reports that a site has begun
+                  drawing power. TDLR&apos;s &ldquo;project closed&rdquo; means a permit file was closed, not that the site is operating.
+                </p>
+              </Section>
+
               <Section id="metrics" title="Every metric, explained">
                 <dl className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
                   {Object.entries(METRICS).map(([key, m]) => (
@@ -283,7 +304,7 @@ function ErcotSnapshot({ summary }: { summary: Awaited<ReturnType<typeof getSumm
         {queue.gw_approved != null && <SnapshotRow label="Approved to energize" value={fmtGW(queue.gw_approved)} date={queue.approved_ts} url={queue.approved_source_url} />}
         {queue.gw_observed_peak != null && <SnapshotRow label="Observed energized peak" value={fmtGW(queue.gw_observed_peak)} date={queue.peak_ts} url={queue.peak_source_url} />}
       </dl>
-      <p className="mt-2 text-[12px] leading-4 text-[var(--slate)]">These are statewide, aggregate figures—not site-level totals. They can come from different reports and dates, and the queue&apos;s planning horizon has changed over time.</p>
+      <p className="mt-2 text-[12px] leading-4 text-[var(--slate)]">These are statewide, aggregate figures, not site-level totals. They can come from different reports and dates, and the queue&apos;s planning horizon has changed over time.</p>
     </div>
   );
 }

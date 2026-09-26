@@ -52,7 +52,7 @@ export function KindChip({ kind }: { kind: SearchKind }) {
 export default function SearchBox({
   size = "lg",
   defaultValue = "",
-  placeholder = "Search a company, place or address — or ask a question",
+  placeholder = "Search a company, place or address, or ask a question",
 }: {
   size?: "lg" | "sm";
   defaultValue?: string;

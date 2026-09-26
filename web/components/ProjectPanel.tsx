@@ -3,26 +3,28 @@ import { TIER_COLORS, TIER_LABELS, UNRESOLVED_PARENT } from "@/lib/constants";
 import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
+import StageClip from "@/components/StageClip";
+import { stageFor } from "@/lib/stages";
 import TimeMachine from "./TimeMachine";
 import { SourceLink } from "./public/Source";
 
 function SectionHeading({ children, detail }: { children: React.ReactNode; detail?: React.ReactNode }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
-      <h3 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500">{children}</h3>
-      {detail && <div className="text-[11px] text-slate-400">{detail}</div>}
+      <h3 className="ub-eyebrow">{children}</h3>
+      {detail && <div className="rw-meta">{detail}</div>}
     </div>
   );
 }
 
 function MetricCard({ label, value, detail, color }: { label: string; value: string; detail?: string; color?: string }) {
   return (
-    <div className="min-w-0 rounded-lg border border-slate-200/80 bg-slate-50/80 px-3 py-2.5">
-      <div className="truncate text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-500">{label}</div>
-      <div className="mt-1 truncate text-lg font-semibold leading-none tracking-tight text-slate-900" style={{ color }}>
+    <div className="min-w-0">
+      <div className="ub-eyebrow truncate">{label}</div>
+      <div className="mt-1 truncate text-lg font-semibold leading-none tracking-tight text-[var(--ink)]" style={{ color }}>
         {value}
       </div>
-      {detail && <div className="mt-1.5 truncate text-[11px] text-slate-500">{detail}</div>}
+      {detail && <div className="mt-1.5 truncate text-[13px] text-[var(--slate)]">{detail}</div>}
     </div>
   );
 }
@@ -56,15 +58,15 @@ export default function ProjectPanel({
 
   if (projectId == null) {
     return (
-      <div className="flex h-full flex-col items-center justify-center px-10 text-center">
-        <div className="mb-4 grid h-12 w-12 place-items-center rounded-xl border border-slate-200 bg-slate-50 text-slate-400 shadow-sm">
+      <div className="rw flex h-full flex-col items-center justify-center px-10 text-center">
+        <div className="mb-4 grid h-12 w-12 place-items-center bg-white text-[var(--slate)] shadow-sm">
           <svg aria-hidden viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M12 21s7-5.25 7-12a7 7 0 1 0-14 0c0 6.75 7 12 7 12Z" />
             <circle cx="12" cy="9" r="2.5" />
           </svg>
         </div>
-        <div className="text-sm font-semibold text-slate-800">Select a project</div>
-        <p className="mt-1.5 max-w-[270px] text-xs leading-5 text-slate-500">
+        <div className="text-sm font-semibold text-[var(--ink)]">Select a project</div>
+        <p className="mt-1.5 max-w-[270px] text-xs leading-5 text-[var(--slate)]">
           Choose a marker on the map to review its ownership, evidence score, and history.
         </p>
       </div>
@@ -73,17 +75,17 @@ export default function ProjectPanel({
 
   if (error && !data) {
     return (
-      <div className="m-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+      <div className="m-4 rounded-lg bg-[var(--rw-hairline)] p-3 text-[13px] text-[var(--graphite)]">
         <div className="font-semibold">Could not load project</div>
-        <div className="mt-1 text-xs text-red-600">{error}</div>
+        <div className="mt-1 text-[13px] text-[var(--graphite)]">{error}</div>
       </div>
     );
   }
 
   if (!data || data.project.project_id !== projectId) {
     return (
-      <div className="flex h-full items-center justify-center gap-2 text-sm text-slate-500">
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-200 border-t-teal-700" />
+      <div className="flex h-full items-center justify-center gap-2 text-sm text-[var(--slate)]">
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--rw-hairline)] border-t-[var(--ink)]" />
         Loading project
       </div>
     );
@@ -94,21 +96,28 @@ export default function ProjectPanel({
   const events = data.events;
   const satisfied = factors.filter((factor) => !!p.factors?.[factor.key]).length;
 
+  // Stage is derived from the same as-of factors the checklist uses, so it
+  // advances in step with the date slider rather than on its own clock.
+  const stage = stageFor({
+    factors: p.factors ?? null,
+    currentStatus: p.current_status ?? null,
+    hasAnyEvidence: (data?.events?.length ?? 0) > 0,
+  });
+
   return (
     <div className={`flex h-full flex-col bg-white transition-opacity ${loading ? "opacity-70" : ""}`}>
-      <header className="z-10 shrink-0 border-b border-slate-200/80 bg-white/95 px-5 py-4 backdrop-blur">
+      <header className="z-10 shrink-0 border-b border-[var(--rw-hairline)] bg-white/95 px-5 py-4 backdrop-blur">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="mb-1.5 flex items-center gap-2">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-700">Project profile</span>
-              {p.is_sample && (
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-800">Sample</span>
-              )}
-            </div>
-            <h2 className="truncate text-base font-semibold leading-tight text-slate-950" title={p.name}>
+            {p.is_sample && (
+              <span className="mb-1.5 inline-block rounded-full bg-[var(--rw-hairline)] px-2.5 py-0.5 text-[12px] font-medium text-[var(--ink)]">
+                Sample
+              </span>
+            )}
+            <h2 className="truncate rw-heading-sm text-[var(--ink)]" title={p.name}>
               {p.name}
             </h2>
-            <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
+            <div className="mt-1 flex items-center gap-1.5 rw-meta">
               <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M8 14s4.5-3.4 4.5-7.75a4.5 4.5 0 1 0-9 0C3.5 10.6 8 14 8 14Z" />
                 <circle cx="8" cy="6.25" r="1.5" />
@@ -118,7 +127,7 @@ export default function ProjectPanel({
           </div>
           <button
             onClick={onClose}
-            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-transparent text-slate-400 transition-colors hover:border-slate-200 hover:bg-slate-50 hover:text-slate-700"
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-transparent text-[var(--slate)] transition-colors hover:border-[var(--rw-hairline)] hover:bg-white hover:text-[var(--graphite)]"
             aria-label="Close project details"
           >
             <svg aria-hidden viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.75">
@@ -129,30 +138,40 @@ export default function ProjectPanel({
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="space-y-6 px-5 py-5">
+        {/* One faint rule between sections. Note the literal colour: an opacity
+            modifier on an arbitrary CSS variable (divide-[var(--x)]/70) does not
+            compute in Tailwind, and silently falls back to a black border. */}
+        <div className="divide-y divide-[#eef0f4] px-5 py-5 [&>section]:py-5 [&>section:first-child]:pt-0 [&>section:last-child]:pb-0">
           <section>
             <SectionHeading detail={<SourceLink url={p.entity_source_url} />}>Ownership</SectionHeading>
-            <div className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_1px_2px_rgb(15_23_42/0.03)]">
+            <div className="pt-1">
               <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                 <div className="min-w-0">
-                  <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Registered entity</div>
-                  <div className="mt-1 truncate text-sm font-medium text-slate-700" title={p.llc_name ?? "Unknown LLC"}>
+                  <div className="ub-eyebrow">Registered entity</div>
+                  <div className="mt-1 truncate text-[15px] text-[var(--ink)]" title={p.llc_name ?? "Unknown LLC"}>
                     {p.llc_name ?? "Unknown LLC"}
                   </div>
                 </div>
-                <div className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-slate-400">→</div>
+                <div className="grid h-7 w-7 place-items-center rounded-full bg-[var(--rw-hairline)] text-[var(--slate)]">→</div>
                 <div className="min-w-0 text-right">
-                  <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Parent company</div>
+                  <div className="ub-eyebrow">Parent company</div>
                   <div className="mt-1 truncate text-sm font-semibold" title={p.parent ?? UNRESOLVED_PARENT} style={{ color: p.parent_color ?? undefined }}>
                     {p.parent ?? UNRESOLVED_PARENT}
                   </div>
                 </div>
               </div>
-              <div className="mt-3 border-t border-slate-100 pt-2.5 text-[11px] text-slate-500">
+              <div className="mt-3 pt-4 text-[13px] text-[var(--slate)]">
                 {p.resolved_by ? `Ownership resolved via ${p.resolved_by}` : "Parent company has not been resolved"}
               </div>
             </div>
           </section>
+
+          {stage && (
+            <section>
+              <SectionHeading detail="Illustrative">Project Time Machine</SectionHeading>
+              <StageClip stage={stage} asOf={fmtDate(asOf)} />
+            </section>
+          )}
 
           <section>
             <SectionHeading detail={scored ? `Updated ${fmtDate(p.scored_at)}` : undefined}>Project snapshot</SectionHeading>
@@ -174,21 +193,21 @@ export default function ProjectPanel({
 
           <section>
             <SectionHeading detail={<SourceLink url={p.location_source_url} label="Location source" />}>Data quality</SectionHeading>
-            <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-xs text-slate-600">
+            <div className="text-[13px] text-[var(--graphite)]">
               <div className="flex justify-between gap-4">
-                <span className="text-slate-400">Canonical site</span>
-                <span className="truncate text-right font-medium text-slate-700">{p.site_name ?? "Not linked"}</span>
+                <span className="text-[var(--slate)]">Canonical site</span>
+                <span className="truncate text-right font-medium text-[var(--graphite)]">{p.site_name ?? "Not linked"}</span>
               </div>
-              <div className="mt-2 flex justify-between gap-4 border-t border-slate-100 pt-2">
-                <span className="text-slate-400">Lifecycle</span>
-                <span className="text-right font-medium text-slate-700">
+              <div className="mt-2 flex justify-between gap-4">
+                <span className="text-[var(--slate)]">Lifecycle</span>
+                <span className="text-right font-medium text-[var(--graphite)]">
                   {p.current_status?.replaceAll("_", " ") ?? "Unknown"}
                   {p.status_observed_at ? ` · observed ${fmtDate(p.status_observed_at)}` : ""}
                 </span>
               </div>
-              <div className="mt-2 flex justify-between gap-4 border-t border-slate-100 pt-2">
-                <span className="text-slate-400">Location quality</span>
-                <span className="text-right font-medium text-slate-700">
+              <div className="mt-2 flex justify-between gap-4">
+                <span className="text-[var(--slate)]">Location quality</span>
+                <span className="text-right font-medium text-[var(--graphite)]">
                   {p.location_precision ?? "Unknown"}
                   {p.location_confidence != null ? ` · ${Math.round(p.location_confidence * 100)}% confidence` : ""}
                 </span>
@@ -198,27 +217,27 @@ export default function ProjectPanel({
 
           <section>
             <SectionHeading detail={scored ? `${satisfied} of ${factors.length} signals · ${p.score} pts` : "Not scored yet"}>Evidence signals</SectionHeading>
-            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <div className="overflow-hidden bg-white">
               {factors.map((factor, index) => {
                 const ok = !!p.factors?.[factor.key];
                 const event = ok ? evidenceFor(factor, events) : null;
                 return (
                   <div
                     key={factor.key}
-                    className={`grid grid-cols-[24px_1fr_auto] items-start gap-2.5 px-3 py-2.5 ${index ? "border-t border-slate-100" : ""}`}
+                    className={`grid grid-cols-[24px_1fr_auto] items-start gap-2.5 px-3 py-2.5 ${index ? "mt-1" : ""}`}
                   >
                     <span
-                      className={`mt-px grid h-5 w-5 place-items-center rounded-full text-[11px] font-bold ${
-                        ok ? "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200" : "bg-slate-100 text-slate-400"
+                      className={`mt-px grid h-5 w-5 place-items-center rounded-full text-[13px] font-bold ${
+                        ok ? "bg-[var(--rw-hairline)] text-[var(--ink)] ring-1 ring-inset ring-[var(--rw-hairline)]" : "bg-[var(--rw-hairline)] text-[var(--slate)]"
                       }`}
                     >
                       {ok ? "✓" : "–"}
                     </span>
                     <div className="min-w-0">
-                      <div className={`text-xs leading-5 ${ok ? "font-medium text-slate-700" : "text-slate-400"}`}>{factor.rule}</div>
-                      {event?.source_url && <div className="mt-0.5 text-[10px]"><SourceLink url={event.source_url} label="View evidence" /></div>}
+                      <div className={`text-xs leading-5 ${ok ? "font-medium text-[var(--graphite)]" : "text-[var(--slate)]"}`}>{factor.rule}</div>
+                      {event?.source_url && <div className="mt-0.5 text-[12px]"><SourceLink url={event.source_url} label="View evidence" /></div>}
                     </div>
-                    <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${ok ? "bg-teal-50 text-teal-700" : "bg-slate-50 text-slate-400"}`}>
+                    <span className={`rounded-md px-1.5 py-0.5 text-[12px] font-semibold tabular-nums ${ok ? "bg-[var(--rw-hairline)] text-[var(--ink)]" : "bg-white text-[var(--slate)]"}`}>
                       +{factor.points}
                     </span>
                   </div>
@@ -229,7 +248,7 @@ export default function ProjectPanel({
 
           <section>
             <SectionHeading>Score over time</SectionHeading>
-            <div className="rounded-xl border border-slate-200 bg-white px-2 pb-1 pt-2 shadow-[0_1px_2px_rgb(15_23_42/0.03)]">
+            <div className="bg-white px-2 pb-1 pt-2 shadow-[0_1px_2px_rgb(15_23_42/0.03)]">
               <TimeMachine scores={data.scores} events={events} />
             </div>
           </section>
@@ -237,24 +256,24 @@ export default function ProjectPanel({
           <section>
             <SectionHeading detail={`${events.length} record${events.length === 1 ? "" : "s"}`}>Evidence history</SectionHeading>
             {events.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-500">
+              <div className="px-4 py-6 text-center rw-meta">
                 No evidence on or before this date.
               </div>
             ) : (
-              <ol className="relative ml-2 border-l border-slate-200">
+              <ol className="relative ml-2 border-l border-[var(--rw-hairline)]">
                 {[...events].reverse().map((event, index) => (
                   <li key={`${event.ts}-${event.event_type}-${index}`} className="relative pb-4 pl-5 last:pb-0">
-                    <span className="absolute -left-[4.5px] top-1.5 h-2 w-2 rounded-full border-2 border-white bg-slate-400 ring-1 ring-slate-200" />
+                    <span className="absolute -left-[4.5px] top-1.5 h-2 w-2 rounded-full border-2 border-white bg-[var(--slate)] ring-1 ring-[var(--rw-hairline)]" />
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex min-w-0 items-center gap-2">
-                        <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-500">{fmtDate(event.ts)}</span>
-                        <span className="truncate rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-slate-500">
+                        <span className="shrink-0 text-[13px] font-medium tabular-nums text-[var(--slate)]">{fmtDate(event.ts)}</span>
+                        <span className="truncate rounded bg-[var(--rw-hairline)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[var(--slate)]">
                           {event.source}
                         </span>
                       </div>
-                      <span className="shrink-0 text-[10px]"><SourceLink url={event.source_url} /></span>
+                      <span className="shrink-0 text-[12px]"><SourceLink url={event.source_url} /></span>
                     </div>
-                    <p className="mt-1 text-xs leading-5 text-slate-700">{describeEvent(event)}</p>
+                    <p className="mt-1 text-xs leading-5 text-[var(--graphite)]">{describeEvent(event)}</p>
                   </li>
                 ))}
               </ol>

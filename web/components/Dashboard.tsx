@@ -94,7 +94,22 @@ export default function Dashboard({
           </div>
         </div>
         <nav aria-label="Dashboard navigation" className="flex shrink-0 items-center gap-1 text-[13px] font-medium">
-          <Link href="/" className="rounded-full px-3 py-2 text-[#5e5e5e] transition-colors hover:bg-[#f3f3f3] hover:text-black">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 rounded-full px-3 py-2 text-[#5e5e5e] transition-colors hover:bg-[#f3f3f3] hover:text-black"
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 16 16"
+              className="h-4 w-4 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            >
+              <circle cx="7" cy="7" r="4.5" />
+              <path d="M10.5 10.5 14 14" />
+            </svg>
             Search
           </Link>
           <Link href="/methodology#scoring" className="rounded-full bg-black px-3.5 py-2 text-white transition-colors hover:bg-[#282828]">

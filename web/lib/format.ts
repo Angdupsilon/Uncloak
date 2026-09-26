@@ -1,7 +1,8 @@
 // Formatting helpers for the UI. Numbers are formatted here, never invented.
 import type { EvidenceEvent } from "./types";
 
-const DASH = "—";
+// Compact placeholder for a value the record does not report. Never zero.
+const DASH = "-";
 
 export function fmtGW(v: number | null | undefined, digits = 1): string {
   return v == null ? DASH : `${v.toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits })} GW`;

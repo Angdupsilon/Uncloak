@@ -1,0 +1,62 @@
+{
+  "assets": {
+    "arc": {
+      "stage": "arc",
+      "file": "arc.mp4",
+      "bytes": 1746304,
+      "sha256": "87c5bc7b59a7b54a81b3230fb60db64513eb895513d4072f6da252915a5f0077",
+      "prompt": "Extreme close shot of a high-voltage substation transformer at night, a single brilliant orange electrical arc flaring across a ceramic insulator, everything else falling into deep black, sparks drifting. Near-black frame with one ember-orange light source. Single continuous locked-off cinematic shot, no cuts, slow deliberate motion, shallow depth of field, anamorphic feel, film grain, no text, no signage, no logos, no people, no vehicles with plates, no watermarks.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T21:42:18+00:00",
+      "request_id": "82dc26af-6721-9cd3-b2a5-b6c0c9ee91a7",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "water": {
+      "stage": "water",
+      "file": "water.mp4",
+      "bytes": 12018369,
+      "sha256": "e74b704656aa56d6588d219a6e518661aef8d7845e0e6dd66cec5cdbab02be09",
+      "prompt": "Underwater shot of turbulent cooling water discharge, dense white bubble churn against deep blue, shafts of surface light cutting down through the current. Saturated deep blue palette. Single continuous locked-off cinematic shot, no cuts, slow deliberate motion, shallow depth of field, anamorphic feel, film grain, no text, no signage, no logos, no people, no vehicles with plates, no watermarks.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T21:43:03+00:00",
+      "request_id": "67cc6ed5-52f8-9054-beed-50d597adac7b",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "salt": {
+      "stage": "salt",
+      "file": "salt.mp4",
+      "bytes": 3003777,
+      "sha256": "a48c9c163de9a9ae5b06248380f0fd54313448a90b5da4e6252257c65c7a32f1",
+      "prompt": "High aerial shot drifting over a vast cracked white salt flat, polygonal salt crust stretching to a pale horizon, thin sheen of water catching flat overcast light. Almost monochrome pale white and bone palette. Single continuous locked-off cinematic shot, no cuts, slow deliberate motion, shallow depth of field, anamorphic feel, film grain, no text, no signage, no logos, no people, no vehicles with plates, no watermarks.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T21:43:38+00:00",
+      "request_id": "71c52f0d-f02c-9951-88ed-446bb3a78d46",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "arm": {
+      "stage": "arm",
+      "file": "arm.mp4",
+      "bytes": 979174,
+      "sha256": "5eb86453c09e940067153123ba538dee67961b16ba61a988c6de49006394dfac",
+      "prompt": "Close shot of a precise white robotic arm moving in a sterile semiconductor clean room, smooth mechanical articulation, soft even diffused lighting, seamless pale grey surfaces. Flat neutral grey palette, clinical and calm. Single continuous locked-off cinematic shot, no cuts, slow deliberate motion, shallow depth of field, anamorphic feel, film grain, no text, no signage, no logos, no people, no vehicles with plates, no watermarks.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T21:44:22+00:00",
+      "request_id": "dac58261-a008-9307-a442-6dffe92eeef7",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    }
+  },
+  "updated_at": "2026-09-26T21:44:22+00:00",
+  "note": "Generic illustrations of construction stages, reused across all sites. Not photographs of any specific project."
+}
