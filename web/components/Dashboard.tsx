@@ -13,7 +13,7 @@ import type { AskResponse, ParentRow, Project, ScoringConfig, Summary } from "@/
 // Leaflet touches `window`, so the map renders client-side only.
 const ProjectMap = dynamic(() => import("@/components/ProjectMap"), {
   ssr: false,
-  loading: () => <div className="h-full w-full animate-pulse rounded-lg bg-slate-100" />,
+  loading: () => <div className="h-full w-full animate-pulse rounded-2xl bg-[#efefef]" />,
 });
 
 export default function Dashboard({ today }: { today: string }) {
@@ -49,14 +49,14 @@ export default function Dashboard({ today }: { today: string }) {
   }, []);
 
   return (
-    <div className="flex h-screen min-w-[960px] flex-col gap-4 p-5 text-slate-900">
+    <div className="flex h-screen min-w-[1040px] flex-col gap-4 p-5 text-black">
       <header className="flex items-center justify-between gap-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <span aria-hidden className="h-7 w-1.5 shrink-0 rounded-full bg-teal-700" />
+        <div className="min-w-0">
+          
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold leading-none tracking-tight">GridSight</h1>
-            <p className="mt-1 truncate text-[13px] leading-none text-slate-500">
-              Texas data-center load: what ERCOT is asked for vs. what public records can find
+            <h1 className="ub-display-lg">GridSight</h1>
+            <p className="ub-body ub-body-md mt-1 truncate">
+              Texas data-center load: requested vs. verified
             </p>
           </div>
         </div>
@@ -64,16 +64,16 @@ export default function Dashboard({ today }: { today: string }) {
       </header>
 
       {showingSample && (
-        <div className="flex items-center gap-2.5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900">
-          <span className="rounded bg-amber-200/70 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide">Sample</span>
-          <span>Names, dates, costs and ERCOT figures on screen are fake placeholders.</span>
+        <div className="ub-body-md flex items-center gap-3 rounded-2xl bg-[#efefef] px-5 py-3.5 text-black">
+          <span className="ub-pill-subtle !py-1.5 !px-3.5 !text-[14px]">Sample data</span>
+          <span className="ub-body">Names, dates, costs and ERCOT figures on screen are fake placeholders.</span>
         </div>
       )}
 
       <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
 
       <main className="flex min-h-0 flex-1 gap-4">
-        <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
+        <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)]">
           <ProjectMap
             projects={projectList}
             selectedId={selectedId}
@@ -84,29 +84,29 @@ export default function Dashboard({ today }: { today: string }) {
             loading={projects.loading && !projects.data}
           />
           {projects.error && (
-            <div className="absolute left-3 top-3 z-[1000] rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 shadow-[var(--shadow-1)]">
+            <div className="ub-card ub-body-sm-strong absolute left-3 top-3 z-[1000] !rounded-full px-4 py-2.5 text-black">
               Projects unavailable: {projects.error}
             </div>
           )}
           {highlight && (
             <button
               onClick={() => setHighlight(null)}
-              className="absolute left-14 top-3 z-[1000] flex items-center gap-2 rounded-full bg-teal-700 py-1.5 pl-3.5 pr-3 text-xs font-medium text-white shadow-[var(--shadow-2)] transition-colors hover:bg-teal-800"
+              className="ub-pill absolute left-3 top-14 z-[1000] gap-2 shadow-[var(--shadow-float)]"
             >
               Filtered to {highlight.length} project{highlight.length === 1 ? "" : "s"}
-              <span aria-hidden className="text-sm leading-none text-teal-200">
+              <span aria-hidden className="text-sm leading-none text-white/60">
                 ×
               </span>
             </button>
           )}
         </div>
-        <aside className="w-[400px] shrink-0 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
+        <aside className="ub-card w-[400px] shrink-0 overflow-hidden">
           <ProjectPanel projectId={selectedId} asOf={asOf} factors={config.data?.factors ?? []} onClose={() => setSelectedId(null)} />
         </aside>
       </main>
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
-      <footer className="flex items-center gap-8 rounded-xl border border-[var(--border-soft)] bg-white px-5 py-3 pr-[420px] shadow-[var(--shadow-1)]">
+      <footer className="ub-card flex items-center gap-8 px-5 py-3.5 pr-[300px]">
         <DateSlider start={config.data?.backfill_start ?? null} end={today} value={asOf} onChange={setAsOf} />
         <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
         <div className="max-w-[50%]">

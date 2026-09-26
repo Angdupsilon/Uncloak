@@ -1,95 +1,308 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans-ui);
   --font-mono: var(--font-geist-mono);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Tokens per DESIGN.md (Uber). White canvas, black as the only conversion
+   colour, no accent palette. The pill is the signature interactive shape;
+   cards round to 16px. Type is sentence-case with neutral tracking.
+   Evidence-tier colour on the map is a data encoding, not decoration.
+   ───────────────────────────────────────────────────────────────────────── */
+
 :root {
-  /* Surfaces: a warm-neutral page with true-white cards reads calmer than
-     slate-on-slate, and gives the cards something to lift off of. */
-  --surface-page: #f4f5f7;
-  --surface-card: #ffffff;
-  --surface-sunken: #eceef1;
-  --border-soft: #e4e7ec;
-  --border-strong: #d0d5dd;
+  --canvas: #ffffff;
+  --canvas-soft: #efefef;
+  --canvas-softer: #f3f3f3;
+  --surface-pressed: #e2e2e2;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475467;
-  --text-muted: #98a2b3;
+  --ink: #000000;
+  --body: #5e5e5e;
+  --hairline-mid: #4b4b4b;
+  --mute: #afafaf;
+  --on-dark: #ffffff;
 
-  /* One accent, used sparingly: selection, focus, active controls. */
-  --accent: #0f766e;
-  --accent-soft: #ccfbf1;
+  --hairline: #e2e2e2;
 
-  /* Two-step elevation. Cards sit at 1, floating things at 2. */
-  --shadow-1: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
-  --shadow-2: 0 4px 6px -2px rgb(16 24 40 / 0.03), 0 12px 16px -4px rgb(16 24 40 / 0.08);
+  /* Card elevation only. Uber uses shadow to lift cards and floating pills,
+     never as atmosphere. */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.06);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.12), 0 8px 24px rgb(0 0 0 / 0.12);
 }
 
 body {
-  background: var(--surface-page);
-  color: var(--text-primary);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  /* Numbers line up in columns across every card and table. */
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans-ui), Arial, Helvetica, sans-serif;
+  /* ss01 nudges Inter toward UberMove's geometric letterforms, per DESIGN.md. */
+  font-feature-settings: "ss01" 1, "cv05" 1;
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  line-height: 24px;
 }
 
-/* Headings are tight; body text is not. Default Tailwind leaves both loose,
-   which is most of why an unstyled dashboard reads as "unfinished". */
-h1,
-h2,
-h3 {
-  letter-spacing: -0.018em;
+/* ── Type scale, straight from DESIGN.md ─────────────────────────────────
+   Display is weight 700, sentence-case, tight leading, never letter-spaced.
+   Text is 400/500 at 12-18px. The two roles never cross: display never
+   carries a paragraph, text never carries a headline. */
+
+.ub-display-xl {
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
+.ub-display-lg {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.ub-display-md {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+.ub-display-sm {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+}
+
+.ub-body-lg {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+}
+.ub-body-md {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+.ub-body-md-strong {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.ub-body-sm {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+.ub-body-sm-strong {
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.ub-caption {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+/* Secondary text colour role. */
+.ub-body {
+  color: var(--body);
+  font-weight: 400;
+}
+
+/* Eyebrow: the one place uppercase is allowed, used sparingly. */
+.ub-eyebrow {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--body);
+}
+
+/* The signature shape. Primary = black pill, the brand's conversion target. */
+.ub-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: none;
+  background: var(--ink);
+  color: var(--on-dark);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 12px 20px;
+  white-space: nowrap;
+  transition: background-color 160ms ease;
+}
+.ub-pill:hover {
+  background: #282828;
+}
+.ub-pill:disabled {
+  opacity: 0.35;
+}
+
+/* Tertiary pill: soft grey fill, black label. */
+.ub-pill-subtle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: none;
+  background: var(--canvas-soft);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 12px 20px;
+  white-space: nowrap;
+  transition: background-color 160ms ease;
+}
+.ub-pill-subtle:hover {
+  background: var(--surface-pressed);
+}
+
+/* Canonical card: white, 16px, elevation hint rather than a border. */
+.ub-card {
+  background: var(--canvas);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Map ─────────────────────────────────────────────────────────────────
+   The basemap is desaturated so the evidence markers are the only saturated
+   thing on screen. */
 
 .leaflet-container {
   font-family: inherit;
-  background: var(--surface-sunken);
+  background: #eaeaea;
 }
 
-/* Leaflet SVG paths get a browser focus ring on click. */
+/* Terrain relief under the canvas layer, flattened almost to nothing: the
+   Uber map is famously quiet, so relief is a hint, not a feature. */
+.gs-map .gs-tiles-relief {
+  filter: saturate(0) brightness(1.06) contrast(0.92);
+  opacity: 0.35;
+}
+
 .leaflet-interactive:focus {
   outline: none;
 }
 
-/* Leaflet's default controls and popups are the loudest default on the page. */
-.leaflet-control-zoom a {
-  border: none !important;
-  background: var(--surface-card) !important;
-  color: var(--text-secondary) !important;
-  box-shadow: var(--shadow-1);
-}
-.leaflet-control-zoom a:first-child {
-  border-radius: 8px 8px 0 0 !important;
-}
-.leaflet-control-zoom a:last-child {
-  border-radius: 0 0 8px 8px !important;
-}
-.leaflet-control-zoom a:hover {
-  background: var(--surface-sunken) !important;
-  color: var(--text-primary) !important;
-}
-.leaflet-bar {
-  border: none !important;
-  box-shadow: var(--shadow-1) !important;
-}
-.leaflet-popup-content-wrapper,
-.leaflet-tooltip {
-  border: 1px solid var(--border-soft) !important;
-  border-radius: 10px !important;
-  box-shadow: var(--shadow-2) !important;
-  font-size: 12px;
-}
-.leaflet-control-attribution {
-  background: rgb(255 255 255 / 0.75) !important;
-  font-size: 10px !important;
-  color: var(--text-muted) !important;
+.gs-map .gs-tiles-base {
+  /* Near-monochrome and lifted: Uber's map desaturates the world so the
+     only saturated thing left is the data drawn on top of it. */
+  filter: saturate(0.25) brightness(1.04) contrast(0.96);
 }
 
-/* The as-of slider is the single most-touched control in the app, so it gets
-   a real thumb instead of the browser default. */
+.gs-map .gs-tiles-labels {
+  opacity: 0.85;
+  filter: grayscale(1) contrast(1.1);
+}
+
+.gs-vignette {
+  z-index: 420;
+  background: radial-gradient(135% 105% at 50% 45%, transparent 70%, rgb(0 0 0 / 0.07) 100%);
+}
+
+.gs-map .leaflet-control-zoom a {
+  border: none !important;
+  background: rgb(255 255 255 / 0.94) !important;
+  color: var(--ink) !important;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-float);
+}
+.gs-map .leaflet-control-zoom a:first-child {
+  border-radius: 12px 12px 0 0 !important;
+}
+.gs-map .leaflet-control-zoom a:last-child {
+  border-radius: 0 0 12px 12px !important;
+}
+.gs-map .leaflet-control-zoom a:hover {
+  background: var(--canvas-soft) !important;
+  color: var(--ink) !important;
+}
+.gs-map .leaflet-bar {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.gs-map .leaflet-tooltip.gs-tooltip {
+  border: none !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: var(--ink) !important;
+  padding: 9px 11px !important;
+  box-shadow: var(--shadow-float) !important;
+}
+.gs-map .leaflet-tooltip.gs-tooltip::before {
+  border-top-color: #ffffff !important;
+}
+
+.gs-map .leaflet-control-attribution {
+  background: rgb(255 255 255 / 0.8) !important;
+  color: var(--mute) !important;
+  font-size: 10px !important;
+  backdrop-filter: blur(6px);
+}
+.gs-map .leaflet-control-attribution a {
+  color: var(--body) !important;
+}
+
+/* Markers. Evidence-tier colour is a data encoding, so it survives the
+   monochrome brand rule. */
+.gs-marker {
+  cursor: pointer;
+  paint-order: fill stroke;
+  transition:
+    fill-opacity 160ms ease,
+    stroke-width 160ms ease,
+    stroke-opacity 160ms ease;
+}
+.gs-marker:hover {
+  fill-opacity: 1;
+  stroke-width: 3.5;
+  stroke-opacity: 1;
+}
+.gs-marker--selected {
+  stroke-opacity: 1;
+}
+.gs-halo {
+  pointer-events: none;
+  transition: fill-opacity 200ms ease;
+}
+
+/* Pulse marks the selected project: feedback for a click, not decoration. */
+@keyframes gs-halo-pulse {
+  0%,
+  100% {
+    fill-opacity: 0.16;
+  }
+  50% {
+    fill-opacity: 0.42;
+  }
+}
+.gs-halo--pulse {
+  animation: gs-halo-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes gs-ping {
+  0% {
+    opacity: 1;
+    transform: scale(0.8);
+  }
+  70%,
+  100% {
+    opacity: 0.15;
+    transform: scale(1.6);
+  }
+}
+.gs-ping {
+  animation: gs-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* The as-of slider is the most-touched control in the app, so it gets a real
+   thumb instead of the browser default. Square, per the brand's shape system. */
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -98,73 +311,67 @@ input[type="range"] {
   cursor: pointer;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-  height: 5px;
-  border-radius: 999px;
-  background: var(--border-strong);
+  height: 1px;
+  background: var(--surface-pressed);
 }
 input[type="range"]::-moz-range-track {
-  height: 5px;
+  height: 3px;
   border-radius: 999px;
-  background: var(--border-strong);
+  background: var(--surface-pressed);
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  margin-top: -6px;
-  height: 17px;
-  width: 17px;
+  margin-top: -7px;
+  height: 15px;
+  width: 15px;
+  background: var(--ink);
+  border: none;
   border-radius: 999px;
-  background: var(--text-primary);
-  border: 2.5px solid #fff;
-  box-shadow: var(--shadow-1);
   transition: transform 120ms ease;
 }
 input[type="range"]::-moz-range-thumb {
-  height: 17px;
-  width: 17px;
+  height: 16px;
+  width: 16px;
+  background: var(--ink);
+  border: none;
   border-radius: 999px;
-  background: var(--text-primary);
-  border: 2.5px solid #fff;
-  box-shadow: var(--shadow-1);
 }
 input[type="range"]:hover::-webkit-slider-thumb {
-  transform: scale(1.12);
+  transform: scale(1.18);
 }
 input[type="range"]:focus-visible::-webkit-slider-thumb {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
-/* Thin scrollbars so the side panel and chat log don't grow a chunky gutter. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-color: var(--surface-pressed) transparent;
 }
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
+  background: var(--surface-pressed);
   border-radius: 999px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--mute);
 }
 *::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* One consistent focus ring, keyboard-only. */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 ::selection {
-  background: var(--accent-soft);
-  color: var(--text-primary);
+  background: var(--ink);
+  color: var(--canvas);
 }
 
 @media (prefers-reduced-motion: reduce) {
