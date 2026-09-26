@@ -8,7 +8,7 @@ import { latLngBounds } from "leaflet";
 import maplibreGL from "@maplibre/maplibre-gl-leaflet";
 import { setWorkerUrl } from "maplibre-gl";
 import { TIER_COLORS_MAP, TIER_LABELS, TIER_ORDER, UI, UNRESOLVED_PARENT } from "@/lib/constants";
-import { fmtGW, fmtMW, fmtPct } from "@/lib/format";
+import { fmtMW, fmtPct } from "@/lib/format";
 import type { Project } from "@/lib/types";
 
 export interface MapProps {
@@ -19,8 +19,6 @@ export interface MapProps {
   highlightIds: number[] | null;
   fitRequest: number; // increments when the map should fit to highlightIds
   loading: boolean;
-  /** ERCOT queue capacity totals, summarized separately from project markers. */
-  queue: { requestedGw: number; approvedGw: number | null } | null;
 }
 
 /** Multiplier applied to every vector label's text-size. */
@@ -190,14 +188,10 @@ function FitBounds({ projects, ids, request }: { projects: Project[]; ids: numbe
   return null;
 }
 
-export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading, queue }: MapProps) {
+export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading }: MapProps) {
   const highlight = useMemo(() => (highlightIds ? new Set(highlightIds) : null), [highlightIds]);
   const located = projects.filter((p) => p.lat != null && p.lon != null);
   const unlocated = projects.length - located.length;
-  const requestedGw = queue && queue.requestedGw > 0 ? queue.requestedGw : null;
-  const approvedGw = requestedGw != null && queue?.approvedGw != null ? Math.max(0, Math.min(requestedGw, queue.approvedGw)) : null;
-  const unapprovedGw = requestedGw != null && approvedGw != null ? requestedGw - approvedGw : null;
-  const approvedPct = requestedGw != null && approvedGw != null ? (approvedGw / requestedGw) * 100 : 0;
 
   // Draw bigger circles first so small ones stay clickable.
   const ordered = [...located].sort((a, b) => (b.mw_est ?? 0) - (a.mw_est ?? 0));
@@ -243,32 +237,6 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
           );
         })}
       </MapContainer>
-
-      {requestedGw != null && approvedGw != null && unapprovedGw != null && (
-        <section className="ub-card absolute right-4 top-4 z-[1000] w-[286px] px-4 py-3.5" aria-label="ERCOT requested capacity approval status">
-          <div className="flex items-baseline justify-between gap-3">
-            <div className="ub-body-md-strong text-black">ERCOT queue capacity</div>
-            <div className="ub-body-sm-strong tabular-nums text-black">{fmtGW(requestedGw)} total</div>
-          </div>
-          <p className="ub-caption mt-0.5 text-[#5e5e5e]">Gigawatts requested—not a count of requests or duplicate projects.</p>
-          <div className="mt-3 flex h-3 overflow-hidden rounded-sm bg-[#e6e6e6] ring-1 ring-inset ring-[#d4d4d4]" role="img" aria-label={`${fmtGW(approvedGw)} approved and ${fmtGW(unapprovedGw)} not approved`}>
-            {approvedPct > 0 && <div className="h-full bg-[#8a8a8a]" style={{ width: `${approvedPct}%` }} />}
-          </div>
-          <div className="mt-2 grid grid-cols-2 gap-3 text-[12px] leading-4 text-[#5e5e5e]">
-            <div>
-              <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-[2px] bg-[#8a8a8a]" />
-              <span className="font-medium text-black">{fmtGW(approvedGw)}</span> approved
-            </div>
-            <div>
-              <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-[2px] border border-[#d4d4d4] bg-[#e6e6e6]" />
-              <span className="font-medium text-black">{fmtGW(unapprovedGw)}</span> not approved
-            </div>
-          </div>
-          <p className="mt-2 border-t border-[#efefef] pt-2 text-[11px] leading-4 text-[#5e5e5e]">
-            “Phantom” is only the unapproved portion. “Shadow” is a separate public-record coverage gap.
-          </p>
-        </section>
-      )}
 
       <div className="ub-card ub-body-sm absolute bottom-4 left-4 z-[1000] w-[228px] px-5 py-4 text-[#5e5e5e]">
         <div className="ub-body-md-strong mb-3 text-black">Evidence tier</div>
