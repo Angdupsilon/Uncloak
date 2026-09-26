@@ -213,7 +213,9 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
                 stroke: false,
                 opacity,
                 fillColor: TIER_COLORS_MAP[p.tier],
-                fillOpacity: opacity * (selected ? 0.9 : 0.75),
+                // A higher base opacity makes stacked markers visibly deepen,
+                // so co-located projects read as a denser cluster.
+                fillOpacity: opacity * (selected ? 0.9 : 0.85),
               }}
               eventHandlers={{ click: () => onSelect(p.project_id) }}
             >
