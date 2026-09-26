@@ -100,7 +100,7 @@ export default function Dashboard({ today }: { today: string }) {
             </button>
           )}
         </div>
-        <aside className="w-[400px] shrink-0 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
+        <aside className="w-[420px] shrink-0 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
           <ProjectPanel projectId={selectedId} asOf={asOf} factors={config.data?.factors ?? []} onClose={() => setSelectedId(null)} />
         </aside>
       </main>
