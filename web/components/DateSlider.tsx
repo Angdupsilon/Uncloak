@@ -50,7 +50,7 @@ export default function DateSlider({
   };
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-3">
+    <div className="flex min-w-[400px] flex-1 items-center gap-3">
       <button
         onClick={togglePlay}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white transition-colors hover:bg-slate-700"
@@ -60,10 +60,13 @@ export default function DateSlider({
         {isPlaying ? "❚❚" : "▶"}
       </button>
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline justify-between text-xs text-slate-500">
-          <span>{fmtDate(steps[0])}</span>
-          <span className="text-sm font-semibold text-slate-900">As of {fmtDate(value)}</span>
-          <span>{fmtDate(steps.at(-1))}</span>
+        {/* justify-between alone lets these run together on a narrow footer.
+            The centre readout is the one value that must stay legible, so it
+            never shrinks; the range endpoints truncate instead. */}
+        <div className="ub-caption mb-0.5 flex items-baseline justify-between gap-4 text-[#afafaf]">
+          <span className="whitespace-nowrap">{fmtDate(steps[0])}</span>
+          <span className="ub-body-md-strong shrink-0 whitespace-nowrap text-black">As of {fmtDate(value)}</span>
+          <span className="whitespace-nowrap">{fmtDate(steps.at(-1))}</span>
         </div>
         <input
           type="range"
