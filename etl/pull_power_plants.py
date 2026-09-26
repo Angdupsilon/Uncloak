@@ -327,7 +327,10 @@ def main() -> None:
     ap.add_argument("--campd-csv", type=Path, nargs="+")
     ap.add_argument("--start", type=date.fromisoformat, help="first local day (default: 4 quarters back)")
     ap.add_argument("--end", type=date.fromisoformat, help="last local day (default: latest published quarter)")
-    ap.add_argument("--workers", type=int, default=4, help="parallel CAMPD API requests")
+    ap.add_argument(
+        "--workers", type=int, default=1,
+        help="parallel CAMPD API requests (the API allows one in flight per key; more just get 429s)",
+    )
     args = ap.parse_args()
 
     start, end = default_window(date.today())
