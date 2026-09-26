@@ -276,7 +276,7 @@ export async function getTimeline(projectId: number, asOf: string): Promise<Time
 }
 
 // ---------------------------------------------------------------------------
-// Fuzzy lookup for "Ask GridSight" (project name, LLC name, or parent name)
+// Fuzzy lookup for "Ask Uncloak" (project name, LLC name, or parent name)
 // ---------------------------------------------------------------------------
 
 export interface LookupResult {

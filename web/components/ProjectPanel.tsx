@@ -1,35 +1,10 @@
 "use client";
 import { TIER_COLORS, TIER_LABELS, UNRESOLVED_PARENT } from "@/lib/constants";
-import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD, isLink } from "@/lib/format";
+import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
 import TimeMachine from "./TimeMachine";
-
-function ExternalLinkIcon() {
-  return (
-    <svg aria-hidden viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="1.7">
-      <path d="M6 3H3.75A1.75 1.75 0 0 0 2 4.75v7.5C2 13.216 2.784 14 3.75 14h7.5A1.75 1.75 0 0 0 13 12.25V10" />
-      <path d="M9 2h5v5M14 2 7.5 8.5" />
-    </svg>
-  );
-}
-
-function SourceLink({ url, label = "Source" }: { url: string | null | undefined; label?: string }) {
-  if (isLink(url)) {
-    return (
-      <a
-        href={url}
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex items-center gap-1 font-medium text-teal-700 transition-colors hover:text-teal-900 hover:underline"
-      >
-        {label}
-        <ExternalLinkIcon />
-      </a>
-    );
-  }
-  return url ? <span className="break-all text-slate-400">{url}</span> : <span className="text-slate-400">No source</span>;
-}
+import { SourceLink } from "./public/Source";
 
 function SectionHeading({ children, detail }: { children: React.ReactNode; detail?: React.ReactNode }) {
   return (

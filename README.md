@@ -173,6 +173,28 @@ one event by then.
   `ALTER TABLE evidence_events SET (timescaledb.compress, ...)` and `add_compression_policy`
   lines. Enable them for native columnar compression of older evidence.
 
+## Public research pages
+
+The site opens on a search-first public experience (`web/app/(public)/`). The expert dashboard
+moved to `/dashboard`, unchanged, and accepts deep links (`?parent=Google&site=12`).
+
+| Route | What it shows |
+|---|---|
+| `/` | Search (organizations, sites, registered entities, cities, counties, ZIPs, addresses), statewide figures, top organizations |
+| `/search?q=` | Full results grouped by type |
+| `/org`, `/org/[slug]` | Organization index and profile: summary, sourced key figures, context, sources, then sites / trend / entities / comparison tabs |
+| `/site/[id]` | Site profile: what it is, who is behind it, location basis, evidence history with a link to each record |
+| `/near?q=` or `?lat=&lon=` | Sites within a radius, list + map, with distance and why each appears |
+| `/methodology` | Sources, linking, scoring, MW estimate, missing data, double counting, coverage limits |
+
+Every public figure comes from `web/lib/publicQueries.ts` (one site query shared by all pages)
+and is explained in one place, `web/lib/metrics.ts`, as **documented**, **GridSight estimate** or
+**context**. Missing values read "Unavailable", never 0. Headquarters are not in the dataset and
+every site is labeled a facility. Place lookup (`web/lib/geocode.ts`) uses the U.S. Census geocoder
+for street addresses and OpenStreetMap Nominatim for places and ZIPs. When those lookups are
+unreachable, it falls back to the recorded sites. Browser location is opt-in and never stored.
+The public pages follow `web/DESIGN.md` (scoped under `.rw` in `globals.css`).
+
 ## API
 
 All endpoints accept `as_of=YYYY-MM-DD` (default today, UTC) and echo it back. All SQL is in
@@ -184,6 +206,9 @@ All endpoints accept `as_of=YYYY-MM-DD` (default today, UTC) and echo it back. A
 - `GET /api/parents`: MW total / evidence-weighted / in verified projects, by parent
 - `GET /api/config`: scoring weights, `$ per MW`, tier thresholds, backfill start
 - `POST /api/ask` `{question, as_of}`: `{answer, map_filter, open_timeline, tool_calls}`
+- `GET /api/search?q=`: typed search hits for the public search box
+- `GET /api/orgs/[slug]`: organization profile (sites, entities, weekly trend, sources, comparison)
+- `GET /api/geocode?q=` and `GET /api/near?q=|lat=&lon=&radius_mi=&county=`: place lookup and nearby sites
 
 Ask GridSight gives Gemini four tools (`filter_projects`, `get_project_timeline`, `get_summary`,
 `compare_parents`) that call the same query functions. It never gives Gemini free-form SQL, and

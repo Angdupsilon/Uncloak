@@ -1,4 +1,4 @@
-// "Ask GridSight": Gemini function calling over four read-only tools.
+// "Ask Uncloak": Gemini function calling over four read-only tools.
 // The model never writes SQL; every tool runs a function from lib/queries.ts.
 import { FunctionCallingConfigMode, GoogleGenAI, type Content, type FunctionCall, type FunctionDeclaration, type Part } from "@google/genai";
 import {
@@ -13,7 +13,7 @@ import {
 } from "./queries";
 import type { AskResponse } from "./types";
 
-const SYSTEM_PROMPT = `You are GridSight's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage.`;
+const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage.`;
 
 const MAX_ROUNDS = 4;
 const MAX_PROJECTS_TO_MODEL = 40;
@@ -178,7 +178,7 @@ const friendly = (answer: string): AskResponse => ({ answer, map_filter: null, o
 export async function askGridSight(question: string, asOf: string): Promise<AskResponse> {
   const apiKey = process.env.GEMINI_API_KEY;
   const model = process.env.GEMINI_MODEL;
-  if (!apiKey || !model) return friendly("Ask GridSight isn't configured yet (GEMINI_API_KEY / GEMINI_MODEL are not set).");
+  if (!apiKey || !model) return friendly("Ask Uncloak isn't configured yet (GEMINI_API_KEY / GEMINI_MODEL are not set).");
 
   const ai = new GoogleGenAI({ apiKey });
   const contents: Content[] = [
@@ -202,7 +202,7 @@ export async function askGridSight(question: string, asOf: string): Promise<AskR
       });
       const calls = res.functionCalls ?? [];
       if (!calls.length || final) {
-        const answer = (res.text ?? "").trim() || "I couldn't find an answer in GridSight's data.";
+        const answer = (res.text ?? "").trim() || "I couldn't find an answer in Uncloak's data.";
         return {
           answer,
           map_filter: state.mapIds ? { ids: state.mapIds, fit_bounds: state.mapIds.length > 0 } : null,
@@ -229,7 +229,7 @@ export async function askGridSight(question: string, asOf: string): Promise<AskR
     }
   } catch (err) {
     console.error("[gridsight ask]", err);
-    return { ...friendly("Sorry, Ask GridSight hit an error. Please try again."), tool_calls: toolCalls };
+    return { ...friendly("Sorry, Ask Uncloak hit an error. Please try again."), tool_calls: toolCalls };
   }
-  return friendly("I couldn't find an answer in GridSight's data.");
+  return friendly("I couldn't find an answer in Uncloak's data.");
 }
