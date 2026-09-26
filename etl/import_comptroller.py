@@ -127,7 +127,7 @@ def build(raw: pd.DataFrame):
         entities[llc] = {"llc_name": llc, "parent_name": parent or "", "resolved_by": "COMPTROLLER" if parent else "",
                          "source_url": latest["source_url"], "_eff": latest["_eff"], "_reason": reason}
         if parent and parent not in parents:
-            parents[parent] = color or OTHER_PARENT_COLOR
+            parents[parent] = color or OTHER_PARENT_COLOR  # pruned below to parents still in use
         projects[name] = {"name": name, "county": "", "city": "", "address": "", "lat": "", "lon": "", "llc_name": llc,
                           "_parent": parent, "_reason": reason}
 
@@ -145,6 +145,10 @@ def build(raw: pd.DataFrame):
             }
             events.append({"ts": r["_eff"], "project_name": name, "source": "COMPTROLLER", "event_type": "certified",
                            "value_num": "", "payload_json": json.dumps(payload), "source_url": r["source_url"]})
+    # An entity shared by several sites keeps only its most recent parent, so drop parents
+    # that no entity ends up using.
+    used = {e["parent_name"] for e in entities.values() if e["parent_name"]}
+    parents = {p: c for p, c in parents.items() if p in used}
     return projects, entities, parents, events, notes
 
 

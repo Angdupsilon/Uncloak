@@ -97,6 +97,7 @@ python etl/load_tceq.py --file path/to/tceq_bulk.csv   # set column names at the
 python etl/geocode.py
 python etl/score.py                                   # backfill + refresh
 python etl/score.py --project 12 --as-of 2025-06-01   # score one project as of a date
+python etl/check_integrity.py                         # read-only audit of the database (exit 1 on failure)
 ```
 
 ### 4. Web
