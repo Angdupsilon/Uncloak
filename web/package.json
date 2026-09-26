@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@google/genai": "^2.24.0",
+    "@maplibre/maplibre-gl-leaflet": "^0.1.4",
     "dotenv": "^18.0.4",
     "leaflet": "^1.9.4",
+    "maplibre-gl": "^6.11.2",
     "next": "16.3.6",
     "pg": "^8.23.0",
     "react": "19.2.8",

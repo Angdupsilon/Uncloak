@@ -50,7 +50,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-[1100] rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow-[var(--shadow-2)] transition-all hover:-translate-y-0.5 hover:bg-slate-800"
+        className="fixed bottom-6 right-6 z-[1100] ub-pill shadow-[var(--shadow-float)]"
       >
         ✦ Ask GridSight
       </button>
@@ -58,21 +58,21 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[var(--border-soft)] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
-      <div className="flex items-center justify-between bg-slate-900 px-4 py-3 text-white">
+    <div className="fixed bottom-6 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
+      <div className="flex items-center justify-between border-b border-[#efefef] px-4 py-3 text-black">
         <div className="text-sm font-semibold">✦ Ask GridSight</div>
-        <button onClick={() => setOpen(false)} className="text-lg leading-none text-slate-300 hover:text-white" aria-label="Collapse">
+        <button onClick={() => setOpen(false)} className="text-lg leading-none text-[#afafaf] hover:text-black" aria-label="Collapse">
           –
         </button>
       </div>
       <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-sm">
         {msgs.length === 0 && (
           <div className="space-y-2">
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-[#5e5e5e]">
               Answers come only from GridSight&apos;s database as of the selected date. Try:
             </div>
             {EXAMPLES.map((q) => (
-              <button key={q} onClick={() => ask(q)} className="block w-full rounded-lg border border-[var(--border-soft)] px-3 py-2 text-left text-xs text-slate-700 transition-colors hover:border-[var(--border-strong)] hover:bg-slate-50">
+              <button key={q} onClick={() => ask(q)} className="block w-full rounded-xl border border-[#e2e2e2] px-3 py-2 text-left text-xs text-black transition-colors hover:border-[#e2e2e2] hover:bg-[#f3f3f3]">
                 {q}
               </button>
             ))}
@@ -80,33 +80,33 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
         )}
         {msgs.map((m, i) => (
           <div key={i} className={m.role === "user" ? "text-right" : ""}>
-            <div className={`inline-block max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-left leading-relaxed ${m.role === "user" ? "rounded-br-md bg-slate-900 text-white" : "rounded-bl-md bg-slate-100 text-slate-900"}`}>
+            <div className={`inline-block max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-left leading-relaxed ${m.role === "user" ? "rounded-br-md bg-black text-white" : "rounded-bl-md bg-[#efefef] text-black"}`}>
               {m.text}
             </div>
             {m.tools && m.tools.length > 0 && (
-              <div className="mt-1 font-mono text-[10px] text-slate-400">
+              <div className="mt-1 font-mono text-[10px] text-[#afafaf]">
                 {m.tools.map((t) => `${t.name}(${JSON.stringify(t.args)})`).join(" → ")}
               </div>
             )}
-            {m.matched != null && <div className="text-[11px] text-sky-700">Map filtered to {m.matched} project(s)</div>}
+            {m.matched != null && <div className="text-[11px] text-black">Map filtered to {m.matched} project(s)</div>}
           </div>
         ))}
-        {busy && <div className="text-xs text-slate-400">Thinking…</div>}
+        {busy && <div className="text-xs text-[#afafaf]">Thinking…</div>}
       </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           ask(input);
         }}
-        className="flex gap-2 border-t border-[var(--border-soft)] p-2.5"
+        className="flex gap-2 border-t border-[#e2e2e2] p-2.5"
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about projects, parents, ERCOT…"
-          className="flex-1 rounded-lg border border-[var(--border-strong)] px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-teal-600"
+          className="flex-1 rounded-xl border border-[#e2e2e2] px-3 py-2 text-sm outline-none transition-colors placeholder:text-[#afafaf] focus:border-teal-600"
         />
-        <button disabled={busy || !input.trim()} className="rounded-lg bg-slate-900 px-3.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:opacity-35">
+        <button disabled={busy || !input.trim()} className="ub-pill !px-5 disabled:opacity-35">
           Ask
         </button>
       </form>

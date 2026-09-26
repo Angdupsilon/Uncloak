@@ -6,7 +6,7 @@ import type { Summary } from "@/lib/types";
 function Source({ url, label }: { url: string | null | undefined; label: string }) {
   if (isLink(url)) {
     return (
-      <a href={url} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-slate-900">
+      <a href={url} target="_blank" rel="noreferrer" className="underline decoration-dotted hover:text-black">
         {label}
       </a>
     );
@@ -44,7 +44,7 @@ function Card({
 
 export default function SummaryBar({ summary, loading, error }: { summary: Summary | null; loading: boolean; error: string | null }) {
   if (error && !summary) {
-    return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">Summary unavailable: {error}</div>;
+    return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-[#5e5e5e]">Summary unavailable: {error}</div>;
   }
   if (!summary) {
     return (
@@ -103,7 +103,6 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
       <Card
         title="Evidence-weighted demand"
         value={fmtGW(s.realistic_gw, 2)}
-        accent="text-emerald-800"
         sub="Σ evidence score × estimated MW"
         foot={<>As of {fmtDate(s.as_of)} · Evidence index (uncalibrated)</>}
       >
@@ -127,7 +126,6 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
       <Card
         title="Shadow load"
         value={fmtGW(s.shadow_gw)}
-        accent="text-rose-800"
         sub="ERCOT requested − found on map"
         foot={
           s.ercot ? (

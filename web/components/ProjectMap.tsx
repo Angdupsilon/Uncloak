@@ -1,10 +1,13 @@
 "use client";
 import "leaflet/dist/leaflet.css";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useMemo, useState } from "react";
 import { CircleMarker, GeoJSON, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
 import type { FeatureCollection } from "geojson";
 import { latLngBounds } from "leaflet";
-import { TIER_COLORS, TIER_LABELS, TIER_ORDER, UI, UNRESOLVED_PARENT } from "@/lib/constants";
+import maplibreGL from "@maplibre/maplibre-gl-leaflet";
+import { setWorkerUrl } from "maplibre-gl";
+import { TIER_COLORS_MAP, TIER_LABELS, TIER_ORDER, UI, UNRESOLVED_PARENT } from "@/lib/constants";
 import { fmtMW, fmtPct } from "@/lib/format";
 import type { Project } from "@/lib/types";
 
@@ -16,6 +19,33 @@ export interface MapProps {
   highlightIds: number[] | null;
   fitRequest: number; // increments when the map should fit to highlightIds
   loading: boolean;
+}
+
+/** Multiplier applied to every vector label's text-size. */
+const LABEL_SCALE = 1.35;
+
+/**
+ * Scale a MapLibre text-size value.
+ *
+ * It cannot simply be wrapped in ["*", value, scale]: a "zoom" expression is
+ * only legal as the direct input of a top-level "step"/"interpolate", so
+ * nesting one inside a multiply is rejected by the style validator. Instead the
+ * output stops are scaled in place and the expression's shape is preserved.
+ */
+function scaleTextSize(value: unknown): unknown {
+  if (typeof value === "number") return value * LABEL_SCALE;
+  if (!Array.isArray(value)) return value;
+
+  const out = [...value];
+  const op = out[0];
+  // ["interpolate", interpolation, input, stopIn, stopOut, ...] -> outputs at 4,6,8...
+  // ["step", input, defaultOut, stopIn, stopOut, ...]           -> outputs at 2,4,6...
+  const first = op === "interpolate" ? 4 : op === "step" ? 2 : -1;
+  if (first < 0) return value;
+  for (let i = first; i < out.length; i += 2) {
+    if (typeof out[i] === "number") out[i] = (out[i] as number) * LABEL_SCALE;
+  }
+  return out;
 }
 
 function radiusFor(mw: number | null): number {
@@ -76,6 +106,58 @@ function TexasSpotlight() {
   );
 }
 
+/**
+ * Vector basemap via MapLibre GL, bridged into Leaflet so every existing layer
+ * (markers, spotlight mask, tooltips, fitBounds) keeps working untouched.
+ *
+ * Why vector: raster tiles are published at 256px, so on a HiDPI display they
+ * are always upscaled 2x and there is no keyless @2x source (CARTO serves an
+ * identical 2049-byte placeholder for @2x and 1x alike; Wikimedia 403s after
+ * the first request). Vector tiles are rendered on the client at the device
+ * pixel ratio, so they are sharp at any zoom and any DPI.
+ *
+ * OpenFreeMap's "liberty" style is free, keyless and OSM-derived, so the map
+ * keeps the colourful look.
+ */
+function VectorBasemap() {
+  const map = useMap();
+  useEffect(() => {
+    // MapLibre spawns a module worker via import.meta.url, which Turbopack does
+    // not rewrite - it fails with "Worker failed to load". Serving the worker
+    // (and the shared chunk it imports) from public/ sidesteps the bundler.
+    setWorkerUrl("/maplibre-gl-worker.mjs");
+
+    const layer = maplibreGL({ style: "https://tiles.openfreemap.org/styles/liberty" });
+    layer.addTo(map);
+
+    // MapLibre options carry no `attribution`, so credit goes on Leaflet's own
+    // control alongside the rest of the map chrome.
+    const credit =
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &middot; <a href="https://openfreemap.org">OpenFreeMap</a>';
+    map.attributionControl?.addAttribution(credit);
+
+    // Place labels ship small for a full-screen map; this dashboard shows the
+    // whole state in a panel, so bump every symbol layer's text size.
+    const gl = layer.getMaplibreMap();
+    const enlarge = () => {
+      for (const lyr of gl.getStyle()?.layers ?? []) {
+        if (lyr.type !== "symbol") continue;
+        const size = gl.getLayoutProperty(lyr.id, "text-size");
+        if (size == null) continue;
+        gl.setLayoutProperty(lyr.id, "text-size", scaleTextSize(size));
+      }
+    };
+    if (gl.isStyleLoaded()) enlarge();
+    else gl.once("styledata", enlarge);
+
+    return () => {
+      map.attributionControl?.removeAttribution(credit);
+      map.removeLayer(layer);
+    };
+  }, [map]);
+  return null;
+}
+
 function Counties() {
   const [data, setData] = useState<FeatureCollection | null>(null);
   useEffect(() => {
@@ -127,23 +209,8 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
 
   return (
     <div className="gs-map relative h-full w-full overflow-hidden bg-[#aad3df]">
-      <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" preferCanvas={false} zoomControl={false} zoomSnap={0.5} zoomDelta={0.5}>
-        {/* Standard OpenStreetMap raster: the colourful basemap the project
-            started with. No key, no account. Left largely ungraded so parks,
-            roads and water keep their colour.
-            OSM bakes label size into the raster at each zoom level, so the only
-            way to enlarge city names is to change which tile is drawn where.
-            tileSize 512 + zoomOffset -1 pulls tiles one zoom SHALLOWER and draws
-            them at double size: the geography lines up exactly, but every label
-            renders 2x. (detectRetina does the opposite and must stay off — it
-            pulls a zoom deeper and halves the labels.) */}
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maxZoom={19}
-          tileSize={512}
-          zoomOffset={-1}
-        />
+      <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" preferCanvas={false} zoomControl={false} zoomSnap={1} zoomDelta={1}>
+        <VectorBasemap />
         <TexasSpotlight />
         <Counties />
         <FitBounds projects={projects} ids={highlightIds} request={fitRequest} />
@@ -161,7 +228,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
                 color: selected ? "#0f172a" : (p.parent_color ?? "#475569"),
                 weight: selected ? 4 : 2.5,
                 opacity,
-                fillColor: TIER_COLORS[p.tier],
+                fillColor: TIER_COLORS_MAP[p.tier],
                 fillOpacity: opacity * 0.75,
               }}
               eventHandlers={{ click: () => onSelect(p.project_id) }}
@@ -182,24 +249,26 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
         })}
       </MapContainer>
 
-      <div className="pointer-events-none absolute bottom-3 left-3 z-[1000] rounded-md bg-white/95 px-3 py-2 text-xs shadow">
-        <div className="mb-1 font-semibold text-slate-700">Evidence tier</div>
-        {TIER_ORDER.map((t) => (
-          <div key={t} className="flex items-center gap-2">
-            <span className="inline-block h-3 w-3 rounded-full" style={{ background: TIER_COLORS[t] }} />
-            {TIER_LABELS[t]}
-          </div>
-        ))}
-        <div className="mt-1 text-slate-500">Size ∝ √MW · outline = parent</div>
-        {unlocated > 0 && <div className="mt-1 text-amber-700">{unlocated} not shown (no coordinates)</div>}
+      <div className="ub-card ub-body-sm pointer-events-none absolute bottom-4 left-4 z-[1000] px-5 py-4 text-[#5e5e5e]">
+        <div className="ub-body-md-strong mb-3 text-black">Evidence tier</div>
+        <div className="space-y-1.5">
+          {TIER_ORDER.map((t) => (
+            <div key={t} className="flex items-center gap-2.5">
+              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: TIER_COLORS_MAP[t] }} />
+              {TIER_LABELS[t]}
+            </div>
+          ))}
+        </div>
+        <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">Size &prop; &radic;MW &middot; outline = parent</div>
+        {unlocated > 0 && <div className="ub-caption mt-1 text-[#afafaf]">{unlocated} not shown (no coordinates)</div>}
       </div>
 
       {loading && (
-        <div className="absolute right-3 top-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-slate-600 shadow">Loading…</div>
+        <div className="absolute right-3 top-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-[#5e5e5e] shadow">Loading…</div>
       )}
       {!loading && projects.length === 0 && (
         <div className="pointer-events-none absolute inset-0 z-[1000] flex items-center justify-center">
-          <div className="rounded-md bg-white/95 px-4 py-3 text-sm text-slate-600 shadow">No projects with evidence on or before this date.</div>
+          <div className="rounded-md bg-white/95 px-4 py-3 text-sm text-[#5e5e5e] shadow">No projects with evidence on or before this date.</div>
         </div>
       )}
     </div>
