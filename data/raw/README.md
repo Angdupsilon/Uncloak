@@ -129,3 +129,10 @@ ERCOT large-load interconnection figures, read directly from ERCOT's own documen
   dates through 2027 (2028 from July 2024). The 2025 overviews count through 2030, and the 2026
   hearing decks through 2033. Part of the step from 57 GW (Sep 2024) to 137 GW (Apr 2025) comes
   from that change in scope.
+
+## `us_source_catalog.csv`
+
+Candidate public sources for coverage outside Texas, one row per source, with its role
+(the Texas source it stands in for), evidence type, license and verification status. Only the
+Texas rows are loaded today. See [`docs/us-coverage.md`](../../docs/us-coverage.md) for the
+research, the coverage matrix and the schema changes needed first.
