@@ -24,7 +24,7 @@ EVENT_SOURCES: dict[str, dict[str, str]] = {
     "square_footage": {"TX": "TDLR"},
     "tenant_named": {"TX": "TDLR"},
     "inspection_done": {"TX": "TDLR"},
-    "certified": {"TX": "COMPTROLLER"},
+    "certified": {"TX": "COMPTROLLER", "IL": "IL_DCEO", "MN": "MN_DEED"},
     "permit_filed": {"TX": "TCEQ", "VA": "VA_DEQ"},
     "status_change": {"*": "OTHER"},
     # National layer: a data center mapped in the IM3 Open Source Data Center Atlas
@@ -43,6 +43,7 @@ EVENT_TYPES: dict[str, str] = {et: m.get("TX", m.get("*")) for et, m in EVENT_SO
 SOURCES = {src for m in EVENT_SOURCES.values() for src in m.values()}
 # The state whose records each source publishes (None: any state).
 SOURCE_STATE: dict[str, str | None] = {"TDLR": "TX", "COMPTROLLER": "TX", "TCEQ": "TX", "VA_DEQ": "VA",
+                                       "IL_DCEO": "IL", "MN_DEED": "MN",
                                        "OSM": None, "OTHER": None}
 
 
@@ -52,7 +53,8 @@ def source_allowed(event_type: str, source: str, state: str) -> bool:
     return pairs.get(state) == source or pairs.get("*") == source
 
 
-RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "TDLR_OWNER", "OSM_OPERATOR", "MANUAL"}
+# STATE_REGISTRY: the organization is named in a state incentive registry's own company text.
+RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "TDLR_OWNER", "OSM_OPERATOR", "STATE_REGISTRY", "MANUAL"}
 
 # Checklist factors (spec section 6). Order is display order. Most factors come from a Texas record
 # type (TDLR, Comptroller); the air-permit factor counts any state's permit_filed record (role
@@ -68,8 +70,8 @@ FACTORS: list[dict] = [
      "rule": "Total registered construction value of at least $500M"},
     {"key": "tenant_named", "points": 20, "event_type": "tenant_named", "min_count": 1,
      "rule": "A tenant is named in a TDLR record"},
-    {"key": "comptroller_certified", "points": 15, "event_type": "certified", "min_count": 1,
-     "rule": "Certified by the Texas Comptroller data-center program"},
+    {"key": "comptroller_certified", "points": 15, "event_type": "certified", "min_count": 1, "role": "incentive_registry",
+     "rule": "Certified by a state data-center incentive program (Texas Comptroller, Illinois DCEO, Minnesota DEED)"},
     # The key stays tceq_permit so stored Texas factor flags are unchanged.
     {"key": "tceq_permit", "points": 15, "event_type": "permit_filed", "min_count": 1, "role": "air_permit",
      "rule": "A state air permit for the site has been filed (TCEQ in Texas, DEQ in Virginia)"},

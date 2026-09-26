@@ -1,8 +1,9 @@
 "use client";
 import { TIER_COLORS, TIER_LABELS, UNRESOLVED_PARENT } from "@/lib/constants";
 import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
-import { countyLabel, STATE_NAMES } from "@/lib/geo";
+import { countyLabel } from "@/lib/geo";
 import { describeRegions, EIA861_URL } from "@/lib/regions";
+import { coverageNote, factorCoverage, factorNote } from "@/lib/coverage";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
 import TimeMachine from "./TimeMachine";
@@ -228,10 +229,7 @@ export default function ProjectPanel({
           <section>
             <SectionHeading detail={scored ? `${satisfied} of ${factors.length} signals · ${p.score} pts` : "Not scored yet"}>Evidence signals</SectionHeading>
             {p.state !== "TX" ? (
-              <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-4 text-amber-900">
-                These signals are Texas record types (TDLR, Comptroller, TCEQ). {STATE_NAMES[p.state] ?? p.state} has no
-                equivalent loaded yet, so an unmet signal here means “not published here”, not “checked and missing”.
-              </p>
+              <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-4 text-amber-900">{coverageNote(p.state)}</p>
             ) : (
               atlasOnly && (
                 <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-4 text-amber-900">
@@ -243,6 +241,7 @@ export default function ProjectPanel({
               {factors.map((factor, index) => {
                 const ok = !!p.factors?.[factor.key];
                 const event = ok ? evidenceFor(factor, events) : null;
+                const note = ok ? null : factorNote(factorCoverage(factor.key, p.state), p.state);
                 return (
                   <div
                     key={factor.key}
@@ -258,6 +257,7 @@ export default function ProjectPanel({
                     <div className="min-w-0">
                       <div className={`text-xs leading-5 ${ok ? "font-medium text-slate-700" : "text-slate-400"}`}>{factor.rule}</div>
                       {event?.source_url && <div className="mt-0.5 text-[10px]"><SourceLink url={event.source_url} label="View evidence" /></div>}
+                      {note && <div className="mt-0.5 text-[10px] text-slate-400">{note}</div>}
                     </div>
                     <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-semibold tabular-nums ${ok ? "bg-teal-50 text-teal-700" : "bg-slate-50 text-slate-400"}`}>
                       +{factor.points}

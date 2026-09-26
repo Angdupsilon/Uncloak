@@ -142,8 +142,15 @@ d = one("""select count(*) from (select payload->>'tdlr_project_number' n, count
           where event_type='building_registered' and payload ? 'tdlr_project_number' group by 1 having count(*)>1) x""")
 check("duplicates","each TDLR project registered once", d == 0, f"dups={d}")
 d = one("""select count(*) from (select payload->>'owner_registration' r, payload->>'occupant_registration' o, count(*) from evidence_events
-          where event_type='certified' group by 1,2 having count(*)>1) x""")
+          where event_type='certified' and source='COMPTROLLER' group by 1,2 having count(*)>1) x""")
 check("duplicates","each Comptroller registration once", d == 0, f"dups={d}")
+d = one("""select count(*) from (select source, payload->>'company', payload->>'data_center_name', payload->>'mou_year',
+          payload->>'site_location', count(*) from evidence_events
+          where event_type='certified' and source <> 'COMPTROLLER' group by 1,2,3,4,5 having count(*)>1) x""")
+check("duplicates","each state-registry record once", d == 0, f"dups={d}")
+bad = [(src, st, n) for src, st, n in q("select e.source, p.state, count(*) from evidence_events e join projects p using (project_id) group by 1,2")
+       if config.SOURCE_STATE.get(src) not in (None, st)]
+check("values","state records sit on projects in that state", not bad, str(bad))
 d = one("select count(*) from (select project_id, ts, count(*) from project_scores group by 1,2 having count(*)>1) x")
 check("duplicates","one score per project per date", d == 0, f"dups={d}")
 d = one("select count(*) from (select ts, count(*) from ercot_queue group by 1 having count(*)>1) x")

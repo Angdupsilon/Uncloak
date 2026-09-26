@@ -40,7 +40,7 @@ const EVENT_NOUN: Record<string, [string, string]> = {
   square_footage: ["square-footage record", "square-footage records"],
   tenant_named: ["tenant named", "tenants named"],
   inspection_done: ["inspection done", "inspections done"],
-  certified: ["Comptroller certification", "Comptroller certifications"],
+  certified: ["state certification", "state certifications"],
   permit_filed: ["air permit filed", "air permits filed"],
   status_change: ["status change", "status changes"],
   site_mapped: ["atlas mapping", "atlas mappings"],
@@ -61,6 +61,8 @@ export function describeEvent(e: EvidenceEvent): string {
         e.source === "VA_DEQ" && e.value_num != null ? ` · ${Math.round(e.value_num).toLocaleString()} MW of generators` : ""
       }`;
     case "certified":
+      if (e.source === "IL_DCEO") return `Illinois Data Center Investment Program MOU${p.mou_year ? ` (${String(p.mou_year)})` : ""}`;
+      if (e.source === "MN_DEED") return "Listed as a certified qualified data center by Minnesota DEED";
       return "Comptroller certified";
     case "inspection_done":
       return "Inspection done";

@@ -249,6 +249,57 @@ Every DEQ permit with its match status and basis, written by `etl/import_va_deq_
 A VA permit counts toward the evidence index the way a TCEQ permit does: `config.EVENT_SOURCES` pairs
 `permit_filed` with TCEQ in Texas and VA_DEQ in Virginia, and the air-permit factor scores the role.
 
+## `il_dceo_reports/` and `il_dceo_data_centers_2026-09-26.csv`
+
+Illinois Department of Commerce and Economic Opportunity, Data Center Investment Program annual reports
+2020–2025 (20 ILCS 605/605-1025), from "Reports Required by Statute":
+https://dceo.illinois.gov/aboutdceo/reportsrequiredbystatute.html (the report list is filled in by
+JavaScript, so it was read in a browser; the six PDFs were then downloaded directly on 2026-09-26 and are
+kept in `il_dceo_reports/`).
+
+The CSV is the 2025 report's table of every data center owner or operator with a signed MOU and a
+sales-tax exemption certificate (pages 8–9): 34 MOUs from 2020 through 2025-12-31, each with company,
+MOU year, city ("Site Location"), investment commitment, DCEO's estimated tax benefit (6.25% of the
+commitment, DCEO's own figure), new jobs and the underserved-area flag. `etl/import_il_dceo.py --pdf`
+re-reads it.
+
+### How it was verified
+
+- The table's total row (34 MOUs, $10,665,815,092 committed, 731 jobs, 16 underserved) matches the sum of
+  the parsed rows. The estimated-tax-benefit column sums to $666,613,444, $1 more than the published
+  total ($666,613,443), a rounding difference in DCEO's table.
+- Each earlier report's MOU table (2021: 13, 2022: 15, 2023: 21, 2024: 27) was matched to the 2025 list by
+  year, city and commitment. Two differ and the 2025 figure is used, with the difference in `note`:
+  Digital Realty's 2021 Elk Grove Village MOU ($280,608,348 in the 2021 report vs $280,608,349) and
+  Aligned's 2021 Northlake MOU ($252,000,000 in the 2024 report vs $252,500,000).
+- The report gives only the MOU year, so events are dated 31 December of that year and say so.
+- Addresses: the report states facility addresses only in its 2025 amendment section. Two are used
+  (quoted in `address_quote`): Digital Realty's Franklin Park campus (9401 West Grand Avenue, one of the
+  campus addresses listed) and Elk Grove Village Property LLC (1650 Higgins Road). LLC names that look
+  like addresses ("2425 Busse Road LLC") are not treated as addresses. Addresses were geocoded with the
+  Census geocoder; the Franklin Park campus lands 228 m from exactly one mapped Digital Realty site
+  (ORD12), so that MOU is attached to it. Every other MOU is its own project.
+
+## `mn_deed/` and `mn_deed_qualified_data_centers_2026-09-26.csv`
+
+Minnesota Department of Employment and Economic Development, "List of Designated Qualified Data Centers"
+(PDF titled "Data Center Sales Tax Refund Projects", dated 7/15/2026), linked from
+https://mn.gov/deed/business/financing-business/tax-credits/data-center-credit/ and downloaded
+2026-09-26. The Department of Revenue's qualified-data-centers page explains the exemption but refers to
+DEED for the list. 42 data centers, all "Certified" (16 new, 26 refurbished), with name, company, city
+and type, read with `pdfplumber` (`etl/import_mn_deed.py --pdf`) and checked against the PDF text.
+
+The list publishes neither certification dates nor addresses. Events are dated at the list's date (DEED
+listed the site as certified by then), and no record is attached to a mapped site.
+
+## `il_dceo_review.csv`, `mn_deed_review.csv`
+
+One row per registry record: the organization its company text names (and why), whether it was attached
+to a mapped site or loaded as its own project, and the mapped sites of the same organization in the
+state, which may be the same facility. Those are listed for review and never merged. Company text is
+never expanded into a brand it doesn't state: "C1 Chicago Aurora III LLC" stays unlinked even though
+another row reads "CyrusOne (C1 Chicago)".
+
 ## `us_source_catalog.csv`
 
 Candidate public sources for coverage outside Texas, one row per source, with its role

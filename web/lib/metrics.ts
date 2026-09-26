@@ -46,6 +46,18 @@ export const SOURCES = {
     url: "https://www.deq.virginia.gov/news-info/shortcuts/permits/air/issued-air-permits-for-data-centers",
     what: "Air permits DEQ has issued to data centers, mostly for backup diesel generators, with the permit document for each.",
   },
+  IL_DCEO: {
+    name: "Illinois DCEO, Data Center Investment Program annual reports",
+    short: "Illinois DCEO",
+    url: "https://dceo.illinois.gov/aboutdceo/reportsrequiredbystatute.html",
+    what: "Data centers with a signed memorandum of understanding and sales-tax exemption certificate, with the MOU year, city, investment commitment and jobs.",
+  },
+  MN_DEED: {
+    name: "Minnesota DEED, list of designated qualified data centers",
+    short: "Minnesota DEED",
+    url: "https://mn.gov/deed/business/financing-business/tax-credits/data-center-credit/",
+    what: "Data centers certified for Minnesota's data-center sales-tax exemption, with company, city and type. No certification dates or addresses are published.",
+  },
   ERCOT: {
     name: "ERCOT large-load interconnection reports",
     short: "ERCOT",
@@ -214,5 +226,6 @@ export const RESOLVED_BY_LABEL: Record<string, string> = {
   TDLR_TENANT: "Named as tenant on a TDLR construction registration",
   TDLR_OWNER: "Named as owner on a TDLR construction registration",
   OSM_OPERATOR: "Named as operator in OpenStreetMap (IM3 data-center atlas), not a registered-entity record",
+  STATE_REGISTRY: "Named in the company text of a state data-center incentive registry",
   MANUAL: "Linked by manual review of a cited source",
 };

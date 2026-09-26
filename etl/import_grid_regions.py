@@ -50,7 +50,7 @@ from common import STATE_FIPS
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
 CACHE = RAW / "cache"
-SEED_DIRS = [ROOT / "data" / "seed", ROOT / "data" / "seed_national"]
+SEED_DIRS = [ROOT / "data" / "seed", ROOT / "data" / "seed_national", *sorted((ROOT / "data" / "seed_states").glob("*"))]
 PUDL = "https://s3.us-west-2.amazonaws.com/pudl.catalyst.coop/nightly"
 FILES = {
     "territory": "out_eia861__yearly_balancing_authority_service_territory.parquet",

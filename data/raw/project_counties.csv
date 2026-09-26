@@ -317,12 +317,22 @@ project_name,state,lat,lon,stated_county,county_fips,census_county,method,stated
 "Unnamed data center · Ada, ID #1",ID,43.463149,-116.268228,Ada,16001,Ada County,spatial_join,yes,16001,fips,
 "Unnamed data center · Ada, ID #2",ID,43.463349,-116.272085,Ada,16001,Ada County,spatial_join,yes,16001,fips,
 "VentureData · Madison, ID",ID,43.825243,-111.782093,Madison,16065,Madison County,spatial_join,yes,16065,fips,
+"2425 Busse Road LLC (CenterSquare ORD2) · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"4513 Western Avenue LLC (CenterSquare ORD4) · Lisle, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Aligned Data Center - Chicago ORD-01 · Cook, IL",IL,41.913983,-87.917465,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Aligned Data Center - Chicago ORD-02 · Cook, IL",IL,41.912962,-87.917492,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Aligned Data Centers (EGV) PropCo · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"Aligned Data Centers · Northlake, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"C1 Chicago 1 LLC - C1 Chicago 2 · Wood Dale, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"C1 Chicago Aurora III · Aurora, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"C1 Yorkville · Yorkville, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Centersquare Elk Grove Village Data Center Campus ORD2 · DuPage, IL",IL,41.99204,-87.958172,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "Centersquare Lisle ORD4 Data Center · DuPage, IL",IL,41.802341,-88.094886,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
+"Chirisa Volo · Volo, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "CoreSite Chicago Data Center (CH1) · Cook, IL",IL,41.87594,-87.631466,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "CoreSite Chicago Data Center (CH2) · Cook, IL",IL,41.862798,-87.641304,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Coresite · Chicago, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"CyrusOne (C1 Chicago) · Aurora, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "CyrusOne Chicago Aurora CME · DuPage, IL",IL,41.796711,-88.243603,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "Datacenter (386) · DuPage, IL",IL,41.707134,-87.975956,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "Digital Realty CH1 · Cook, IL",IL,41.994237,-87.962172,Cook,17031,Cook County,spatial_join,yes,17031,fips,
@@ -330,33 +340,56 @@ project_name,state,lat,lon,stated_county,county_fips,census_county,method,stated
 "Digital Realty CH3 · Cook, IL",IL,41.994396,-87.964904,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Digital Realty Chicago ORD12 · Cook, IL",IL,41.928378,-87.859236,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Digital Realty ORD11 · Cook, IL",IL,41.874293,-87.629954,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Digital Realty Trust · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "EdgeConneX CHI01 · Cook, IL",IL,42.000775,-87.950769,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "EdgeConneX CHI02 · Cook, IL",IL,42.001494,-87.952563,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"EdgeConneX · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"EdgeConnex · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Element Critical CH1 · DuPage, IL",IL,41.975762,-87.964685,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "Element Critical CH2 · DuPage, IL",IL,41.974227,-87.967176,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
+"Elk Grove Village Property LLC (Phase 1) · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Equinix Chicago CH3 · Cook, IL",IL,42.001159,-87.955213,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Equinix Chicago Data CH7 · DuPage, IL",IL,41.812557,-87.972843,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
+"Equinix · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"Goldframe · DeKalb, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"HydraVault · Chicago, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Iron Mountain Data & Record Storage · Cook, IL",IL,41.848797,-87.64551,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Iron Mountain Data Centers · Des Plaines, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Lakeside Technology Center · Cook, IL",IL,41.853653,-87.618359,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Lincoln Rackhouse · DuPage, IL",IL,41.772165,-88.217091,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
+"MEDP Mission Critical Facility, LLC dba Metro Edge · Chicago, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Meta data center · DeKalb, IL #1",IL,41.88853,-88.721858,DeKalb,17037,DeKalb County,spatial_join,yes,17037,fips,
 "Meta data center · DeKalb, IL #2",IL,41.889284,-88.731054,DeKalb,17037,DeKalb County,spatial_join,yes,17037,fips,
 "Meta data center · DeKalb, IL #3",IL,41.890275,-88.726355,DeKalb,17037,DeKalb County,spatial_join,yes,17037,fips,
 "Microsoft - Azure Datacenter · Cook, IL",IL,41.923006,-87.918241,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Microsoft Data Center - Hoffman Estates · Cook, IL",IL,42.076952,-88.133891,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Microsoft · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"Microsoft · Hoffman Estates, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"Microsoft · Northlake, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "NCSA Petascale Computing Facility · Champaign, IL",IL,40.095259,-88.242031,Champaign,17019,Champaign County,spatial_join,yes,17019,fips,
 "NTT Chicago CH1 · DuPage, IL",IL,41.987919,-88.007265,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "NTT Chicago CH2 · DuPage, IL",IL,41.988967,-88.007257,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "NTT Chicago CH3 · DuPage, IL",IL,41.986914,-88.008004,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "NTT Chicago CH4 · DuPage, IL",IL,41.989095,-88.004765,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
+"NTT Global Data Centers · Itasca, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Netrality · Cook, IL",IL,41.872881,-87.63344,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Oracle America · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "QTS Chicago · Cook, IL",IL,41.842187,-87.669008,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Quality Technology Service (QTS) · Chicago, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"SDC CHI I · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"SDC CHI II Busse · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"SDC CHI III · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "STACK Chicago CHI01 · Cook, IL",IL,42.006844,-87.96519,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"STACK Infrastructure · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Serverfarm CH1 · Cook, IL",IL,41.870944,-87.640141,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"Serverfarm LLC dba SF CH1 · Chicago, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Skybox Chicago I · Cook, IL",IL,41.993668,-87.973519,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Stream Chicago I · Cook, IL",IL,42.002601,-87.951135,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Stream Chicago II · Cook, IL",IL,41.999124,-87.957765,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "T5 Chicago II · Cook, IL",IL,42.023042,-87.975557,Cook,17031,Cook County,spatial_join,yes,17031,fips,
+"T5@Chicago II · Elk Grove Village, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"T5@Chicago III · Northlake, IL",IL,,,,,,,,,,no coordinates and no county in the record
+"T5@Chicago IV · Grayslake, IL",IL,,,,,,,,,,no coordinates and no county in the record
 "Unnamed data center · Cook, IL",IL,42.023143,-87.972186,Cook,17031,Cook County,spatial_join,yes,17031,fips,
 "Unnamed data center · DuPage, IL #1",IL,41.795384,-88.246923,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
 "Unnamed data center · DuPage, IL #2",IL,41.905355,-88.219514,DuPage,17043,DuPage County,spatial_join,yes,17043,fips,
@@ -409,16 +442,58 @@ project_name,state,lat,lon,stated_county,county_fips,census_county,method,stated
 "Unnamed data center · Genesee, MI",MI,42.968713,-83.779602,Genesee,26049,Genesee County,spatial_join,yes,26049,fips,
 "Unnamed data center · Monroe, MI",MI,41.807282,-83.627629,Monroe,26115,Monroe County,spatial_join,yes,26115,fips,
 "Verizon Wireless data center · Wayne, MI",MI,42.326266,-83.076986,Wayne,26163,Wayne County,spatial_join,yes,26163,fips,
+"111 Washington Ave S. · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"3M · Maplewood, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "Ark Duluth Data Center · St. Louis, MN",MN,46.827467,-92.130431,St. Louis,27137,St. Louis County,spatial_join,yes,27137,fips,
+"BCBSM · Eagan, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Best Buy Data Center · Bloomington, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"C.H. Robinson · Oronoco, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Centra Digital · Eagan, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Cologix - Suite 200 · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Compass Data Center · Shakopee, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"DataBank MSP III · Brooklyn Park, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"DataBank · Eagan, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "DataBank · Hennepin, MN",MN,45.143711,-93.387128,Hennepin,27053,Hennepin County,spatial_join,yes,27053,fips,
+"Ecolab · Eagan, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"EdgeConneX · Eden Prairie, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "Encompass Minneapolis Facility · Anoka, MN",MN,45.132197,-93.095622,Anoka,27003,Anoka County,spatial_join,yes,27003,fips,
 "Epic / Mayo Data Center · Olmsted, MN",MN,44.070816,-92.522121,Olmsted,27109,Olmsted County,spatial_join,yes,27109,fips,
+"Epic Hosting · Rochester, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Fastenal · Winona, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "Flexential Minneapolis - Chaska · Carver, MN",MN,44.851593,-93.598831,Carver,27019,Carver County,spatial_join,yes,27019,fips,
+"General Mills I · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"General Mills II · Golden Valley, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "H5 Minneapolis · Ramsey, MN",MN,44.972253,-93.14746,Ramsey,27123,Ramsey County,spatial_join,yes,27123,fips,
+"HealthPartners, Inc. · Mendota Heights, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Involta · Duluth, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Irongate - MSP2 · Woodbury, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Irongate - MSP3 · Eagan, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Irongate - Woodbury · Woodbury, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Land-O-Lakes · Arden Hills, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Legacy 1001 Minneapolis Venture · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Medtronic, Inc · Woodbury, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "Minnesota Gateway Data Center · Hennepin, MN",MN,44.971302,-93.254652,Hennepin,27053,Hennepin County,spatial_join,yes,27053,fips,
+"MoneyGram Payment Systems, Inc. · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"One Neck · Eden Prairie, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Prudential Data Center · Plymouth, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"St. Jude Medical · Little Canada, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Stream II · Chaska, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Stream · Chaska, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Target-Brooklyn Park · Brooklyn Park, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Target-Elk River · Elk River, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Toro Company · Bloomington, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"U.S. Bank N.A. - St. Paul · St. Paul, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"UHG - Chaska · Chaska, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"UHG - Elk River · Elk River, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"UHG - Plymouth · Plymouth, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "Unnamed data center · Dakota, MN #1",MN,44.734508,-93.064881,Dakota,27037,Dakota County,spatial_join,yes,27037,fips,
 "Unnamed data center · Dakota, MN #2",MN,44.734759,-93.06186,Dakota,27037,Dakota County,spatial_join,yes,27037,fips,
 "Unnamed data center · Hennepin, MN",MN,44.991458,-93.280292,Hennepin,27053,Hennepin County,spatial_join,yes,27053,fips,
+"Valley View Data Center · Eden Prairie, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"ViaWest Data Center - Chaska · Chaska, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Wells Fargo Bank N.A. - Minneapolis · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Wells Fargo Bank N.A. - Shoreview · Shoreview, MN",MN,,,,,,,,,,no coordinates and no county in the record
+"Xcel Energy · Minneapolis, MN",MN,,,,,,,,,,no coordinates and no county in the record
 "Black Rock Financial Management · Platte, MO",MO,39.295492,-94.678025,Platte,29165,Platte County,spatial_join,yes,29165,fips,
 "Carfax · Boone, MO",MO,38.923512,-92.288624,Boone,29019,Boone County,spatial_join,yes,29019,fips,
 "CenturyLink · Caldwell, MO",MO,39.744048,-93.997376,Caldwell,29025,Caldwell County,spatial_join,yes,29025,fips,

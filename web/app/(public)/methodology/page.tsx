@@ -114,6 +114,12 @@ export default async function Methodology() {
                     <strong className="font-semibold text-black">TDLR tenant:</strong> the organization is the named tenant on a construction registration.
                   </li>
                   <li>
+                    <strong className="font-semibold text-black">State incentive registries (Illinois, Minnesota):</strong> the registry&apos;s company text
+                    names the organization, for example &ldquo;Digital Realty Trust, LP&rdquo;. Special-purpose LLCs whose names don&apos;t state a brand stay
+                    unlinked. A registry record joins a mapped site only when the record states an address within 250 m of a site of the same organization;
+                    otherwise it is its own site, and possible duplicates are listed for review, never merged.
+                  </li>
+                  <li>
                     <strong className="font-semibold text-black">Manual review:</strong> a cited source links the entity to the organization.
                   </li>
                 </ul>
@@ -244,10 +250,12 @@ export default async function Methodology() {
               <Section id="limits" title="Coverage limits">
                 <ul className="list-disc space-y-2 pl-6">
                   <li>
-                    Public records are Texas only (Comptroller, TDLR, TCEQ, ERCOT). Outside Texas, sites come from the IM3 Open Source Data Center Atlas,
-                    which maps data-center buildings from OpenStreetMap. Those sites have a location, footprint and operator tag but no public record yet,
-                    so they score 0 on the evidence index. That means the record types don&apos;t exist there yet, not that evidence was checked and
-                    found missing. Company headquarters aren&apos;t in this dataset.
+                    Public records are deepest in Texas (Comptroller, TDLR, TCEQ, ERCOT). Illinois (DCEO Data Center Investment Program) and Minnesota
+                    (DEED qualified data centers) add state incentive registries, and Virginia DEQ&apos;s data-center air-permit list is loaded but not yet
+                    matched to sites. Elsewhere, sites come from the IM3 Open Source Data Center Atlas, which maps data-center buildings from OpenStreetMap.
+                    Those sites have a location, footprint and operator tag but no public record yet, so they score 0 on the evidence index. Each checklist
+                    item says when its record type isn&apos;t published in a state, which is different from a record that was checked and found missing.
+                    Company headquarters aren&apos;t in this dataset.
                   </li>
                   <li>
                     The atlas covers well-mapped buildings, not every data center, and has no sites in Alaska, Delaware, Hawaii, Rhode Island or Vermont.

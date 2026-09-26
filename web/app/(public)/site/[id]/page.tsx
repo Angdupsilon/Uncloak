@@ -24,6 +24,7 @@ import { describeEvent, fmtDate, fmtMW, fmtUSD } from "@/lib/format";
 import { TIER_LABELS } from "@/lib/constants";
 import { countyLabel, fmtDistance } from "@/lib/geo";
 import { describeRegions, EIA861_URL } from "@/lib/regions";
+import { coverageNote, factorCoverage, factorNote } from "@/lib/coverage";
 import { PROGRAM_HELP, RESOLVED_BY_LABEL, SOURCES, type SourceKey } from "@/lib/metrics";
 import { orgHref, siteHref } from "@/lib/slug";
 import type { FactorConfig } from "@/lib/types";
@@ -79,7 +80,10 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
   const located = s.lat != null && s.lon != null;
   const place = [s.city, s.county && countyLabel(s.county, s.state), s.state].filter(Boolean).join(", ");
   const asOfLabel = `As of ${fmtDate(asOf)}`;
-  const cert = p.certification as Record<string, string | null> | null;
+  const certEvent = events.find((e) => e.event_type === "certified") ?? null;
+  const certSource = certEvent?.source ?? null;
+  // The owner / occupant / operator block is the Comptroller record's own layout.
+  const cert = certSource === "COMPTROLLER" ? (p.certification as Record<string, string | null> | null) : null;
   const sourceKeys = s.sources.filter((k): k is SourceKey => k in SOURCES);
   const within10 = p.nearby.filter((x) => x.distance_km <= 16.09);
   const atlasOnly = s.sources.length > 0 && s.sources.every((x) => x === "OSM");
@@ -91,7 +95,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
     ? "Location unavailable: no address or reviewed location is published for this site in our records."
     : s.sources.includes("TDLR") && s.address
       ? "Address from the site's TDLR construction registration."
-      : atlasOnly
+      : atlasOnly || p.timeline?.project.location_method === "osm_atlas"
         ? "Mapped building or campus centroid from the IM3 data-center atlas (OpenStreetMap), not a public-record address."
         : "Location from a reviewed public-record compilation (see Methodology).";
   const grid = describeRegions(p.timeline?.regions ?? [], s.state, p.timeline?.project.county_fips ?? null);
@@ -152,10 +156,22 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
                 Its only record is a mapping in the IM3 data-center atlas{s.state === "TX" ? "; no Texas public record has been matched to it yet" : ""}.{" "}
               </>
             )}
-            {s.certified_at && (
+            {s.certified_at && certSource === "COMPTROLLER" && (
               <>
                 It entered the Texas Comptroller&apos;s {s.program ?? "data-center"} program on {fmtDate(s.certified_at)}
                 {s.program && PROGRAM_HELP[s.program] ? `, ${PROGRAM_HELP[s.program]}` : ""}.{" "}
+              </>
+            )}
+            {certEvent && certSource === "IL_DCEO" && (
+              <>
+                Illinois DCEO lists a {String(certEvent.payload?.mou_year ?? "")} memorandum of understanding for it under the state&apos;s Data Center
+                Investment Program, which grants sales-tax exemptions.{" "}
+              </>
+            )}
+            {certEvent && certSource === "MN_DEED" && (
+              <>
+                Minnesota DEED lists it as a certified qualified data center (list dated {fmtDate(String(certEvent.payload?.list_date ?? certEvent.ts))}), eligible
+                for the state&apos;s data-center sales-tax exemption. DEED doesn&apos;t publish the certification date.{" "}
               </>
             )}
             {s.tdlr_registrations > 0 && (
@@ -242,10 +258,17 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
                 Without a published location we can&apos;t say what&apos;s nearby. The records still document who is behind the site and what has been filed.
               </p>
             )}
-            {s.certified_at && (
+            {s.certified_at && certSource === "COMPTROLLER" && (
               <p>
                 Registration in the Comptroller program means the state lists this site as eligible for a data-center sales-tax exemption. The registry
                 doesn&apos;t publish the value of any exemption.
+              </p>
+            )}
+            {certEvent && certSource === "IL_DCEO" && certEvent.payload?.investment_commitment_usd != null && (
+              <p>
+                The MOU commits {fmtUSD(Number(certEvent.payload.investment_commitment_usd))} of investment and{" "}
+                {String(certEvent.payload.new_jobs ?? "an unstated number of")} new jobs. DCEO estimates the tax benefit at{" "}
+                {fmtUSD(Number(certEvent.payload.est_tax_benefits_usd))} (6.25% of the commitment, DCEO&apos;s own estimate, not an amount received).
               </p>
             )}
             {located && (
@@ -367,9 +390,11 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             {factors.length > 0 && (
               <div className="rounded-lg border border-[var(--hairline)] bg-white">
                 <div className="border-b border-[var(--hairline)] px-4 py-3 text-[14px] font-medium text-black">Evidence checklist</div>
+                {s.state !== "TX" && <p className="border-b border-[var(--hairline)] px-4 py-2.5 text-[13px] text-[var(--body)]">{coverageNote(s.state)}</p>}
                 <ul>
                   {factors.map((f, i) => {
                     const ok = !!siteFactors[f.key];
+                    const note = ok ? null : factorNote(factorCoverage(f.key, s.state), s.state);
                     return (
                       <li key={f.key} className={`flex items-start gap-3 px-4 py-2.5 text-[14px] ${i ? "border-t border-[var(--hairline)]" : ""}`}>
                         <span aria-hidden className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px] font-bold ${ok ? "bg-black text-white" : "bg-[var(--canvas-soft)] text-[#939393]"}`}>
@@ -378,6 +403,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
                         <span className={`flex-1 ${ok ? "text-black" : "text-slate-500"}`}>
                           <span className="sr-only">{ok ? "Met: " : "Not met: "}</span>
                           {f.rule}
+                          {note && <span className="block text-[12px] text-slate-500">{note}</span>}
                         </span>
                         <span className="text-[12px] tabular-nums text-slate-500">+{f.points}</span>
                       </li>

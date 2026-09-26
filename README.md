@@ -99,7 +99,10 @@ python etl/import_locations.py
 python etl/import_im3_atlas.py                      # national layer -> data/seed_national/
 python etl/import_grid_regions.py                   # county FIPS + EIA-861 grid-operator lookup (needs pyarrow, shapely)
 python etl/import_va_deq_air.py                     # Virginia DEQ air permits -> data/seed_states/va_deq/
-python etl/run_all.py --dir data/seed --dir data/seed_national --dir data/seed_states/va_deq
+python etl/import_il_dceo.py                        # Illinois DCEO data-center MOUs -> data/seed_states/il_dceo/
+python etl/import_mn_deed.py                        # Minnesota DEED qualified data centers -> data/seed_states/mn_deed/
+python etl/run_all.py --dir data/seed --dir data/seed_national --dir data/seed_states/va_deq \
+  --dir data/seed_states/il_dceo --dir data/seed_states/mn_deed
 ```
 
 `--dir` can repeat; directories load in order. State importers write only evidence events on
@@ -197,7 +200,7 @@ scores.
 | `multi_building` | 10 | ≥2 `building_registered` |
 | `value_over_500m` | 15 | registered value ≥ $500M |
 | `tenant_named` | 20 | ≥1 `tenant_named` |
-| `comptroller_certified` | 15 | ≥1 `certified` |
+| `comptroller_certified` | 15 | ≥1 `certified` (any state's incentive registry: Comptroller, IL DCEO, MN DEED) |
 | `tceq_permit` | 15 | ≥1 `permit_filed` (any state's air-permit record: TCEQ in Texas, VA_DEQ in Virginia) |
 | `inspection_done` | 5 | ≥1 `inspection_done` |
 
