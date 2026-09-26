@@ -213,7 +213,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
                 stroke: false,
                 opacity,
                 fillColor: TIER_COLORS_MAP[p.tier],
-                fillOpacity: opacity * (selected ? 0.9 : 0.75),
+                fillOpacity: opacity * (selected ? 0.9 : UI.markerFillOpacity),
               }}
               eventHandlers={{ click: () => onSelect(p.project_id) }}
             >
