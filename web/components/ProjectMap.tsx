@@ -2,7 +2,7 @@
 import "leaflet/dist/leaflet.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useMemo, useState } from "react";
-import { CircleMarker, GeoJSON, MapContainer, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { CircleMarker, GeoJSON, MapContainer, Tooltip, useMap } from "react-leaflet";
 import type { FeatureCollection } from "geojson";
 import { latLngBounds } from "leaflet";
 import maplibreGL from "@maplibre/maplibre-gl-leaflet";
@@ -19,7 +19,7 @@ export interface MapProps {
   highlightIds: number[] | null;
   fitRequest: number; // increments when the map should fit to highlightIds
   loading: boolean;
-  /** ERCOT queue totals, drawn as rings on the same area scale as the markers. */
+  /** ERCOT queue capacity totals, summarized separately from project markers. */
   queue: { requestedGw: number; approvedGw: number | null } | null;
 }
 
@@ -53,30 +53,6 @@ function scaleTextSize<T>(value: T): T {
 function radiusFor(mw: number | null): number {
   if (mw == null || mw <= 0) return UI.markerMinRadiusPx;
   return Math.min(UI.markerMaxRadiusPx, UI.markerMinRadiusPx + UI.markerRadiusPerSqrtMw * Math.sqrt(mw));
-}
-
-/** True-scale radius: area strictly proportional to MW, floored only so a
- *  marker stays clickable. `pxPerSqrtMw` comes from fitting the queue ring. */
-function scaledRadiusFor(mw: number | null, pxPerSqrtMw: number): number {
-  if (mw == null || mw <= 0) return UI.scaleMarkerMinRadiusPx;
-  return Math.max(UI.scaleMarkerMinRadiusPx, pxPerSqrtMw * Math.sqrt(mw));
-}
-
-/** Reports the map's pixel size so the queue ring can be fitted to the panel. */
-function MapSize({ onSize }: { onSize: (px: number) => void }) {
-  const map = useMap();
-  useEffect(() => {
-    const report = () => {
-      const { x, y } = map.getSize();
-      onSize(Math.min(x, y));
-    };
-    report();
-    map.on("resize", report);
-    return () => {
-      map.off("resize", report);
-    };
-  }, [map, onSize]);
-  return null;
 }
 
 /**
@@ -199,17 +175,6 @@ function Counties() {
   return <GeoJSON data={data} style={{ color: "#000000", weight: 0.5, fill: false, opacity: 0.18 }} interactive={false} />;
 }
 
-/** Frames Texas once on mount. Fitting beats a fixed zoom because the map
- *  panel is fluid: the same zoom that frames the state at 1440px shows half of
- *  Mexico at 1920px. */
-function FitTexas() {
-  const map = useMap();
-  useEffect(() => {
-    map.fitBounds(latLngBounds(UI.txBounds), { padding: [6, 6], animate: false });
-  }, [map]);
-  return null;
-}
-
 function FitBounds({ projects, ids, request }: { projects: Project[]; ids: number[] | null; request: number }) {
   const map = useMap();
   useEffect(() => {
@@ -227,17 +192,12 @@ function FitBounds({ projects, ids, request }: { projects: Project[]; ids: numbe
 
 export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading, queue }: MapProps) {
   const highlight = useMemo(() => (highlightIds ? new Set(highlightIds) : null), [highlightIds]);
-  const [toScale, setToScale] = useState(true);
-  const [mapPx, setMapPx] = useState(0);
-
-  // Fit the requested-queue ring to the panel, then draw every marker on that
-  // same px-per-sqrt(MW) scale, so ring area vs. dot area is the real ratio.
-  const requestedMw = queue && queue.requestedGw > 0 ? queue.requestedGw * 1000 : null;
-  const ringPx = mapPx * UI.queueRingFraction;
-  const pxPerSqrtMw = toScale && requestedMw && ringPx > 0 ? ringPx / Math.sqrt(requestedMw) : null;
-  const approvedPx = pxPerSqrtMw && queue?.approvedGw ? pxPerSqrtMw * Math.sqrt(queue.approvedGw * 1000) : null;
   const located = projects.filter((p) => p.lat != null && p.lon != null);
   const unlocated = projects.length - located.length;
+  const requestedGw = queue && queue.requestedGw > 0 ? queue.requestedGw : null;
+  const approvedGw = requestedGw != null && queue?.approvedGw != null ? Math.max(0, Math.min(requestedGw, queue.approvedGw)) : null;
+  const unapprovedGw = requestedGw != null && approvedGw != null ? requestedGw - approvedGw : null;
+  const approvedPct = requestedGw != null && approvedGw != null ? (approvedGw / requestedGw) * 100 : 0;
 
   // Draw bigger circles first so small ones stay clickable.
   const ordered = [...located].sort((a, b) => (b.mw_est ?? 0) - (a.mw_est ?? 0));
@@ -249,36 +209,6 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
         <TexasSpotlight />
         <Counties />
         <FitBounds projects={projects} ids={highlightIds} request={fitRequest} />
-        <MapSize onSize={setMapPx} />
-        {pxPerSqrtMw && queue && (
-          <>
-            {/* Anchored on Texas; pixel-sized like the markers, so the ratio holds at any zoom. */}
-            <CircleMarker
-              key={`ring-req-${ringPx}`}
-              center={UI.txCenter}
-              radius={ringPx}
-              interactive={false}
-              pathOptions={{ color: "#000000", weight: 1.5, opacity: 0.55, dashArray: "6 6", fillColor: "#000000", fillOpacity: 0.04 }}
-            >
-              <Tooltip permanent direction="top" offset={[0, -ringPx]} className="gs-ring-label">
-                {fmtGW(queue.requestedGw)} requested
-              </Tooltip>
-            </CircleMarker>
-            {approvedPx && (
-              <CircleMarker
-                key={`ring-appr-${approvedPx}`}
-                center={UI.txCenter}
-                radius={approvedPx}
-                interactive={false}
-                pathOptions={{ color: "#000000", weight: 1.5, opacity: 0.9, fillColor: "#000000", fillOpacity: 0.18 }}
-              >
-                <Tooltip permanent direction="right" offset={[approvedPx, 0]} className="gs-ring-label">
-                  {fmtGW(queue.approvedGw)} approved
-                </Tooltip>
-              </CircleMarker>
-            )}
-          </>
-        )}
         {ordered.map((p) => {
           const parentKey = p.parent ?? UNRESOLVED_PARENT;
           const dimmed = (activeParents.size > 0 && !activeParents.has(parentKey)) || (highlight !== null && !highlight.has(p.project_id));
@@ -288,7 +218,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
             <CircleMarker
               key={p.project_id}
               center={[p.lat!, p.lon!]}
-              radius={pxPerSqrtMw ? scaledRadiusFor(p.mw_est, pxPerSqrtMw) : radiusFor(p.mw_est)}
+              radius={radiusFor(p.mw_est)}
               pathOptions={{
                 color: selected ? "#0f172a" : (p.parent_color ?? "#475569"),
                 weight: selected ? 4 : 2.5,
@@ -314,6 +244,32 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
         })}
       </MapContainer>
 
+      {requestedGw != null && approvedGw != null && unapprovedGw != null && (
+        <section className="ub-card absolute right-4 top-4 z-[1000] w-[286px] px-4 py-3.5" aria-label="ERCOT requested capacity approval status">
+          <div className="flex items-baseline justify-between gap-3">
+            <div className="ub-body-md-strong text-black">ERCOT queue capacity</div>
+            <div className="ub-body-sm-strong tabular-nums text-black">{fmtGW(requestedGw)} total</div>
+          </div>
+          <p className="ub-caption mt-0.5 text-[#5e5e5e]">Gigawatts requested—not a count of requests or duplicate projects.</p>
+          <div className="mt-3 flex h-3 overflow-hidden rounded-sm bg-[#e6e6e6] ring-1 ring-inset ring-[#d4d4d4]" role="img" aria-label={`${fmtGW(approvedGw)} approved and ${fmtGW(unapprovedGw)} not approved`}>
+            {approvedPct > 0 && <div className="h-full bg-[#8a8a8a]" style={{ width: `${approvedPct}%` }} />}
+          </div>
+          <div className="mt-2 grid grid-cols-2 gap-3 text-[12px] leading-4 text-[#5e5e5e]">
+            <div>
+              <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-[2px] bg-[#8a8a8a]" />
+              <span className="font-medium text-black">{fmtGW(approvedGw)}</span> approved
+            </div>
+            <div>
+              <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-[2px] border border-[#d4d4d4] bg-[#e6e6e6]" />
+              <span className="font-medium text-black">{fmtGW(unapprovedGw)}</span> not approved
+            </div>
+          </div>
+          <p className="mt-2 border-t border-[#efefef] pt-2 text-[11px] leading-4 text-[#5e5e5e]">
+            “Phantom” is only the unapproved portion. “Shadow” is a separate public-record coverage gap.
+          </p>
+        </section>
+      )}
+
       <div className="ub-card ub-body-sm absolute bottom-4 left-4 z-[1000] w-[228px] px-5 py-4 text-[#5e5e5e]">
         <div className="ub-body-md-strong mb-3 text-black">Evidence tier</div>
         <div className="space-y-1.5">
@@ -324,33 +280,13 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
             </div>
           ))}
         </div>
-        {pxPerSqrtMw ? (
-          <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#5e5e5e]">
-            <div className="flex items-center gap-2.5">
-              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border border-dashed border-black/60" />
-              ERCOT queue (requested)
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border border-black bg-black/20" />
-              Approved to energize
-            </div>
-            <div className="mt-1 text-[#afafaf]">Rings and dots share one scale: area &prop; MW. Outline = parent.</div>
-          </div>
-        ) : (
-          <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">Size &prop; &radic;MW (enlarged) &middot; outline = parent</div>
-        )}
+        <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">
+          Each dot is one public-record project. Size reflects estimated MW (enlarged); outline = parent.
+        </div>
         {unlocated > 0 && (
           <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">
             {unlocated} of {projects.length} projects not shown (no coordinates)
           </div>
-        )}
-        {requestedMw && (
-          <button
-            onClick={() => setToScale((v) => !v)}
-            className="ub-caption mt-2 w-full rounded-full bg-[#efefef] px-3 py-1 font-medium text-black transition-colors hover:bg-[#e2e2e2]"
-          >
-            {toScale ? "Enlarge project dots" : "Show queue to scale"}
-          </button>
         )}
       </div>
 
