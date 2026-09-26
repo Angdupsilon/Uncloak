@@ -70,22 +70,39 @@ function Swatch({ color, hollow }: { color: string; hollow?: boolean }) {
   );
 }
 
-/** One row of the reconciliation: label, value, and a bar on a linear scale of the queue. */
-function Row({ label, gw, of, color, digits = 1 }: { label: string; gw: number; of: number | null; color: string; digits?: number }) {
+/** One row of the reconciliation: label, value, context, and a shared comparison bar. */
+function Row({
+  label,
+  detail,
+  gw,
+  of,
+  color,
+  digits = 1,
+  showShare = true,
+}: {
+  label: string;
+  detail?: string;
+  gw: number;
+  of: number | null;
+  color: string;
+  digits?: number;
+  showShare?: boolean;
+}) {
   // Without an ERCOT denominator there is no share to show, only the bar.
   const pct = of ? Math.min(100, (gw / of) * 100) : 100;
   return (
     <div>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="ub-body-sm truncate text-[#5e5e5e]">{label}</span>
+        <span className="ub-body-sm min-w-0 text-[#5e5e5e]">{label}</span>
         <span className="ub-body-sm-strong shrink-0 tabular-nums">
-          {fmtGW(gw, digits)} {of ? <span className="ub-caption font-normal text-[#afafaf]">{fmtShare(gw, of)}</span> : null}
+          {fmtGW(gw, digits)} {of && showShare ? <span className="ub-caption font-normal text-[#afafaf]">{fmtShare(gw, of)}</span> : null}
         </span>
       </div>
       <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[#efefef]">
         {/* Minimum 2px so a real but tiny share is still visible as "something". */}
         <div className="h-full rounded-full" style={{ width: `max(2px, ${pct}%)`, background: color }} />
       </div>
+      {detail && <p className="mt-1 text-[11px] leading-4 text-[#8a8a8a]">{detail}</p>}
     </div>
   );
 }
@@ -119,13 +136,19 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
     >
       {/* 1. The headline: how much requested load is still waiting on ERCOT. */}
       <section>
-        <div className="ub-body-md-strong text-[#5e5e5e]">Still waiting for ERCOT approval</div>
+        <div className="ub-body-md-strong text-[#5e5e5e]">Awaiting ERCOT approval to energize</div>
         {hasQueue ? (
           <>
             <div className="ub-display-xl mt-1 tabular-nums">{fmtShare(requested - approved, requested)}</div>
             <p className="ub-body-sm text-[#5e5e5e]">
-              <span className="font-medium text-black">{fmtGW(requested - approved)}</span> of {fmtGW(requested)} requested is not approved to turn on.
+              <span className="font-medium text-black">{fmtGW(requested - approved)}</span> of {fmtGW(requested)} requested remains unapproved.
             </p>
+            {e?.approved_ts && e.approved_ts.slice(0, 10) !== e.ts.slice(0, 10) && (
+              <p className="mt-1 text-[11px] leading-4 text-[#8a8a8a]">
+                Queue reported {fmtDate(e.ts)}. Approval figure reported {fmtDate(e.approved_ts)}
+                {e.peak_ts ? `; peak-usage figure reported ${fmtDate(e.peak_ts)}.` : "."}
+              </p>
+            )}
           </>
         ) : (
           <p className="ub-body-sm mt-1 text-[#5e5e5e]">No ERCOT queue data on or before this date.</p>
@@ -138,14 +161,14 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           <div className="mt-2 space-y-0.5 text-[12px] leading-4 text-[#5e5e5e]">
             {energized != null && (
               <div className="flex items-center gap-2">
-                <Swatch color={INK.energized} /> Using power (highest observed) · {fmtGW(energized)}
+                <Swatch color={INK.energized} /> Observed using power (peak) · {fmtGW(energized)}
               </div>
             )}
             <div className="flex items-center gap-2">
-              <Swatch color={INK.approved} /> Approved to turn on · {fmtGW(Math.max(0, approved - (energized ?? 0)))}
+              <Swatch color={INK.approved} /> Approved, not operating · {fmtGW(Math.max(0, approved - (energized ?? 0)))}
             </div>
             <div className="flex items-center gap-2">
-              <Swatch color={INK.phantom} hollow /> Waiting for ERCOT approval · {fmtGW(requested - approved)}
+              <Swatch color={INK.phantom} hollow /> Awaiting ERCOT approval · {fmtGW(requested - approved)}
             </div>
           </div>
           <div className="mt-0.5 text-[11px] leading-4 text-[#afafaf]">Each square = {fmtGW(requested / WAFFLE_CELLS, 2)} (0.1% of requests)</div>
@@ -156,7 +179,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           a gap here is our coverage, not evidence that load is speculative. */}
       <section className="border-t border-[#efefef] pt-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="ub-body-md-strong text-[#5e5e5e]">Projects we found in public records</div>
+          <div className="ub-body-md-strong text-[#5e5e5e]">Public-record capacity estimates</div>
           {spark.length > 1 && !noMw && (
             <div className="h-7 w-16 shrink-0" aria-label="Weekly evidence-weighted vs found GW">
               <ResponsiveContainer width="100%" height="100%">
@@ -178,16 +201,41 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           <p className="ub-body-sm mt-1 text-[#5e5e5e]">MW estimate unavailable: MW_COST_PER_MW_USD not set</p>
         ) : (
           <div className="mt-2 space-y-2">
-            {hasQueue && <Row label="Approved by ERCOT" gw={approved} of={approved} color={INK.approved} />}
-            {s.found_gw != null && <Row label="Capacity tied to a project" gw={s.found_gw} of={hasQueue ? approved : null} color={INK.found} digits={2} />}
+            {hasQueue && (
+              <Row
+                label="ERCOT approval baseline"
+                detail="System-wide approval-to-energize total; it is not matched project by project."
+                gw={approved}
+                of={approved}
+                color={INK.approved}
+                showShare={false}
+              />
+            )}
+            {s.found_gw != null && (
+              <Row
+                label="Estimated project capacity"
+                detail="Cost-derived total for projects found in public records; not a project-level ERCOT match."
+                gw={s.found_gw}
+                of={hasQueue ? approved : null}
+                color={INK.found}
+                digits={2}
+              />
+            )}
             {s.realistic_gw != null && (
-              <Row label="Capacity backed by evidence" gw={s.realistic_gw} of={hasQueue ? approved : s.found_gw} color={INK.weighted} digits={2} />
+              <Row
+                label="Evidence-weighted estimate"
+                detail="Estimated project capacity weighted by each project's evidence score."
+                gw={s.realistic_gw}
+                of={hasQueue ? approved : s.found_gw}
+                color={INK.weighted}
+                digits={2}
+              />
             )}
           </div>
         )}
         <p className="mt-1.5 text-[12px] leading-4 text-[#5e5e5e]">
           {s.projects} projects · {s.projects_with_mw} with cost data.
-          {hasQueue && s.found_gw != null && " Some ERCOT-approved load is not tied to a project record yet."}
+          {hasQueue && s.found_gw != null && " Percentages compare each estimate with ERCOT's system-wide approval total; they do not indicate a project match."}
         </p>
       </section>
 
