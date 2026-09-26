@@ -222,11 +222,20 @@ export function BigStat({
   const m = METRICS[metric];
   return (
     <div className="flex min-w-0 flex-col bg-white p-6 sm:p-8">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-start justify-between gap-3">
         <span className="text-[15px] font-medium text-black">{label}</span>
         <KindBadge kind={m.kind} />
       </div>
-      <div className={`mt-4 font-normal leading-none tracking-[-2px] ${value == null ? "text-[40px] text-[#939393]" : "text-[56px] text-black sm:text-[64px]"}`}>
+      <div
+        className={`mt-4 font-normal leading-none ${
+          value == null
+            ? "text-[36px] tracking-[-1px] text-[#939393] sm:text-[40px]"
+            : value.length > 8
+              ? // Words ("Low evidence") get a smaller size and may wrap; numbers never wrap.
+                "text-[36px] leading-[1.05] tracking-[-1px] text-black sm:text-[40px]"
+              : "whitespace-nowrap text-[48px] tracking-[-2px] text-black sm:text-[56px] 2xl:text-[64px]"
+        }`}
+      >
         {value ?? "Unavailable"}
       </div>
       {note && <p className="mt-3 text-[14px] leading-5 text-[var(--slate)]">{note}</p>}
@@ -250,6 +259,6 @@ export function BigStat({
 
 export function StatBand({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 lg:grid-cols-4">{children}</div>
+    <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 xl:grid-cols-4">{children}</div>
   );
 }

@@ -353,10 +353,10 @@ export default function QueueTimeline({
         </button>
         )}
 
-        <div className="min-w-0 flex-1">
+        <div className="min-w-[min(100%,18rem)] flex-1">
           {current && approved100 != null ? (
             <>
-              <p className={isPage ? "text-[20px] leading-7 text-black" : "ub-body-md text-black"}>
+              <p className={isPage ? "text-[18px] leading-7 text-black sm:text-[20px]" : "ub-body-md text-black"}>
                 Of every <b>100 MW</b> asking to join the Texas grid, only <b>{approved100} MW</b> is approved to connect
                 {found100 != null && (
                   <>

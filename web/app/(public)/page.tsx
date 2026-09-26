@@ -86,7 +86,7 @@ export default async function Home() {
           ) : (
             <>
               <SectionTitle aside={`As of ${fmtDate(asOf)}`}>At a glance</SectionTitle>
-              <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] md:grid-cols-3">
+              <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] lg:grid-cols-3">
                 <Glance
                   value={data.sites.length.toLocaleString()}
                   label="data-center sites on record"
@@ -192,7 +192,7 @@ function Glance({
   return (
     <div className="bg-white p-6 sm:p-8">
       <div className="flex items-start justify-between gap-2">
-        <div className="text-[56px] font-normal leading-none tracking-[-2px] text-black sm:text-[64px]">{value}</div>
+        <div className="whitespace-nowrap text-[48px] font-normal leading-none tracking-[-2px] text-black sm:text-[56px] 2xl:text-[64px]">{value}</div>
         <KindBadge kind={kind} />
       </div>
       <div className="mt-4 text-[16px] leading-6 text-black">{label}</div>
