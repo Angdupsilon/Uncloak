@@ -53,16 +53,16 @@ export default function DateSlider({
     <div className="flex min-w-0 flex-1 items-center gap-3">
       <button
         onClick={togglePlay}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white transition-colors hover:bg-slate-700"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-[#282828]"
         aria-label={isPlaying ? "Pause" : "Play weekly"}
         title={isPlaying ? "Pause" : "Play: step weekly through time"}
       >
         {isPlaying ? "❚❚" : "▶"}
       </button>
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline justify-between text-xs text-slate-500">
+        <div className="ub-body-sm flex items-baseline justify-between text-[#afafaf]">
           <span>{fmtDate(steps[0])}</span>
-          <span className="text-sm font-semibold text-slate-900">As of {fmtDate(value)}</span>
+          <span className="ub-display-sm text-black">As of {fmtDate(value)}</span>
           <span>{fmtDate(steps.at(-1))}</span>
         </div>
         <input
