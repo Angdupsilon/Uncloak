@@ -83,7 +83,17 @@ ERCOT large-load interconnection figures, read directly from ERCOT's own documen
   of approved loads. The 2024 reports call it "observed a non-simultaneous peak consumption".
 - A blank cell means that document doesn't state the figure. The dashboard shows each figure
   from its own latest dated row and labels it with that date.
-- The April 2026 ERCOT Monthly gives no as-of date, so its row uses the publication date
-  (2026-05-13).
-- Figures only shown in chart images (the 2025 Monthly Operational Overviews and the March 2026
-  queue total) are not transcribed.
+- Documents with no as-of date (the April 2026 ERCOT Monthly and the June–December 2025
+  Monthly Operational Overviews) are dated by publication. Documents that name only a month
+  ("63k MW in December", "as of June 2026") are placed on the last day of that month.
+- Some figures appear only in slide images: the 2024 status-update bar-chart totals and the
+  data tables in the 2025 Monthly Operational Overviews. They were read from the rendered slide,
+  and `quote_or_derivation` says so ("Chart image", "Table image"). For the 2025 overviews,
+  `gw_approved` = Observed Energized + Approved to Energize but Not Operational from the table's
+  2030 column. That matches the slide's "Of the X MW…" sentence except where ERCOT left that
+  sentence unchanged from the month before; those cases are noted. The March 2026 queue total is
+  still not transcribed.
+- The queue's scope changes over time. The 2023–24 status updates count projects with in-service
+  dates through 2027 (2028 from July 2024). The 2025 overviews count through 2030, and the 2026
+  hearing decks through 2033. Part of the step from 57 GW (Sep 2024) to 137 GW (Apr 2025) comes
+  from that change in scope.
