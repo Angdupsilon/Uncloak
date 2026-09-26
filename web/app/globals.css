@@ -285,6 +285,13 @@ body {
   animation: gs-halo-pulse 2.4s ease-in-out infinite;
 }
 
+/* Ranking bars grow from the baseline once on load. */
+@keyframes gs-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
 @keyframes gs-ping {
   0% {
     opacity: 1;

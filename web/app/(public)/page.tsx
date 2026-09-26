@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import SearchBox from "@/components/public/SearchBox";
 import LocateButton from "@/components/public/LocateButton";
 import HeroVisual from "@/components/public/HeroVisual";
+import OrgRanking from "@/components/public/OrgRanking";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
 import { Container, ErrorState, KindBadge, SampleBanner, SectionTitle } from "@/components/public/ui";
 import { SourceLink } from "@/components/public/Source";
@@ -117,21 +118,8 @@ export default async function Home() {
                   <SectionTitle id="orgs-h" aside={<Link href="/org" className="rw-link">All organizations →</Link>}>
                     Organizations with the most sites
                   </SectionTitle>
-                  <ol className="divide-y divide-[var(--hairline)] rounded-lg border border-[var(--hairline)] bg-white">
-                    {data.orgs.slice(0, 8).map((o, i) => (
-                      <li key={o.slug}>
-                        <Link href={`/org/${o.slug}`} className="flex items-center gap-4 px-4 py-3 hover:bg-[var(--canvas-softer)]">
-                          <span className="w-5 text-right text-[13px] tabular-nums text-slate-400">{i + 1}</span>
-                          <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: o.color ?? "#94a3b8" }} />
-                          <span className="min-w-0 flex-1 truncate text-[16px] text-black">{o.name}</span>
-                          <span className="text-[13px] tabular-nums text-[var(--body)]">
-                            {o.sites} site{o.sites === 1 ? "" : "s"}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ol>
-                  <p className="mt-2 text-[12px] leading-5 text-slate-500">
+                  <OrgRanking orgs={data.orgs} />
+                  <p className="mt-3 text-[12px] leading-5 text-slate-500">
                     Ranked by the number of sites linked to each organization in these records, not by size or investment.
                   </p>
                 </section>
