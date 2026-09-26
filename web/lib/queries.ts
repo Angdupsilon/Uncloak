@@ -143,9 +143,22 @@ export async function getProjects(asOf: string, f: ProjectFilters = {}): Promise
 
 export async function getSummary(asOf: string): Promise<Summary> {
   const [ercotRows, totals, weeklyRows] = await Promise.all([
-    query<Omit<ErcotPoint, "ts"> & { ts: Date }>(
-      `SELECT ts, gw_requested, gw_approved, gw_observed_peak, source_url
-       FROM ercot_queue WHERE ts < ${DAY_END} ORDER BY ts DESC LIMIT 1`,
+    // ERCOT publishes these figures in different documents, so each one comes from its
+    // own latest row on or before as_of and carries that row's date and source.
+    query<{
+      ts: Date; gw_requested: number; source_url: string | null;
+      approved_ts: Date | null; gw_approved: number | null; approved_source_url: string | null;
+      peak_ts: Date | null; gw_observed_peak: number | null; peak_source_url: string | null;
+    }>(
+      `SELECT r.ts, r.gw_requested, r.source_url,
+              a.ts AS approved_ts, a.gw_approved, a.source_url AS approved_source_url,
+              o.ts AS peak_ts, o.gw_observed_peak, o.source_url AS peak_source_url
+       FROM (SELECT ts, gw_requested, source_url FROM ercot_queue
+             WHERE ts < ${DAY_END} AND gw_requested IS NOT NULL ORDER BY ts DESC LIMIT 1) r
+       LEFT JOIN LATERAL (SELECT ts, gw_approved, source_url FROM ercot_queue
+             WHERE ts < ${DAY_END} AND gw_approved IS NOT NULL ORDER BY ts DESC LIMIT 1) a ON true
+       LEFT JOIN LATERAL (SELECT ts, gw_observed_peak, source_url FROM ercot_queue
+             WHERE ts < ${DAY_END} AND gw_observed_peak IS NOT NULL ORDER BY ts DESC LIMIT 1) o ON true`,
       [asOf],
     ),
     query<{ found_mw: number | null; realistic_mw: number | null; projects: number; projects_with_mw: number }>(
@@ -167,7 +180,14 @@ export async function getSummary(asOf: string): Promise<Summary> {
   const found_gw = hasMw ? Number(t.found_mw) / 1000 : null;
   const realistic_gw = hasMw ? Number(t.realistic_mw) / 1000 : null;
   const e = ercotRows[0];
-  const ercot: ErcotPoint | null = e ? { ...e, ts: e.ts.toISOString() } : null;
+  const ercot: ErcotPoint | null = e
+    ? {
+        ...e,
+        ts: e.ts.toISOString(),
+        approved_ts: e.approved_ts?.toISOString() ?? null,
+        peak_ts: e.peak_ts?.toISOString() ?? null,
+      }
+    : null;
   const shadow_gw = ercot?.gw_requested != null && found_gw != null ? ercot.gw_requested - found_gw : null;
 
   return {

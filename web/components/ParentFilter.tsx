@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { UI } from "@/lib/constants";
 import { fmtMW } from "@/lib/format";
 import type { ParentRow } from "@/lib/types";
 
 /** How many parents stay inline before the rest move behind "More". */
-const INLINE_LIMIT = 5;
+const INLINE_LIMIT = UI.parentChipsCollapsed;
 
 function ParentPill({
   p,
@@ -102,7 +103,6 @@ export default function ParentFilter({
       >
         All
       </button>
-
       <div className="flex min-w-0 items-center gap-2 overflow-hidden">
         {inline.map((p) => (
           <ParentPill key={p.name} p={p} on={active.has(p.name)} onToggle={onToggle} />

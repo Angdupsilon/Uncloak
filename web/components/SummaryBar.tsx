@@ -74,7 +74,10 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
         sub={
           s.ercot ? (
             <>
-              Approved {fmtGW(s.ercot.gw_approved)} · Observed peak {fmtGW(s.ercot.gw_observed_peak)}
+              Approved {fmtGW(s.ercot.gw_approved)}
+              {s.ercot.approved_ts && s.ercot.approved_ts !== s.ercot.ts ? ` (${fmtDate(s.ercot.approved_ts)})` : ""} · Observed{" "}
+              {fmtGW(s.ercot.gw_observed_peak)}
+              {s.ercot.peak_ts && s.ercot.peak_ts !== s.ercot.ts ? ` (${fmtDate(s.ercot.peak_ts)})` : ""}
             </>
           ) : (
             "No ERCOT queue data on or before this date"

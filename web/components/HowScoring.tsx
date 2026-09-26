@@ -51,9 +51,12 @@ export default function HowScoring({ config }: { config: ScoringConfig | null })
                   {config.mw_cost_per_mw_usd != null ? (
                     <>
                       <span className="font-semibold">{fmtUSD(config.mw_cost_per_mw_usd)} per MW</span>
-                      {config.mw_cost_source && config.mw_cost_source !== "env" && (
-                        <span className="ml-1 rounded bg-[#efefef] px-1 font-semibold text-black">{config.mw_cost_source}</span>
-                      )}
+{config.mw_cost_source && config.mw_cost_source !== "env" &&
+  (/sample/i.test(config.mw_cost_source) ? (
+    <span className="ml-1 rounded bg-yellow-200 px-1 font-semibold text-yellow-900">{config.mw_cost_source}</span>
+  ) : (
+    <span className="ml-1 rounded bg-[#efefef] px-1 font-semibold text-black">{config.mw_cost_source}</span>
+  ))}
                     </>
                   ) : (
                     <span className="font-semibold text-amber-700">not configured (MW_COST_PER_MW_USD)</span>

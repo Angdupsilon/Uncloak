@@ -1,4 +1,185 @@
 name,county,city,address,lat,lon,llc_name
-<<FILL: Alamo Mission LLC project name>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,Alamo Mission LLC
 Stargate Milam,Milam,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL: Stargate Milam LLC name>>
 Stargate Shackelford,Shackelford,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL: Stargate Shackelford LLC name>>
+1102 McKinzie LLC Data Center,,,,,,1102 McKinzie LLC
+1242 McKinzie LLC Data Center,,,,,,1242 McKinzie LLC
+3301 Hibbetts Road Data Center,,,,,,"Coreweave, Inc."
+ALE60 Data Center,,,,,,COPT San Antonio LP
+ALE61 Data Center,,,,,,Amazon Data Services Inc.
+ALE62 Data Center,,,,,,Amazon Data Services Inc.
+Austin Data Center 2 LLC,,,,,,Austin Data Center 2 LLC
+Bastrop Project One,,,,,,Ocean Blockchain LLC
+Bexar 1,,,,,,"Amazon Data Services, Inc."
+C1 Dallas - Allen (LOT 1) LLC,,,,,,C1 Dallas - Allen (LOT 1) LLC
+C1 Richardson LLC Data Center,,,,,,C1 Richardson LLC
+Canadian Breaks Data Center,,,,,,Zephyr Infrastructure LLC
+"Cedarvale, Barslow/Pyote TX Data Center",,,,,,Ionic Digital Cedarvale LLC
+Cipher Black Pearl LLC Data Center,,,,,,"Cipher Black Pearl, LLC"
+Cipher Mining Technologies Inc. - Odessa Site,,,,,,Cipher Mining Technologies Inc.
+DFW 9,,,,,,"DB Data Center Red Oak, LLC"
+DFW 10,,,,,,"DB Data Center Red Oak, LLC"
+DFW 11,,,,,,"DB Data Center Red Oak, LLC"
+DFW 12,,,,,,"DB Data Center Red Oak, LLC"
+DFW 37,,,,,,"Digital Garland Campbell, L.P."
+Digital Garland,,,,,,"DDI Garland, LLC"
+Dory Creek LLC Data Center,,,,,,Bitdeer Inc.
+Fort Blocks LLC Data Center,,,,,,Fort Blocks LLC
+Fort Haskell Data Center,,,,,,Fort Haskell LLC
+Giga Texas Datacenter,,,,,,"Tesla, Inc."
+Hackberry Data Center,,,,,,Silver Basin Digital Infrastructure LLC
+HELO1 DC,,,,,,GALAXY HELIOS I
+Hockley Data Center,,,,,,SF HOUH LLC
+Independence Data Center,,,,,,Core42 Holding US LLC
+Lancium Fort Stockton Clean Campus,,,,,,Lancium LLC
+Leon Creek,,,,,,"DDH-Lonestar-1, LLC"
+Lewisville DFW38,,,,,,"DDI Lewisville, LLC"
+LBB01 Data Center,,,,,,"ALIGNED DATA CENTERS (ABERNATHY) PROPCO, LLC"
+Lonestar Taproot LLC - Pyote,,,,,,Lonestar Dream Inc.
+Lonestar Taproot LLC - Tarbush,,,,,,Lonestar Dream Inc.
+Microsoft Corporation,,,,,,Microsoft Corporation
+NADC,,,,,,Microsoft Corporation
+NTT Global Data Centers Americas - Dallas TX4,,,,,,"NTT Global Data Centers TX, LLC"
+Princeton ProjectCo LLC,,,,,,Princeton ProjectCo LLC
+Project Dorothy 3A,,,,,,STX-01 LLC
+Project Star,,,,,,3350 Marquis LP
+QTS Irving DC3 Data Center,,,,,,"QTS Irving DC3, LLC"
+San Antonio Data Center II,,,,,,CyrusOne LLC
+San Antonio Data Center III,,,,,,CyrusOne LLC
+SDC Austin III LLC dba SDC Austin IV LLC,,,,,,SDC Austin III LLC
+SDC - Austin Tandem Data Center,,,,,,SDC - Austin LLC
+"SDC DFW VIII, L.P.",,,,,,"SDC DFW VIII, L.P."
+SDC SATB1,,,,,,"SDC SA III, L.P."
+State Farm Richardson Data Center,,,,,,JDM III SF Dallas DC LLC
+Stingray,,,,,,Cipher Stingray LLC
+Switch AUS 4,,,,,,"Switch, LTD"
+Temple Green Data Center,,,,,,Rowan Moriah LLC.
+Terisys Thompsons,,,,,,Terisys LLC
+USBTC Pecos Data Center,,,,,,"U.S. Data Lone Star, Inc."
+Walnut Springs ProjectCo LLC,,,,,,Walnut Springs ProjectCo LLC
+West Texas Data Center,,,,,,WTDM OZB LLC
+Whinstone US Data Center,,,,,,Whinstone US Inc.
+Alamo Data Center,,,,,,Alamo Mission LLC
+Borden County Data Center,,,,,,"Borden County DC, LLC"
+Borden County Data Center Phase 2,,,,,,"BDC Building 2, LLC"
+Bull Data Center,,,,,,IE US Development Holdings 5 Inc.
+C1 Bosque I,,,,,,"Bosque Parcel 2, LLC"
+C1 Bosque II LLC,,,,,,C1 Bosque II LLC
+C1 Fort Worth LLC,,,,,,C1 Fort Worth LLC
+Cinco Data Center,,,,,,Rowan Cinco LLC
+Cipher Barber Lake LLC Data Center,,,,,,Cipher Barber Lake LLC
+Cottonwood Data Center,,,,,,Core Scientific Inc.
+Cutten Data Center,,,,,,"SF HOUC, LLC"
+Cyrusone LLC - Houston West III Data Center,,,,,,Cyrusone LLC
+DFW02 LANCASTER (STACK),,,,,,"SI DFW02A, LLC"
+DFW-04 Data Center,,,,,,"Aligned Data Centers (Plano) Propco, LLC"
+ECX AUS11-16,,,,,,"EdgeConnex MCN Austin Property 5, LLC"
+ECX AUS31-36,,,,,,"EdgeConnex MCN Austin Property 7, LLC"
+"EDC AUSTIN, LLC",,,,,,"EDC Austin, LLC"
+"EDC Fort Worth, LLC",,,,,,EDC Fort Worth LLC
+EdgeConneX AU02,,,,,,"DFW33220N, LLC"
+Fermi Data Center 1,,,,,,"Fermi Inc.; Fermi Equipment Holdco, LLC; Firebird Equipment Holdco, LLC; Fermi Campus 1, LLC; Fermi Warehouse, LLC; Fermi High Voltage Warehouse, LLC; Fermi Turbine Warehouse, LLC; Fermi Mobile Gen, LLC; Fermi Construction LLC"
+Flamingo,,,,,,"Amazon Data Services, Inc."
+Fluidstack Abernathy Data Center,,,,,,FS AB LLC
+Freestone Data Center,,,,,,"C1 Freestone 1, LLC"
+Gulf Horizon Data Center,,,,,,"Amazon Data Services, Inc."
+HEL02 DC,,,,,,Galaxy Helios II LLC
+Hicks Field Data Center,,,,,,"ACS DC Hicks Field Road, LLC"
+Horizon,,,,,,IE US Development Holdings 3 Inc.
+Hutto Data Center 4 LLC,,,,,,Hutto Data Center 4 LLC; Hutto Data Center Campus Power 2 LLC
+Hutto Data Center Campus LLC,,,,,,Hutto Data Center 1 LLC; Hutto Data Center 2 LLC; Hutto Data Center Campus Power LLC
+Lancium Abilene Clean Campus,,,,,,"Lancium LLC; Abilene DC 1, LLC"
+Lancium Abilene Clean Campus II,,,,,,"Abilene DC 1, LLC"
+Lancium Abilene Clean Campus III,,,,,,Abilene DC 3 LLC
+Lancium Abilene Clean Campus IV,,,,,,"Abilene DC 4, LLC"
+Lancium Abilene Clean Campus V,,,,,,Abilene DC 5 LLC
+Lancium Abilene Clean Campus VI,,,,,,Abilene DC 6 LLC
+Lancium Abilene Clean Campus VII,,,,,,Abilene DC 7 LLC
+Lancium Abilene Clean Campus VIII,,,,,,Abilene DC 8 LLC
+Lancium Abilene Clean Campus IX,,,,,,"Abilene DC 9, LLC"
+Lancium Abilene Clean Campus X,,,,,,"Abilene DC 10, LLC"
+Lancium Clean Campus - Childress 1,,,,,,Lancium LLC
+Lancium Clean Campus - Turkey 1,,,,,,Lancium Turkey LLC
+Lincoln Rackhouse,,,,,,"Coreweave, Inc."
+Long Draw Data Center,,,,,,"DDH-LONESTAR-4, LLC"
+Meitner Data Center,,,,,,"IP Meitner DTC, LLC"
+Microsoft Corporation (SAT09 - SAT13),,,,,,Microsoft Corporation
+Milam County Data Center Phase 2,,,,,,"MDC Building 2, LLC"
+Nexus Data Centers,,,,,,"Nexus Data Centers, LLC; Nexus Hubbard Power, LLC; Nexus Data Centers Hubbard LLC; Nexus Data Center Hubbard B1 LLC; Nexus Data Center Hubbard B2 LLC; Nexus Data Center Hubbard B3 LLC; Nexus Data Center Hubbard B4 LLC; Nexus Hubbard Power B1 LLC; Nexus Hubbard Power B2 LLC; Nexus Hubbard Power B3 LLC; Nexus Hubbard Power B4 LLC; Nexus Hubbard Power CFCO LLC; Nexus Hubbard Power DFCO A-1 LLC; Nexus Data Center Hubbard CFCO LLC"
+Pecos Ranch Data Center,,,,,,"Amazon Data Services, Inc."
+Polmer LLC Data Center,,,,,,Polmer LLC
+"Poolside Data Center, Pecos County I",,,,,,"Poolside LF Phase 1 DC OPS, LLC"
+"Poolside Data Center, Pecos County II",,,,,,"Poolside LF Phase 2 DC OPS, LLC"
+PowerCampus Dallas by Lancaster Data Center Campus LP,,,,,,Lancaster Data Center Campus LP
+Project Goldeneye,,,,,,"Montera Infrastructure II, LLC"
+Project Goodnight,,,,,,"GN DC1, LLC; GN DC2, LLC"
+Project Lightning,,,,,,"Vector Lightning, LLC"
+Project Watertower,,,,,,"Redwood Dallas SPV, LLC"
+Project Woodrow,,,,,,Nolan Ranch DC Owner LLC
+Pyote Data Center,,,,,,DDH (North America) Inc.
+Red Oak Texas Data Center,,,,,,"Compass Datacenters DFW IIIA, LLC; Compass Datacenters DFW III, LLC; Compass Datacenters DFW IIIB, LLC; Compass Datacenters DFW IIIC, LLC; Compass Datacenters DFW IIID, LLC; Compass Datacenters DFW IIIE, LLC"
+Riot Corsicana Data Center,,,,,,"Riot Corsicana, LLC"
+Riot Corsicana Data Center I,,,,,,"Riot Platforms, Inc."
+Riot Corsicana Data Center 02,,,,,,"Riot Platforms, Inc."
+Riot Rockdale,,,,,,"Riot Platforms, Inc."
+Riot Rockdale Data Center 1,,,,,,"Riot Platforms, Inc."
+Riot Rockdale Data Center 2,,,,,,"Riot Platforms, Inc."
+Rise Data Center,,,,,,Platon Investments LLC
+Scurry County Data Center Building 2,,,,,,"SDC Building 2, LLC"
+Spectrum Data Center,,,,,,"Amazon Data Services, Inc."
+Stampede Data Center,,,,,,Rowan Stampede LLC
+STN OD1 - Project Landman,,,,,,"RXT POWER, LLC; STN INCORPORATED"
+Sweetwater II,,,,,,IE US DEVELOPMENT HOLDINGS 7 INC.
+TX 301 Data Center,,,,,,"Vantage Data Centers TX301, LLC"
+TX 302 Data Center,,,,,,"Vantage Data Centers TX302, LLC"
+TX 303 Data Center,,,,,,"Vantage Data Centers TX303, LLC"
+TX 304 Data Center,,,,,,"Vantage Data Centers TX304, LLC"
+TX 305 Data Center,,,,,,"Vantage Data Centers TX305, LLC"
+TX 306 Data Center,,,,,,"Vantage Data Centers TX306, LLC"
+TX 307 Data Center,,,,,,"Vantage Data Centers TX307, LLC"
+TX 308 Data Center,,,,,,"Vantage Data Centers TX308, LLC"
+TX 309 Data Center,,,,,,"Vantage Data Centers TX309, LLC"
+TX 310 Data Center,,,,,,"Vantage Data Centers TX310, LLC"
+Winner LLC d/b/a Ernst LLC,,,,,,Winner LLC d/b/a Ernst LLC
+Wurldwide LLC DBA Statue LLC,,,,,,Wurldwide LLC
+EX West Green Data Center (San Antonio),Bexar,San Antonio,1050 Democracy,,,"COPT San Antonio II, LP"
+Sharka Data Center,Ellis,Midlothian,3441 Railport Parkway,,,Sharka LLC
+LinkedIn Richardson Texas Data Center,Dallas,Richardson,1210 Integrity Drive,,,Collins Technology Park Partners LLC
+Red Oak Texas Data Center 2,Ellis,Red Oak,300 Houston School Road,,,"Compass Datacenters DFW IIIJ, LLC; Compass Datacenters DFW III, LLC; Compass Datacenters DFW IIIF, LLC; Compass Datacenters DFW IIIG, LLC; Compass Datacenters DFW IIIH, LLC; Compass Datacenters DFW III-I, LLC"
+Microsoft San Antonio (SAT14),Bexar,San Antonio,3545 Wiseman Boulevard,,,Microsoft Corporation
+Denton Data Center,Denton,Denton,8161 Jim Christal Rd,,,Coreweave Compute Acquisition Co V LLC
+Stream DFW VII Data Center,Dallas,Garland,1813 Lookout Drive,,,SDC DFW VII LP
+Temple Data Center (Bell County),Bell,,2810 Bob White Road,,,Temple Green Data LLC
+Microsoft Corporation (SAT 15-17),Bexar,San Antonio,3555 Westover Link,,,Microsoft Corporation
+Skybox-Austin 1-Data Center Upfit (Pflugerville),Travis,Pflugerville,600 New Meister Lane,,,Austin Data Center 1 LLC
+NTT Global Data Centers Americas - Dallas TX2,Dallas,Garland,2108 Lookout Drive,,,"NTT Global Data Centers TX, LLC"
+NTT Global Data Centers Americas - Dallas TX3,Dallas,Garland,2080 Lookout Drive,,,"NTT Global Data Centers TX, LLC"
+SAT40 (San Antonio),Bexar,San Antonio,15000 Lambda Drive,,,Microsoft
+Microsoft Corporation (SAT 80-85),Medina,Castroville,18844 FM 1957,,,Microsoft Corporation
+Rellis Campus Data and Research Center,Brazos,College Station,State Highway 21 and Rellis Parkway,,,Rellis Campus Data and Research Center LLC
+TX21-22 Data Center,Bexar,San Antonio,5207 ROGERS ROAD,,,"Vantage Data Centers TX21, LLC; Vantage Data Centers TX22, LLC"
+TX11 Data Center,Bexar,San Antonio,14720 Omicron Dr.,,,"Vantage Data Centers TX11, LLC"
+Prime Data Center (Dallas),Dallas,Dallas,1455 Round Table Dr.,,,"1515 Roundtable Dr Property, LLC"
+QTS Irving 1,Dallas,Irving,6300 Longhorn Drive,,,"QTS Irving DC3, LLC; QTS Irving DC4, LLC; QTS Irving DC5, LLC; QTS Irving DC6, LLC"
+Childress Data Center,Childress,Childress,620 FM 1033,,,IE US Development Holdings 3 Inc.
+Oppidan 5MW Data Center (El Paso),El Paso,El Paso,9879 North Loop Drive,,,Oppidan
+SAT93 / SAT94 (Medina),Medina,Medina,County Road 381,,,Microsoft
+Microsoft Corporation (SAT 89-90),Medina,Castroville,2995 US HWY 90 W,,,Microsoft Corporation
+AREP Powerhouse Las Colinas (Irving),Dallas,Irving,111 Customer Way,,,American Real Estate Partners
+5MW Temple Data Center (Temple),Bell,Temple,2313 Eberhardt Road,,,Oppidan
+Thelma Data Center,Haskell,Haskell,10357 Loop Road,,,Homebound Group LLC
+TX11-12 Data Center,Bexar,San Antonio,17420 Omicron Dr,,,"Vantage Data Centers TX11, LLC; Vantage Data Centers TX12, LLC"
+Stream Data Centers - DFWC1 (Wilmer),Dallas,Wilmer,930 N Sunrise Rd,,,"SDC DFWC, LP"
+Temple Data Center,Bell,Temple,2230 Eberhardt Rd,,,Rowan Temple LLC
+Project Pumpkin (Miami),Gray,Miami,8810 Co. Rd. 21,,,IP Meitner Land LLC
+AREP Power House Grand Prairie (Midlothian),Ellis,Midlothian,881 Miller Road,,,Prairie Ridge Phase 1 Owner LP
+Hutto Data Center 3 LLC,Williamson,Hutto,3300 COUNTY RD 132,,,Hutto Data Center 3 LLC; Hutto Data Center Campus Power LLC
+Milam County Data Center,Milam,Burlington,COUNTY ROAD 133,,,"MDC Building 1, LLC"
+AUS 01 02 03 Data Center,Caldwell,Lockhart,1395 Bob White Road,,,Lockhart Property LLC
+Project Ditto (Corsicana),Navarro,Corsicana,6980 FM 709,,,"Riot Platforms, Inc."
+BT Gateway Data Center (Royse City),Hunt,Royse City,4989 COUNTY ROAD 2656,,,Giga AFM LLC
+Project Eagle (Boling),Wharton,Boling,244 Eaglewood Rd,,,"AMAZON DATA SERVICES, INC"
+Confidential Data Center (Floydada),Floyd,Floydada,1752 County Road 241,,,"AMAZON DATA SERVICES, INC"
+Pecos County Data Center (Fort Stockton),Pecos,Fort Stockton,6000 TX-18,,,"AMAZON DATA SERVICES, INC"
+Colovore Hutto (Hutto),Williamson,Hutto,2401 Innovation Boulevard,,,"Colovore Austin 1, LLC"
+Beacon Point 1 Data Center,Nueces,Corpus Christi,4650 FM 1694,,,"Beacon Point Commercial Property Owners Association, Inc.; TX Energy Dev, LLC; Beacon Point DC, LLC"
+Colovore Alliance (Fort Worth),Denton,Fort Worth,14700 Heritage Parkway,,,AIL INVESTMENT LP

@@ -45,7 +45,7 @@ cp .env.example .env    # then fill in the values
 | `DATABASE_URL_RO` | web | Same host, `gridsight_ro` role (read-only, 3 s statement timeout) |
 | `GEMINI_API_KEY` | web | Ask GridSight. Without it, the chat replies that it isn't configured |
 | `GEMINI_MODEL` | web | Gemini model id |
-| `MW_COST_PER_MW_USD` | ETL | Construction USD per MW. If blank, `mw_est` is NULL and the UI shows "—" for MW/GW |
+| `MW_COST_PER_MW_USD` | ETL | Optional override. The default in `etl/config.py` is $17.6M/MW from the Cushman & Wakefield 2026 Data Center Development Cost Guide (US & Canada all-in average) |
 | `BACKFILL_START` | ETL | First date of the weekly score backfill. Default `2024-01-01` |
 
 For local development, the web app reads the repo-root `.env` too (see `web/next.config.ts`),
@@ -76,6 +76,19 @@ scores, refreshes the continuous aggregate, and prints a summary. It is idempote
 after editing any CSV. Loading a non-sample directory removes previously loaded SAMPLE rows.
 `--reset` truncates everything first.
 
+Real data comes from two verified public sources in `data/raw/` (see `data/raw/README.md`).
+Convert them into `data/seed/`, then load. Run the Comptroller import first, because the TDLR
+import adds to its sites:
+
+```bash
+python etl/import_comptroller.py --file data/raw/comptroller_data_centers_2026-09-26.csv
+python etl/import_tdlr.py --file data/raw/tdlr_data_centers_2026-09-26.csv
+python etl/run_all.py --dir data/seed
+```
+
+Geocoding uses the U.S. Census batch geocoder first, then OpenStreetMap Nominatim (1 request/s).
+An OSM result is only accepted when its house number and county match the address.
+
 Individual steps:
 
 ```bash
@@ -84,6 +97,7 @@ python etl/load_tceq.py --file path/to/tceq_bulk.csv   # set column names at the
 python etl/geocode.py
 python etl/score.py                                   # backfill + refresh
 python etl/score.py --project 12 --as-of 2025-06-01   # score one project as of a date
+python etl/check_integrity.py                         # read-only audit of the database (exit 1 on failure)
 ```
 
 ### 4. Web
