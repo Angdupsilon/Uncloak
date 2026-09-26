@@ -73,7 +73,29 @@ export interface ProjectFilters {
 }
 
 // Latest score per project as of $1, plus cost/permit evidence consistent with that score.
+// Materializing the latest scores lets the evidence table join to all projects in one
+// pass. A per-project lateral aggregate makes Timescale scan every evidence chunk once
+// per project, which becomes especially expensive while the date slider is playing.
 const PROJECTS_AS_OF = `
+  WITH latest_scores AS MATERIALIZED (
+    SELECT p.project_id, s.ts, s.score, s.probability, s.mw_est, s.factors
+    FROM projects p
+    JOIN LATERAL (
+      SELECT ps.ts, ps.score, ps.probability, ps.mw_est, ps.factors
+      FROM project_scores ps
+      WHERE ps.project_id = p.project_id AND ps.ts <= ${DAY_START}
+      ORDER BY ps.ts DESC LIMIT 1
+    ) s ON true
+  ),
+  evidence_by_project AS (
+    SELECT s.project_id,
+           SUM(x.value_num) FILTER (WHERE x.event_type = 'building_registered') AS total_cost,
+           bool_or(x.event_type = 'permit_filed') AS has_permit
+    FROM latest_scores s
+    LEFT JOIN evidence_events x
+      ON x.project_id = s.project_id AND x.ts < s.ts + interval '1 day'
+    GROUP BY s.project_id
+  )
   SELECT p.project_id, p.name, p.county, p.city, p.lat, p.lon, p.is_sample,
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color,
@@ -82,18 +104,8 @@ const PROJECTS_AS_OF = `
   FROM projects p
   LEFT JOIN entities e ON e.entity_id = p.entity_id
   LEFT JOIN parents pa ON pa.parent_id = e.parent_id
-  JOIN LATERAL (
-    SELECT ps.ts, ps.score, ps.probability, ps.mw_est, ps.factors
-    FROM project_scores ps
-    WHERE ps.project_id = p.project_id AND ps.ts <= ${DAY_START}
-    ORDER BY ps.ts DESC LIMIT 1
-  ) s ON true
-  LEFT JOIN LATERAL (
-    SELECT SUM(x.value_num) FILTER (WHERE x.event_type = 'building_registered') AS total_cost,
-           bool_or(x.event_type = 'permit_filed') AS has_permit
-    FROM evidence_events x
-    WHERE x.project_id = p.project_id AND x.ts < s.ts + interval '1 day'
-  ) ev ON true`;
+  JOIN latest_scores s ON s.project_id = p.project_id
+  LEFT JOIN evidence_by_project ev ON ev.project_id = p.project_id`;
 
 type ProjectRow = Omit<Project, "tier" | "scored_at"> & { scored_at: Date };
 

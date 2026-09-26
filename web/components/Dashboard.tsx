@@ -129,7 +129,13 @@ export default function Dashboard({ today }: { today: string }) {
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
       <footer className="flex items-center gap-8 rounded-xl border border-[#e2e2e2] bg-white px-5 py-3 pr-[420px] shadow-[var(--shadow-card)]">
-        <DateSlider start={config.data?.backfill_start ?? null} end={today} value={asOf} onChange={setAsOf} />
+        <DateSlider
+          start={config.data?.backfill_start ?? null}
+          end={today}
+          value={asOf}
+          loading={summary.loading || projects.loading || parents.loading}
+          onChange={setAsOf}
+        />
         <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
         <div className="min-w-0 flex-1">
           <ParentFilter

@@ -23,11 +23,13 @@ export default function DateSlider({
   start,
   end,
   value,
+  loading,
   onChange,
 }: {
   start: string | null;
   end: string;
   value: string;
+  loading: boolean;
   onChange: (asOf: string) => void;
 }) {
   const steps = useMemo(() => weeklySteps(start ?? end, end), [start, end]);
@@ -36,12 +38,13 @@ export default function DateSlider({
   const atEnd = idx >= steps.length - 1;
   const isPlaying = playing && !atEnd;
 
-  // Advance one week per tick while playing; stops by itself at the last step.
+  // Advance only after the current dashboard snapshot has loaded. Without this
+  // backpressure, every 300 ms tick starts three more database-backed requests.
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || loading) return;
     const timer = setTimeout(() => onChange(steps[idx + 1]), UI.playStepMs);
     return () => clearTimeout(timer);
-  }, [isPlaying, idx, steps, onChange]);
+  }, [isPlaying, loading, idx, steps, onChange]);
 
   const togglePlay = () => {
     if (isPlaying) return setPlaying(false);

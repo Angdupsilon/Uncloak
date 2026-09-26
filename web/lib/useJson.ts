@@ -28,6 +28,7 @@ export function useJson<T>(url: string | null) {
   return {
     data: url ? state.data : null,
     loading: !!url && state.forUrl !== url,
-    error: url ? state.error : null,
+    // Do not surface an error from the previous URL while a newer snapshot loads.
+    error: url && state.forUrl === url ? state.error : null,
   };
 }
