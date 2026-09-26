@@ -288,7 +288,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       cta: "How it works",
       visual: (
         <div className="flex h-full flex-col justify-center gap-2 p-5">
-          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports", "Illinois DCEO data-center MOUs", "Minnesota DEED qualified data centers", "IM3 data-center atlas (OpenStreetMap)"].map((t) => (
+          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports", "Illinois DCEO data-center MOUs", "Minnesota DEED qualified data centers", "Indiana IEDC data-center contracts", "Wisconsin certified data centers", "IM3 data-center atlas (OpenStreetMap)"].map((t) => (
             <div key={t} className="flex items-center gap-2.5 rounded-md bg-white/[0.07] px-3 py-2 text-[12px] text-white/85">
               <span aria-hidden className="grid h-4 w-4 place-items-center rounded-full bg-white text-[9px] font-bold text-black">
                 ✓

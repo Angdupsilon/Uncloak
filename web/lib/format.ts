@@ -63,6 +63,8 @@ export function describeEvent(e: EvidenceEvent): string {
     case "certified":
       if (e.source === "IL_DCEO") return `Illinois Data Center Investment Program MOU${p.mou_year ? ` (${String(p.mou_year)})` : ""}`;
       if (e.source === "MN_DEED") return "Listed as a certified qualified data center by Minnesota DEED";
+      if (e.source === "IN_IEDC") return `Indiana data center sales tax exemption contract${p.iedc_project_id ? ` (IEDC ${String(p.iedc_project_id)})` : ""}`;
+      if (e.source === "WI_DOR") return "Certified as a qualified data center in Wisconsin";
       return "Comptroller certified";
     case "inspection_done":
       return "Inspection done";

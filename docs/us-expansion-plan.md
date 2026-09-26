@@ -12,7 +12,9 @@ from the record.
 > stay Texas-only, and Texas scores are unchanged. Grid-operator tags (`site_regions`, EIA-861 2024
 > by county, 1/n confidence) are loaded for 1,460 of 1,530 sites. Virginia DEQ's permit list (194) is
 > loaded for review and the source/event pairing is state-aware; VA matching waits on the permit PDFs.
-> Illinois DCEO (34 MOUs) and Minnesota DEED (42 certified) incentive registries are loaded.
+> Illinois DCEO (34 MOUs), Minnesota DEED (42), Indiana IEDC (12 contracts) and Wisconsin DOR (4)
+> incentive registries are loaded; Ohio, Nevada, Arizona and Washington were checked and not loaded
+> (no cumulative site-level list; see data/raw/README.md).
 > Still to do: role-based scoring
 > (section 5), data-center load reports (Phase 2) and state records (Phase 3). The EIA NAICS-518 plants were left out: only 3 of 17 match an atlas site within
 > 500 m with operating capacity.

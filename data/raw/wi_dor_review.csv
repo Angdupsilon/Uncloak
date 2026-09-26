@@ -1,0 +1,5 @@
+business_entity,certification_date,city,organization,organization_basis,status,project,match_basis,possible_mapped_duplicates,mapped_sites_same_org
+Microsoft,2023-10-01,Mount Pleasant,Microsoft,names Microsoft,own_project,"Microsoft · Mount Pleasant, WI",the record states no address,0,
+"Epic Hosting, LLC",2024-09-24,Verona,,no organization named in the record,own_project,"Epic Hosting · Verona, WI",no organization to compare,0,
+Degas LLC,2025-02-18,Beaver Dam,,no organization named in the record,own_project,"Degas · Beaver Dam, WI",no organization to compare,0,
+"Oracle America Cloud Services LLC / (formerly Green Chile Ventures, LLC)",2025-10-31,Port Washington,Oracle,names Oracle,own_project,"Oracle America Cloud Services · Port Washington, WI",the record's address could not be geocoded,0,

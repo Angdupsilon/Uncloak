@@ -300,6 +300,50 @@ state, which may be the same facility. Those are listed for review and never mer
 never expanded into a brand it doesn't state: "C1 Chicago Aurora III LLC" stays unlinked even though
 another row reads "CyrusOne (C1 Chicago)".
 
+## `in_iedc_data_contracts_2026-09-26.json`
+
+Indiana Economic Development Corporation Transparency Portal, "Search for Tax Credits, Grants, and Loan
+Contracts" filtered to Fund Type DATA (the data center sales tax exemption):
+https://transparencyportal.iedc.in.gov/searchtaxgrantloancontracts (retrieved 2026-09-26). The file
+is the portal's own search API response, with the request that produced it. 13 contracts, each with
+recipient, city, county, contract date and status, expected and actual investment, and the amount
+certified to date. The same 13 rows appear on the portal page with the same filter.
+
+- 12 are executed (or in post-term reporting) and load as their own projects, dated at the contract
+  date. Microsoft's LaPorte offer (IEDC 425481) is `pendingAcceptedOffer`, with no contract date or
+  document, and is listed in `in_iedc_review.csv` but not loaded.
+- The contract documents are scanned PDFs with no text layer, so IEDC publishes no address in
+  machine-readable form and no contract attaches to a mapped site. Each event links its contract PDF.
+- Most recipients are special-purpose LLCs ("Blocke LLC", "Orla LLC") and stay unlinked to an
+  organization; only Amazon Data Services is named (two contracts). DX Hammond Opco lists Indianapolis as
+  its city and Lake County as its county, as published.
+
+## `wi_dor/` and `wi_dor_qualified_data_centers_2026-09-26.csv`
+
+Wisconsin Department of Revenue, "Qualified Data Center Exemption" FAQ, "Which qualified data centers
+have been certified in Wisconsin?" (as of October 31, 2025), snapshotted 2026-09-26:
+https://www.revenue.wi.gov/Pages/FAQS/ExemptionforQualifiedDataCenter.aspx . Four certified data
+centers with business entity, certification date, location and building description, read from the
+page's table (`etl/import_wi_dor.py --html`). Events are dated at the certification date.
+
+Only Oracle's entry states house numbers ("531, 533, 701, and 723 E. Lake Drive", Port Washington);
+the Census geocoder can't place them yet, so it loads as its own project. "90th Street" (Microsoft,
+Mount Pleasant) is a street, not an address.
+
+## Registries checked and not loaded (2026-09-26)
+
+- **Ohio (Tax Credit Authority data-center exemptions):** approvals appear only in the monthly TCA
+  meeting minutes (PDF and DOCX, under several URL patterns on dam.assets.ohio.gov and
+  development.ohio.gov), with no index page or cumulative list found. A partial set from the minutes
+  that search engines surface would look complete when it isn't, so none is loaded.
+- **Nevada (GOED abatements):** the same shape: approvals are in GOED board agendas and minutes, with no
+  cumulative list.
+- **Arizona (Computer Data Center Program):** the program page lists no certified data centers, and the
+  ACA incentive reports cover the Competes Fund and Qualified Facility credits but not this program.
+- **Washington (DOR tax incentive public disclosure):** the data-center exemption data is reported per
+  business account and year, with no site or address. A business can operate several sites, so rows
+  can't become sites without inventing site boundaries.
+
 ## `us_source_catalog.csv`
 
 Candidate public sources for coverage outside Texas, one row per source, with its role

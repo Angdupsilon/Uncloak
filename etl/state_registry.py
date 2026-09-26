@@ -100,12 +100,12 @@ def mapped_sites(state: str) -> list[dict]:
     return [dict(p, parent=parent_of.get(p["llc_name"], "")) for p in read(nat / "projects.csv") if p["state"] == state]
 
 
-def confirmed_site(parent: str | None, lat: str, lon: str, sites: list[dict]) -> tuple[dict | None, str]:
+def confirmed_site(parent: str | None, lat: str, lon: str, sites: list[dict], address: str = "") -> tuple[dict | None, str]:
     """The one same-organization mapped site within 250 m of the record's own address, if exactly one."""
     if not parent:
         return None, "no organization to compare"
     if not (lat and lon):
-        return None, "the record states no address"
+        return None, "the record's address could not be geocoded" if address else "the record states no address"
     same = [s for s in sites if s["parent"] == parent]
     near = sorted((haversine_m((float(lat), float(lon)), (float(s["lat"]), float(s["lon"]))), s["name"], i) for i, s in enumerate(same))
     within = [n for n in near if n[0] <= MAX_M]

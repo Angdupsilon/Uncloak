@@ -114,7 +114,7 @@ export default async function Methodology() {
                     <strong className="font-semibold text-black">TDLR tenant:</strong> the organization is the named tenant on a construction registration.
                   </li>
                   <li>
-                    <strong className="font-semibold text-black">State incentive registries (Illinois, Minnesota):</strong> the registry&apos;s company text
+                    <strong className="font-semibold text-black">State incentive registries (Illinois, Minnesota, Indiana, Wisconsin):</strong> the registry&apos;s company text
                     names the organization, for example &ldquo;Digital Realty Trust, LP&rdquo;. Special-purpose LLCs whose names don&apos;t state a brand stay
                     unlinked. A registry record joins a mapped site only when the record states an address within 250 m of a site of the same organization;
                     otherwise it is its own site, and possible duplicates are listed for review, never merged.
@@ -250,8 +250,9 @@ export default async function Methodology() {
               <Section id="limits" title="Coverage limits">
                 <ul className="list-disc space-y-2 pl-6">
                   <li>
-                    Public records are deepest in Texas (Comptroller, TDLR, TCEQ, ERCOT). Illinois (DCEO Data Center Investment Program) and Minnesota
-                    (DEED qualified data centers) add state incentive registries, and Virginia DEQ&apos;s data-center air-permit list is loaded but not yet
+                    Public records are deepest in Texas (Comptroller, TDLR, TCEQ, ERCOT). Illinois (DCEO Data Center Investment Program), Minnesota
+                    (DEED qualified data centers), Indiana (IEDC exemption contracts) and Wisconsin (DOR certified data centers) add state incentive
+                    registries, and Virginia DEQ&apos;s data-center air-permit list is loaded but not yet
                     matched to sites. Elsewhere, sites come from the IM3 Open Source Data Center Atlas, which maps data-center buildings from OpenStreetMap.
                     Those sites have a location, footprint and operator tag but no public record yet, so they score 0 on the evidence index. Each checklist
                     item says when its record type isn&apos;t published in a state, which is different from a record that was checked and found missing.

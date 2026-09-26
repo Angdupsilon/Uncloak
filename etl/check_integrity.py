@@ -145,8 +145,8 @@ d = one("""select count(*) from (select payload->>'owner_registration' r, payloa
           where event_type='certified' and source='COMPTROLLER' group by 1,2 having count(*)>1) x""")
 check("duplicates","each Comptroller registration once", d == 0, f"dups={d}")
 d = one("""select count(*) from (select source, payload->>'company', payload->>'data_center_name', payload->>'mou_year',
-          payload->>'site_location', count(*) from evidence_events
-          where event_type='certified' and source <> 'COMPTROLLER' group by 1,2,3,4,5 having count(*)>1) x""")
+          payload->>'site_location', payload->>'iedc_project_id', payload->>'certification_date', count(*) from evidence_events
+          where event_type='certified' and source <> 'COMPTROLLER' group by 1,2,3,4,5,6,7 having count(*)>1) x""")
 check("duplicates","each state-registry record once", d == 0, f"dups={d}")
 bad = [(src, st, n) for src, st, n in q("select e.source, p.state, count(*) from evidence_events e join projects p using (project_id) group by 1,2")
        if config.SOURCE_STATE.get(src) not in (None, st)]

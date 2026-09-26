@@ -24,7 +24,7 @@ EVENT_SOURCES: dict[str, dict[str, str]] = {
     "square_footage": {"TX": "TDLR"},
     "tenant_named": {"TX": "TDLR"},
     "inspection_done": {"TX": "TDLR"},
-    "certified": {"TX": "COMPTROLLER", "IL": "IL_DCEO", "MN": "MN_DEED"},
+    "certified": {"TX": "COMPTROLLER", "IL": "IL_DCEO", "MN": "MN_DEED", "IN": "IN_IEDC", "WI": "WI_DOR"},
     "permit_filed": {"TX": "TCEQ", "VA": "VA_DEQ"},
     "status_change": {"*": "OTHER"},
     # National layer: a data center mapped in the IM3 Open Source Data Center Atlas
@@ -43,7 +43,7 @@ EVENT_TYPES: dict[str, str] = {et: m.get("TX", m.get("*")) for et, m in EVENT_SO
 SOURCES = {src for m in EVENT_SOURCES.values() for src in m.values()}
 # The state whose records each source publishes (None: any state).
 SOURCE_STATE: dict[str, str | None] = {"TDLR": "TX", "COMPTROLLER": "TX", "TCEQ": "TX", "VA_DEQ": "VA",
-                                       "IL_DCEO": "IL", "MN_DEED": "MN",
+                                       "IL_DCEO": "IL", "MN_DEED": "MN", "IN_IEDC": "IN", "WI_DOR": "WI",
                                        "OSM": None, "OTHER": None}
 
 
@@ -71,7 +71,7 @@ FACTORS: list[dict] = [
     {"key": "tenant_named", "points": 20, "event_type": "tenant_named", "min_count": 1,
      "rule": "A tenant is named in a TDLR record"},
     {"key": "comptroller_certified", "points": 15, "event_type": "certified", "min_count": 1, "role": "incentive_registry",
-     "rule": "Certified by a state data-center incentive program (Texas Comptroller, Illinois DCEO, Minnesota DEED)"},
+     "rule": "Certified by a state data-center incentive program (Texas Comptroller; IL, MN, IN, WI registries)"},
     # The key stays tceq_permit so stored Texas factor flags are unchanged.
     {"key": "tceq_permit", "points": 15, "event_type": "permit_filed", "min_count": 1, "role": "air_permit",
      "rule": "A state air permit for the site has been filed (TCEQ in Texas, DEQ in Virginia)"},

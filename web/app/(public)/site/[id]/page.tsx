@@ -168,6 +168,18 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
                 Investment Program, which grants sales-tax exemptions.{" "}
               </>
             )}
+            {certEvent && certSource === "IN_IEDC" && (
+              <>
+                The Indiana Economic Development Corporation signed a data-center sales-tax exemption contract for it on{" "}
+                {fmtDate(String(certEvent.payload?.contract_date ?? certEvent.ts))}.{" "}
+              </>
+            )}
+            {certEvent && certSource === "WI_DOR" && (
+              <>
+                Wisconsin certified it as a qualified data center on {fmtDate(certEvent.ts)}, making it eligible for the state&apos;s data-center sales and
+                use tax exemption.{" "}
+              </>
+            )}
             {certEvent && certSource === "MN_DEED" && (
               <>
                 Minnesota DEED lists it as a certified qualified data center (list dated {fmtDate(String(certEvent.payload?.list_date ?? certEvent.ts))}), eligible
@@ -262,6 +274,12 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
               <p>
                 Registration in the Comptroller program means the state lists this site as eligible for a data-center sales-tax exemption. The registry
                 doesn&apos;t publish the value of any exemption.
+              </p>
+            )}
+            {certEvent && certSource === "IN_IEDC" && certEvent.payload?.expected_investment_usd != null && (
+              <p>
+                The contract expects {fmtUSD(Number(certEvent.payload.expected_investment_usd))} of investment; IEDC reports{" "}
+                {fmtUSD(Number(certEvent.payload.actual_investment_usd ?? 0))} made so far. These are the contract&apos;s figures, not a construction cost.
               </p>
             )}
             {certEvent && certSource === "IL_DCEO" && certEvent.payload?.investment_commitment_usd != null && (

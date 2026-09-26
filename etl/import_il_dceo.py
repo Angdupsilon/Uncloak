@@ -100,7 +100,7 @@ def main(pdf: Path | None) -> None:
                             "source_url": REPORT_URL if parent else ""}
         if parent:
             parents[parent] = sr.parent_color(parent)
-        site, match_basis = sr.confirmed_site(parent, r["lat"], r["lon"], sites)
+        site, match_basis = sr.confirmed_site(parent, r["lat"], r["lon"], sites, r["address_from_report"])
         target = site["name"] if site else name
         if not site:
             projects.append({"name": name, "state": STATE, "county": "", "city": r["site_location"],

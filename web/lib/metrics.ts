@@ -58,6 +58,18 @@ export const SOURCES = {
     url: "https://mn.gov/deed/business/financing-business/tax-credits/data-center-credit/",
     what: "Data centers certified for Minnesota's data-center sales-tax exemption, with company, city and type. No certification dates or addresses are published.",
   },
+  IN_IEDC: {
+    name: "Indiana IEDC Transparency Portal, data center sales tax exemption contracts",
+    short: "Indiana IEDC",
+    url: "https://transparencyportal.iedc.in.gov/searchtaxgrantloancontracts",
+    what: "Executed data-center sales-tax exemption contracts (fund type DATA), with recipient, city, county, contract date and investment.",
+  },
+  WI_DOR: {
+    name: "Wisconsin Department of Revenue, certified qualified data centers",
+    short: "Wisconsin DOR",
+    url: "https://www.revenue.wi.gov/Pages/FAQS/ExemptionforQualifiedDataCenter.aspx",
+    what: "Data centers certified by WEDC for Wisconsin's data-center sales and use tax exemption, with certification date and location.",
+  },
   ERCOT: {
     name: "ERCOT large-load interconnection reports",
     short: "ERCOT",
