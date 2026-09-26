@@ -57,4 +57,5 @@ export const UI = {
   ] as [[number, number], [number, number]],
   fitPaddingPx: 40,
   fitMaxZoom: 10,
+  parentChipsCollapsed: 8,
 };

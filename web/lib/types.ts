@@ -24,11 +24,15 @@ export interface Project {
 }
 
 export interface ErcotPoint {
-  ts: string;
+  ts: string; // date of gw_requested
   gw_requested: number | null;
-  gw_approved: number | null;
-  gw_observed_peak: number | null;
   source_url: string | null;
+  gw_approved: number | null; // "Approval to Energize"
+  approved_ts: string | null;
+  approved_source_url: string | null;
+  gw_observed_peak: number | null; // "Observed Energized" (all-time non-simultaneous peak)
+  peak_ts: string | null;
+  peak_source_url: string | null;
 }
 
 export interface WeeklyPoint {

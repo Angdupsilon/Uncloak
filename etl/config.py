@@ -26,7 +26,7 @@ EVENT_TYPES: dict[str, str] = {
     "status_change": "OTHER",
 }
 SOURCES = {"TDLR", "COMPTROLLER", "TCEQ", "OTHER"}
-RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "MANUAL"}
+RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "TDLR_OWNER", "MANUAL"}
 
 # Checklist factors (spec section 6). Order is display order.
 #   min_count: factor is true when the project has >= min_count events of event_type
@@ -52,9 +52,17 @@ assert MAX_SCORE == 100, "factor points must sum to 100"
 
 # Construction cost (USD) per MW of IT load. <<FILL>> by the team via env.
 # When unset, mw_est is stored as NULL (no MW estimate), never guessed.
+# Default: Cushman & Wakefield 2026 Data Center Development Cost Guide (published 2026-09-03),
+# US & Canada average all-in greenfield development cost of $17.6M per MW, excluding chips/GPUs.
+# https://ir.cushmanwakefield.com/news/press-release-details/2026/Cushman--Wakefield-Releases-2026-Data-Center-Development-Cost-Guide-Citing-21-Rise-in-Per-MW-Construction-Costs/default.aspx
+# It is a national all-in average (includes land); the guide notes Texas markets are among the
+# cheapest, so MW estimates from Texas construction costs lean conservative.
+MW_COST_DEFAULT_USD = 17_600_000
+MW_COST_DEFAULT_SOURCE = "Cushman & Wakefield 2026 Data Center Development Cost Guide (US & Canada average, all-in, excl. chips/GPUs)"
+
 _mw_env = os.getenv("MW_COST_PER_MW_USD", "").strip()
-MW_COST_PER_MW_USD: float | None = float(_mw_env) if _mw_env else None
-MW_COST_SOURCE: str | None = "env" if MW_COST_PER_MW_USD else None
+MW_COST_PER_MW_USD: float | None = float(_mw_env) if _mw_env else MW_COST_DEFAULT_USD
+MW_COST_SOURCE: str | None = (os.getenv("MW_COST_SOURCE", "").strip() or "env") if _mw_env else MW_COST_DEFAULT_SOURCE
 
 BACKFILL_START: date = date.fromisoformat(os.getenv("BACKFILL_START", "2024-01-01"))
 

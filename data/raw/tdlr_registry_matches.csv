@@ -1,0 +1,65 @@
+tdlr_project_number,registry_site,status,basis
+EABPRJB8824712,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2019008945,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2019012848,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2019018578,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2020008045,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2024013301,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2026007415,Sharka Data Center,confirmed,TDLR owner Sharka LLC = registry owner Sharka LLC
+TABS2020011706,LinkedIn Richardson Texas Data Center,confirmed,TDLR owner Collins Technology Park Partners = registry owner; Richardson
+TABS2020019741,Red Oak Texas Data Center 2,confirmed,"TDLR project 'Compass Datacenters DFW III-I, LLC' is a registry owner of this site; Red Oak"
+TABS2021019142,Microsoft San Antonio (SAT14),confirmed,site code SAT14; owner Microsoft
+TABS2021019471,Microsoft San Antonio (SAT14),confirmed,site code SAT14; owner Microsoft
+TABS2021019588,Microsoft San Antonio (SAT14),confirmed,site code SAT14; owner Microsoft
+TABS2021019686,Microsoft San Antonio (SAT14),confirmed,site code SAT14; owner Microsoft
+TABS2022026535,Microsoft Corporation (SAT 15-17),confirmed,site code SAT15; owner Microsoft
+TABS2023024471,Microsoft Corporation (SAT 80-85),confirmed,site codes SAT80/SAT81/SAT82 within SAT 80-85; owner Microsoft
+TABS2023024474,Microsoft Corporation (SAT 80-85),confirmed,site codes SAT80/SAT81/SAT82 within SAT 80-85; owner Microsoft
+TABS2024023976,Microsoft Corporation (SAT 80-85),confirmed,site codes SAT80/SAT81/SAT82 within SAT 80-85; owner Microsoft
+TABS2026008231,Microsoft Corporation (SAT 80-85),confirmed,site codes SAT80/SAT81/SAT82 within SAT 80-85; owner Microsoft
+TABS2025012765,Microsoft Corporation (SAT 89-90),confirmed,site code SAT89/90; owner Microsoft
+TABS2022003099,Denton Data Center,confirmed,"TDLR 'Core Scientific Denton'; registry operator Core Scientific, Inc.; Denton"
+TABS2022003102,Denton Data Center,confirmed,"TDLR 'Core Scientific Denton'; registry operator Core Scientific, Inc.; Denton"
+TABS2022005461,Denton Data Center,confirmed,"TDLR 'Core Scientific Denton'; registry operator Core Scientific, Inc.; Denton"
+TABS2022005463,Denton Data Center,confirmed,"TDLR 'Core Scientific Denton'; registry operator Core Scientific, Inc.; Denton"
+TABS2025005706,Denton Data Center,confirmed,"TDLR 'Core Scientific Denton'; registry operator Core Scientific, Inc.; Denton"
+TABS2022006854,Stream DFW VII Data Center,confirmed,TDLR owner SDC DFW VII LP = registry owner SDC DFW VII LP
+TABS2022005637,Stream DFW VII Data Center,confirmed,site code 'DFW 07' (= DFW VII); owner Stream Data Centers; Garland
+TABS2026008019,Temple Data Center,confirmed,same project name; TDLR owner Polmer LLC = registry occupant Polmer LLC; Temple
+TABS2023003319,NTT Global Data Centers Americas - Dallas TX2,confirmed,site code TX2; NTT; Garland
+TABS2023022536,NTT Global Data Centers Americas - Dallas TX2,confirmed,site code TX2; NTT; Garland
+TABS2023008613,NTT Global Data Centers Americas - Dallas TX3,confirmed,site code TX3; NTT; Garland
+TABS2023022537,NTT Global Data Centers Americas - Dallas TX3,confirmed,site code TX3; NTT; Garland
+TABS2024004718,Rellis Campus Data and Research Center,confirmed,same name; owner Rellis Campus Data and Research Center / Texas A&M System
+TABS2024016087,Rellis Campus Data and Research Center,confirmed,same name; owner Rellis Campus Data and Research Center / Texas A&M System
+TABS2024005974,TX21-22 Data Center,confirmed,site codes TX21/TX22; Vantage
+TABS2026003003,TX21-22 Data Center,confirmed,site codes TX21/TX22; Vantage
+TABS2026006358,TX21-22 Data Center,confirmed,site codes TX21/TX22; Vantage
+TABS2024007561,TX11 Data Center,confirmed,site code TX11; Vantage
+TABS2026001234,TX11-12 Data Center,confirmed,site code TX12; Vantage
+TABS2024014529,QTS Irving 1,confirmed,"site code DFW1-DC6; registry owner QTS Irving DC6, LLC; Irving"
+TABS2024024946,Childress Data Center,confirmed,TDLR owner IE US Development Holdings 3 = registry owner; Childress
+TABS2026003980,Childress Data Center,confirmed,TDLR owner IE US Development Holdings 3 = registry owner; Childress
+TABS2025019833,Thelma Data Center,confirmed,TDLR owner Homebound Group LLC = registry owner Homebound Group LLC
+TABS2026007451,Thelma Data Center,confirmed,TDLR owner Homebound Group LLC = registry owner Homebound Group LLC
+TABS2026017642,Hutto Data Center 3 LLC,confirmed,TDLR owner Hutto Data Center 3 LLC = registry owner
+TABS2026019473,AUS 01 02 03 Data Center,confirmed,"TDLR owner Lockhart Property, LLC = registry owner Lockhart Property LLC"
+TABS2027000611,Beacon Point 1 Data Center,confirmed,"TDLR owner Beacon Point DC LLC = registry occupant/operator Beacon Point DC, LLC"
+TABS2026017746,Milam County Data Center,confirmed,"TDLR owner 'Milam County Data Center LLC' = registry operator 'Milam County DC, LLC' (DC = Data Center); Milam County"
+TABS2022007939,Temple Green Data Center,probable,TDLR owner 'Temple Green Data LLC' resembles site name; registry owner is Rowan Moriah LLC
+TABS2022021892,Temple Data Center or Polmer LLC Data Center,probable,"owner Polmer LLC at 3101 Industrial Blvd, Temple; two registry sites involve Polmer"
+TABS2025007641,Temple Data Center or Polmer LLC Data Center,probable,"owner Polmer LLC at 3101 Industrial Blvd, Temple; two registry sites involve Polmer"
+TABS2025001763,Cipher Black Pearl LLC Data Center,probable,same name 'Black Pearl'; TDLR owner 11786 WINK LLC differs
+TABS2023010309,Bastrop Project One,probable,similar name; TDLR owner Central Texas Airport LLC differs from registry Ocean Blockchain LLC
+TABS2026020144,Riot Corsicana Data Center 02,probable,"owner Riot Platforms, Corsicana; TDLR 2026-05-13 vs registry 2026-05-21; three Riot Corsicana sites"
+TABS2026026954,Pecos Ranch Data Center,probable,owner Amazon; Pecos; TDLR 2026-08-04 vs registry 2026-08-10; names differ
+TABS2026026955,Pecos Ranch Data Center,probable,owner Amazon; Pecos; TDLR 2026-08-04 vs registry 2026-08-10; names differ
+TABS2026026959,Pecos Ranch Data Center,probable,owner Amazon; Pecos; TDLR 2026-08-04 vs registry 2026-08-10; names differ
+TABS2026011989,Meitner Data Center,probable,"TDLR owner IP Meitner Land LLC vs registry IP Meitner DTC / IP Meitner, LLC"
+TABS2026014814,Meitner Data Center,probable,"TDLR owner IP Meitner Land LLC vs registry IP Meitner DTC / IP Meitner, LLC"
+TABS2026014835,Meitner Data Center,probable,"TDLR owner IP Meitner Land LLC vs registry IP Meitner DTC / IP Meitner, LLC"
+TABS2023000518,Red Oak Texas Data Center,probable,'Compass Data Center' in Red Oak; TDLR owner Vallies LLC differs
+EABPRJB8820869,ALE60 Data Center,probable,TDLR owner COPT San Antonio II LP vs registry owner COPT San Antonio LP
+TABS2021008977,ALE60 Data Center,probable,TDLR owner COPT San Antonio II LP vs registry owner COPT San Antonio LP
+TABS2024000855,ALE60 Data Center,probable,TDLR owner COPT San Antonio II LP vs registry owner COPT San Antonio LP
+TABS2024025975,ALE60 Data Center,probable,TDLR owner COPT San Antonio II LP vs registry owner COPT San Antonio LP
