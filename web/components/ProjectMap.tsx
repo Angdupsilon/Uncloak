@@ -60,7 +60,7 @@ function radiusFor(mw: number | null): number {
  * Texas is close to square, so fitting it into a 3:2 panel always leaves
  * neighbours on screen; dimming them is what makes the subject obvious.
  */
-function TexasSpotlight() {
+export function TexasSpotlight() {
   const [mask, setMask] = useState<FeatureCollection | null>(null);
   useEffect(() => {
     let alive = true;
@@ -119,13 +119,21 @@ function TexasSpotlight() {
  * OpenFreeMap's "liberty" style is free, keyless and OSM-derived, so the map
  * keeps the colourful look.
  */
-function VectorBasemap() {
+export function VectorBasemap() {
   const map = useMap();
   useEffect(() => {
     // MapLibre spawns a module worker via import.meta.url, which Turbopack does
     // not rewrite - it fails with "Worker failed to load". Serving the worker
     // (and the shared chunk it imports) from public/ sidesteps the bundler.
     setWorkerUrl("/maplibre-gl-worker.mjs");
+
+    // MapLibre throws without WebGL2 (old devices, locked-down or headless browsers), which
+    // would take the whole page down. Skip the basemap; markers and outlines still render.
+    let webgl2 = false;
+    try {
+      webgl2 = !!document.createElement("canvas").getContext("webgl2");
+    } catch {}
+    if (!webgl2) return;
 
     const layer = maplibreGL({ style: "https://tiles.openfreemap.org/styles/liberty" });
     layer.addTo(map);
@@ -182,6 +190,7 @@ function FitBounds({ projects, ids, request }: { projects: Project[]; ids: numbe
 }
 
 export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading }: MapProps) {
+  const [legendOpen, setLegendOpen] = useState(true);
   const highlight = useMemo(() => (highlightIds ? new Set(highlightIds) : null), [highlightIds]);
   const located = projects.filter((p) => p.lat != null && p.lon != null);
   const unlocated = projects.length - located.length;
@@ -235,23 +244,68 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
         })}
       </MapContainer>
 
-      <div className="ub-card ub-body-sm absolute bottom-4 left-4 z-[1000] w-[228px] px-5 py-4 text-[#5e5e5e]">
-        <div className="ub-body-md-strong mb-3 text-black">Evidence tier</div>
-        <div className="space-y-1.5">
-          {TIER_ORDER.map((t) => (
-            <div key={t} className="flex items-center gap-2.5">
-              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: TIER_COLORS_MAP[t] }} />
-              {TIER_LABELS[t]}
+      {/* Collapsible so it can be moved out of the way of markers in the south
+          west. The card itself stays pointer-events-none so dragging across it
+          still pans the map; only the toggle takes clicks. */}
+      <div
+        className={`ub-card pointer-events-none absolute bottom-4 left-4 z-[1000] text-[#5e5e5e] ${
+          legendOpen ? "ub-body-sm w-[228px] px-5 py-4" : "px-3 py-2"
+        }`}
+      >
+        <div className={`flex items-center gap-3 ${legendOpen ? "mb-3" : ""}`}>
+          <div className={legendOpen ? "ub-body-md-strong text-black" : "ub-body-sm-strong text-black"}>Evidence tier</div>
+          {!legendOpen && (
+            <div className="flex items-center gap-1">
+              {TIER_ORDER.map((t) => (
+                <span
+                  key={t}
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ background: TIER_COLORS_MAP[t] }}
+                />
+              ))}
             </div>
-          ))}
+          )}
+          <button
+            type="button"
+            onClick={() => setLegendOpen((o) => !o)}
+            aria-expanded={legendOpen}
+            aria-label={legendOpen ? "Minimise legend" : "Expand legend"}
+            title={legendOpen ? "Minimise" : "Expand"}
+            className="pointer-events-auto -mr-1 ml-auto grid h-6 w-6 shrink-0 place-items-center rounded-full text-[#afafaf] transition-colors hover:bg-[#efefef] hover:text-black"
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 16 16"
+              className={`h-3.5 w-3.5 transition-transform ${legendOpen ? "" : "rotate-180"}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 10l4-4 4 4" />
+            </svg>
+          </button>
         </div>
-        <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">
-          Each dot is one public-record project. Size reflects estimated MW (enlarged); color = evidence tier.
-        </div>
-        {unlocated > 0 && (
-          <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">
-            {unlocated} of {projects.length} projects not shown (no coordinates)
-          </div>
+        {legendOpen && (
+          <>
+            <div className="space-y-1.5">
+              {TIER_ORDER.map((t) => (
+                <div key={t} className="flex items-center gap-2.5">
+                  <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: TIER_COLORS_MAP[t] }} />
+                  {TIER_LABELS[t]}
+                </div>
+              ))}
+            </div>
+            <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">
+              Each dot is one public-record project. Size reflects estimated MW (enlarged); color = evidence tier.
+            </div>
+            {unlocated > 0 && (
+              <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">
+                {unlocated} of {projects.length} projects not shown (no coordinates)
+              </div>
+            )}
+          </>
         )}
       </div>
 

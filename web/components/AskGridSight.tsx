@@ -52,7 +52,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-[1100] ub-pill shadow-[var(--shadow-float)]"
       >
-        ✦ Ask GridSight
+        ✦ Ask Uncloak
       </button>
     );
   }
@@ -60,7 +60,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
   return (
     <div className="fixed bottom-6 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
       <div className="flex items-center justify-between border-b border-[#efefef] px-4 py-3 text-black">
-        <div className="text-sm font-semibold">✦ Ask GridSight</div>
+        <div className="text-sm font-semibold">✦ Ask Uncloak</div>
         <button onClick={() => setOpen(false)} className="text-lg leading-none text-[#afafaf] hover:text-black" aria-label="Collapse">
           –
         </button>
@@ -69,7 +69,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
         {msgs.length === 0 && (
           <div className="space-y-2">
             <div className="text-xs text-[#5e5e5e]">
-              Answers come only from GridSight&apos;s database as of the selected date. Try:
+              Answers come only from Uncloak&apos;s database as of the selected date. Try:
             </div>
             {EXAMPLES.map((q) => (
               <button key={q} onClick={() => ask(q)} className="block w-full rounded-xl border border-[#e2e2e2] px-3 py-2 text-left text-xs text-black transition-colors hover:border-[#e2e2e2] hover:bg-[#f3f3f3]">
