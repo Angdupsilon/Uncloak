@@ -96,7 +96,13 @@ const PROJECTS_AS_OF = `
       ON x.project_id = s.project_id AND x.ts < s.ts + interval '1 day'
     GROUP BY s.project_id
   )
-  SELECT p.project_id, p.name, p.county, p.city, p.lat, p.lon, p.is_sample,
+  SELECT p.project_id, p.name, COALESCE(si.county,p.county) AS county,
+         COALESCE(si.city,p.city) AS city, COALESCE(si.lat,p.lat) AS lat,
+         COALESCE(si.lon,p.lon) AS lon, p.is_sample,
+         si.site_id, si.name AS site_name, si.location_source_url, si.location_method,
+         si.location_precision, si.location_confidence,
+         st.status AS current_status, to_char(st.observed_at, 'YYYY-MM-DD') AS status_observed_at,
+         cap.mw AS sourced_mw, cap.capacity_type, cap.source_url AS capacity_source_url,
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color,
          s.ts AS scored_at, s.score, s.probability, s.mw_est, s.factors,
@@ -104,6 +110,18 @@ const PROJECTS_AS_OF = `
   FROM projects p
   LEFT JOIN entities e ON e.entity_id = p.entity_id
   LEFT JOIN parents pa ON pa.parent_id = e.parent_id
+  LEFT JOIN project_sites psi ON psi.project_id = p.project_id
+  LEFT JOIN sites si ON si.site_id = psi.site_id
+  LEFT JOIN LATERAL (
+    SELECT status, observed_at FROM project_status_history
+    WHERE project_id=p.project_id AND observed_at <= $1::date ORDER BY observed_at DESC LIMIT 1
+  ) st ON true
+  LEFT JOIN LATERAL (
+    SELECT mw, capacity_type, source_url FROM capacity_observations
+    WHERE project_id=p.project_id AND observed_at <= $1::date
+      AND capacity_type <> 'modeled'
+    ORDER BY CASE capacity_type WHEN 'actual' THEN 1 WHEN 'announced' THEN 2 ELSE 3 END, observed_at DESC LIMIT 1
+  ) cap ON true
   JOIN latest_scores s ON s.project_id = p.project_id
   LEFT JOIN evidence_by_project ev ON ev.project_id = p.project_id`;
 
@@ -244,12 +262,23 @@ export async function getParents(asOf: string): Promise<ParentRow[]> {
 // ---------------------------------------------------------------------------
 
 const PROJECT_INFO = `
-  SELECT p.project_id, p.name, p.county, p.city, p.address, p.lat, p.lon, p.is_sample,
+  SELECT p.project_id, p.name, COALESCE(si.county,p.county) AS county,
+         COALESCE(si.city,p.city) AS city, COALESCE(si.address,p.address) AS address,
+         COALESCE(si.lat,p.lat) AS lat, COALESCE(si.lon,p.lon) AS lon, p.is_sample,
+         si.site_id, si.name AS site_name, si.location_source_url, si.location_method,
+         si.location_precision, si.location_confidence,
+         st.status AS current_status, to_char(st.observed_at, 'YYYY-MM-DD') AS status_observed_at,
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color
   FROM projects p
   LEFT JOIN entities e ON e.entity_id = p.entity_id
-  LEFT JOIN parents pa ON pa.parent_id = e.parent_id`;
+  LEFT JOIN parents pa ON pa.parent_id = e.parent_id
+  LEFT JOIN project_sites psi ON psi.project_id = p.project_id
+  LEFT JOIN sites si ON si.site_id = psi.site_id
+  LEFT JOIN LATERAL (
+    SELECT status, observed_at FROM project_status_history
+    WHERE project_id=p.project_id ORDER BY observed_at DESC LIMIT 1
+  ) st ON true`;
 
 export async function getTimeline(projectId: number, asOf: string): Promise<Timeline | null> {
   const [info, scored, scores, events] = await Promise.all([

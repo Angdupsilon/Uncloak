@@ -14,10 +14,13 @@ import geocode
 import load_seed
 import load_tceq
 import score
+import sync_dimensions
 from common import connect
 
 REQUIRED = ["parents", "entities", "projects", "evidence_events", "project_scores",
-            "ercot_queue", "scoring_config", "weekly_project_state", "weekly_realistic_demand"]
+            "ercot_queue", "scoring_config", "sites", "project_sites", "project_status_history",
+            "entity_parent_history", "capacity_observations", "ercot_project_links",
+            "source_refreshes", "weekly_project_state", "weekly_realistic_demand"]
 
 
 def schema_check() -> None:
@@ -30,7 +33,8 @@ def schema_check() -> None:
         if missing:
             raise SystemExit(
                 f"Missing database objects: {missing}.\n"
-                "Run: psql \"$DATABASE_URL\" -f db/001_schema.sql -f db/002_timescale.sql -f db/003_readonly_role.sql")
+                "Run db/004_data_quality.sql for an existing database, or db/001_schema.sql + "
+                "db/002_timescale.sql + db/003_readonly_role.sql for a new database.")
         cur.execute("SELECT hypertable_name FROM timescaledb_information.hypertables")
         hts = {r[0] for r in cur.fetchall()}
         for t in ("evidence_events", "project_scores", "ercot_queue"):
@@ -71,19 +75,21 @@ def main() -> None:
     if load_seed.is_sample_dir(directory):
         config.use_sample_mw_cost(directory)
 
-    print("1/5 schema check")
+    print("1/6 schema check")
     schema_check()
-    print("2/5 load seed")
+    print("2/6 load seed")
     load_seed.main(directory, args.reset)
     if args.tceq_file:
         print("    load TCEQ")
         load_tceq.main(Path(args.tceq_file))
-    print("3/5 geocode")
+    print("3/6 geocode")
     if args.skip_geocode:
         print("  skipped")
     else:
         geocode.main()
-    print("4/5 backfill scores + 5/5 refresh continuous aggregate")
+    print("4/6 sync canonical sites, provenance, lifecycle and links")
+    sync_dimensions.main(directory)
+    print("5/6 backfill scores + 6/6 refresh continuous aggregate")
     score.backfill()
     summary()
 

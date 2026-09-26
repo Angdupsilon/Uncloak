@@ -1,4 +1,4 @@
-"""Export public TDLR TABS projects whose project or facility name contains "data center".
+"""Export public TDLR TABS projects found by project, facility, owner or address queries.
 
 The TDLR site exposes a server-side DataTables search endpoint but no bulk-download
 button for Architectural Barriers projects. This script queries that public endpoint,
@@ -40,7 +40,7 @@ def client() -> httpx.Client:
     return _THREAD.client
 
 
-def search(field: str) -> list[dict]:
+def search(field: str, term: str) -> list[dict]:
     rows: list[dict] = []
     start = 0
     while True:
@@ -48,7 +48,7 @@ def search(field: str) -> list[dict]:
             "draw": "1",
             "start": str(start),
             "length": str(PAGE_SIZE),
-            field: "data center",
+            field: term,
             "order[0][column]": "3",
             "order[0][dir]": "desc",
         }
@@ -156,13 +156,14 @@ def fetch_detail(summary: dict) -> dict:
     raise RuntimeError(f"{project_number}: {last_error}")
 
 
-def main(output: Path, workers: int) -> None:
+def main(output: Path, workers: int, queries: list[str]) -> None:
     matches: dict[str, dict] = {}
-    for field in ("ProjectName", "FacilityName"):
-        found = search(field)
-        print(f"{field}: {len(found)} search matches", flush=True)
-        for row in found:
-            matches[row["ProjectNumber"]] = row
+    for term in dict.fromkeys(q.strip() for q in queries if q.strip()):
+        for field in ("ProjectName", "FacilityName", "OwnerName", "LocationAddress"):
+            found = search(field, term)
+            print(f"{field}={term!r}: {len(found)} search matches", flush=True)
+            for row in found:
+                matches[row["ProjectNumber"]] = row
     print(f"{len(matches)} distinct projects; fetching details", flush=True)
 
     rows: list[dict] = []
@@ -194,5 +195,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--query", action="append", default=[], help="repeatable TDLR search term")
+    parser.add_argument("--queries-file", type=Path, help="one additional search term per line")
     args = parser.parse_args()
-    main(args.output, max(1, min(args.workers, 8)))
+    queries = args.query or ["data center"]
+    if args.queries_file:
+        queries.extend(line.strip() for line in args.queries_file.read_text().splitlines()
+                       if line.strip() and not line.lstrip().startswith("#"))
+    main(args.output, max(1, min(args.workers, 8)), queries)

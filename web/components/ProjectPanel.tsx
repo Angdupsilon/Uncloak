@@ -188,8 +188,36 @@ export default function ProjectPanel({
                 detail={scored ? TIER_LABELS[p.tier!] : "Not scored"}
                 color={scored ? TIER_COLORS[p.tier!] : undefined}
               />
-              <MetricCard label="Est. load" value={fmtMW(p.mw_est)} />
+              <MetricCard
+                label={p.sourced_mw != null ? `${p.capacity_type ?? "Sourced"} load` : "Modeled load"}
+                value={fmtMW(p.sourced_mw ?? p.mw_est)}
+                detail={p.sourced_mw != null ? "Public-source figure" : "From registered cost"}
+              />
               <MetricCard label="Registered cost" value={fmtUSD(p.total_cost)} />
+            </div>
+          </section>
+
+          <section>
+            <SectionHeading detail={<SourceLink url={p.location_source_url} label="Location source" />}>Data quality</SectionHeading>
+            <div className="rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-xs text-slate-600">
+              <div className="flex justify-between gap-4">
+                <span className="text-slate-400">Canonical site</span>
+                <span className="truncate text-right font-medium text-slate-700">{p.site_name ?? "Not linked"}</span>
+              </div>
+              <div className="mt-2 flex justify-between gap-4 border-t border-slate-100 pt-2">
+                <span className="text-slate-400">Lifecycle</span>
+                <span className="text-right font-medium text-slate-700">
+                  {p.current_status?.replaceAll("_", " ") ?? "Unknown"}
+                  {p.status_observed_at ? ` · observed ${fmtDate(p.status_observed_at)}` : ""}
+                </span>
+              </div>
+              <div className="mt-2 flex justify-between gap-4 border-t border-slate-100 pt-2">
+                <span className="text-slate-400">Location quality</span>
+                <span className="text-right font-medium text-slate-700">
+                  {p.location_precision ?? "Unknown"}
+                  {p.location_confidence != null ? ` · ${Math.round(p.location_confidence * 100)}% confidence` : ""}
+                </span>
+              </div>
             </div>
           </section>
 

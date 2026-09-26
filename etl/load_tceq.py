@@ -4,7 +4,8 @@ Rows are matched to projects by normalized company name (against LLC name,
 project name, or parent name) or, failing that, by county + normalized address.
 Unmatched rows are printed for manual review.
 
-Usage: python etl/load_tceq.py --file <<FILL: path to TCEQ bulk file>>
+Column names are auto-detected from common TCEQ exports and can be overridden with
+``--company-col`` etc. No source-specific code edit is required.
 """
 from __future__ import annotations
 
@@ -14,19 +15,16 @@ from pathlib import Path
 import pandas as pd
 from psycopg.types.json import Jsonb
 
-from common import clean, connect, is_fill, normalize_address, normalize_name
+from common import clean, connect, normalize_address, normalize_name
 
-# ---- Column names in the TCEQ bulk file. <<FILL>> by the team. -------------
-COL_COMPANY = "<<FILL>>"      # permit holder / applicant name
-COL_COUNTY = "<<FILL>>"       # county name
-COL_ADDRESS = "<<FILL>>"      # site address or location description
-COL_PERMIT_ID = "<<FILL>>"    # permit / authorization number
-COL_DATE = "<<FILL>>"         # date the permit was filed / received
-COL_URL = None                # optional: column with a link to the permit record
-# Optional filter: only rows whose COL_FILTER contains one of FILTER_VALUES.
-COL_FILTER = None
-FILTER_VALUES: list[str] = []
-# -----------------------------------------------------------------------------
+ALIASES = {
+    "company": ("company", "customer name", "applicant", "permit holder", "legal name"),
+    "county": ("county", "county name"),
+    "address": ("address", "site address", "physical address", "location"),
+    "permit_id": ("permit number", "permit no", "registration number", "authorization number", "permit id"),
+    "date": ("received date", "application received date", "issue date", "effective date", "date"),
+    "url": ("source url", "document url", "url", "link"),
+}
 
 ORIGIN = "tceq_bulk"
 
@@ -37,18 +35,24 @@ def read_file(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, dtype=str, keep_default_na=False, encoding_errors="replace")
 
 
-def main(path: Path) -> int:
-    required = {"COL_COMPANY": COL_COMPANY, "COL_COUNTY": COL_COUNTY, "COL_ADDRESS": COL_ADDRESS,
-                "COL_PERMIT_ID": COL_PERMIT_ID, "COL_DATE": COL_DATE}
-    unset = [k for k, v in required.items() if is_fill(v)]
-    if unset:
-        raise SystemExit(f"Set the TCEQ column names at the top of etl/load_tceq.py first: {', '.join(unset)}")
+def detect(df: pd.DataFrame, key: str, override: str | None = None, required: bool = True) -> str | None:
+    if override:
+        if override not in df.columns:
+            raise SystemExit(f"Column {override!r} not found. Available: {list(df.columns)}")
+        return override
+    normalized = {normalize_name(str(c)): str(c) for c in df.columns}
+    for alias in ALIASES[key]:
+        if normalize_name(alias) in normalized:
+            return normalized[normalize_name(alias)]
+    if required:
+        raise SystemExit(f"Could not auto-detect the TCEQ {key} column. Available: {list(df.columns)}; pass --{key.replace('_','-')}-col")
+    return None
+
+
+def main(path: Path, columns: dict[str, str | None] | None = None) -> int:
     df = read_file(path)
-    missing = [c for c in required.values() if c not in df.columns]
-    if missing:
-        raise SystemExit(f"Columns not found in {path}: {missing}. Available: {list(df.columns)}")
-    if COL_FILTER:
-        df = df[df[COL_FILTER].str.contains("|".join(FILTER_VALUES), case=False, na=False)]
+    overrides = columns or {}
+    col = {key: detect(df, key, overrides.get(key), key != "url") for key in ALIASES}
 
     with connect() as conn, conn.cursor() as cur:
         cur.execute("""SELECT p.project_id, p.name, p.county, p.address, e.llc_name, pa.name
@@ -65,21 +69,21 @@ def main(path: Path) -> int:
 
         matched, unmatched = [], []
         for i, row in df.iterrows():
-            company = normalize_name(row[COL_COMPANY])
+            company = normalize_name(row[col["company"]])
             pid = by_name.get(company) if company else None
             if pid is None:
-                pid = by_loc.get((normalize_name(row[COL_COUNTY]).replace(" county", ""),
-                                  normalize_address(row[COL_ADDRESS])))
-            ts_raw = clean(row[COL_DATE])
+                pid = by_loc.get((normalize_name(row[col["county"]]).replace(" county", ""),
+                                  normalize_address(row[col["address"]])))
+            ts_raw = clean(row[col["date"]])
             if pid is None or not ts_raw:
-                unmatched.append((i, row[COL_COMPANY], row[COL_COUNTY], row[COL_ADDRESS],
+                unmatched.append((i, row[col["company"]], row[col["county"]], row[col["address"]],
                                   "no date" if pid is not None else "no project match"))
                 continue
             ts = pd.Timestamp(ts_raw)
             ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
-            payload = {"permit_id": clean(row[COL_PERMIT_ID]), "company": clean(row[COL_COMPANY]),
-                       "county": clean(row[COL_COUNTY]), "_origin": ORIGIN}
-            url = clean(row[COL_URL]) if COL_URL else None
+            payload = {"permit_id": clean(row[col["permit_id"]]), "company": clean(row[col["company"]]),
+                       "county": clean(row[col["county"]]), "address": clean(row[col["address"]]), "_origin": ORIGIN}
+            url = clean(row[col["url"]]) if col["url"] else None
             matched.append((ts.to_pydatetime(), pid, payload, url))
 
         for ts, pid, payload, url in matched:
@@ -99,4 +103,7 @@ def main(path: Path) -> int:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--file", required=True, help="path to the TCEQ bulk file (.csv or .xlsx)")
-    main(Path(ap.parse_args().file))
+    for key in ALIASES:
+        ap.add_argument(f"--{key.replace('_','-')}-col")
+    args = ap.parse_args()
+    main(Path(args.file), {key: getattr(args, f"{key}_col") for key in ALIASES})

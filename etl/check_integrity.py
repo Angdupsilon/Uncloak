@@ -29,7 +29,9 @@ def check(area, name, ok, detail=""):
     results.append((area, name, "PASS" if ok else "FAIL", detail))
 
 # ---------- schema ----------
-expected_tables = {"parents","entities","projects","evidence_events","project_scores","ercot_queue","scoring_config"}
+expected_tables = {"parents","entities","projects","evidence_events","project_scores","ercot_queue","scoring_config",
+                   "sites","project_sites","project_status_history","entity_parent_history",
+                   "capacity_observations","ercot_project_links","source_refreshes"}
 tables = {r[0] for r in q("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'")}
 check("schema","GridSight tables present", expected_tables <= tables, f"missing={sorted(expected_tables-tables)}")
 check("schema","no unexpected tables", tables <= expected_tables, f"extra={sorted(tables-expected_tables)}")
@@ -44,7 +46,9 @@ idx = {r[0] for r in q("select indexname from pg_indexes where schemaname='publi
 check("schema","unique name indexes", {"entities_llc_name_key","projects_name_key"} <= idx)
 fks = {(r[0], r[1]) for r in q("""select conrelid::regclass::text, confrelid::regclass::text from pg_constraint
       where contype='f' and connamespace='public'::regnamespace""")}
-need_fk = {("entities","parents"),("projects","entities"),("evidence_events","projects"),("project_scores","projects")}
+need_fk = {("entities","parents"),("projects","entities"),("evidence_events","projects"),("project_scores","projects"),
+           ("project_sites","projects"),("project_sites","sites"),("project_status_history","projects"),
+           ("capacity_observations","projects"),("ercot_project_links","projects")}
 check("schema","foreign keys declared", need_fk <= fks, f"missing={sorted(need_fk-fks)}")
 
 # ---------- read-only role ----------
@@ -90,6 +94,14 @@ n = one("select count(*) from projects where (lat is null) <> (lon is null)")
 check("values","lat/lon both set or both null", n == 0)
 check("values","no SAMPLE projects", one("select count(*) from projects where is_sample or name ilike 'SAMPLE%'") == 0)
 check("values","no SAMPLE ERCOT rows", one("select count(*) from ercot_queue where source_url='SAMPLE'") == 0)
+n = one("select count(*) from projects p left join project_sites ps using(project_id) where ps.project_id is null")
+check("values","every project linked to a canonical site", n == 0, f"unlinked={n}")
+n = one("select count(*) from sites where (lat is null) <> (lon is null) or location_confidence not between 0 and 1")
+check("values","site location provenance values valid", n == 0, f"bad={n}")
+n = one("select count(*) from sites where lat is not null and location_source_url is null")
+check("values","mapped canonical sites have a location source", n == 0, f"missing={n}")
+n = one("select count(*) from capacity_observations where capacity_type <> 'modeled' and source_url !~ '^https://'")
+check("values","sourced capacities have an https source", n == 0, f"bad={n}")
 n = one("select count(*) from entities where (parent_id is null) <> (resolved_by is null)")
 check("values","parent and resolved_by set together", n == 0, f"inconsistent={n}")
 rb = q("select resolved_by, count(*) from entities group by 1 order by 1")

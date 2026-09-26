@@ -53,8 +53,27 @@ people, and contact names appended to company owners, are removed the same way.
 
 ### Limits
 
-The export is a keyword search. Code-named projects whose TDLR names don't say "data center"
-are missing, for example the Lancium/Abilene campus and Stargate Shackelford.
+The 2026-09-26 export is a keyword-search snapshot. The collector now supports repeatable
+project, facility, owner and address terms (`--query` / `--queries-file`) so future snapshots
+can discover code-named projects whose names do not contain “data center.” Such records still
+require the same import filters and reviewed registry matching before they become evidence.
+
+## Canonical sites and sourced dimensions
+
+`etl/sync_dimensions.py` separates public-record projects from physical campuses. It groups
+only complete, normalized street-address matches automatically; otherwise it retains a 1:1
+site until reviewed evidence supports a merge. It also materializes TDLR lifecycle observations,
+location provenance, ownership snapshots and source freshness. Optional sourced capacity and
+project-level ERCOT matches live in `data/seed/capacity_observations.csv` and
+`data/seed/ercot_project_links.csv`; empty files mean “no supported matches,” not zero capacity.
+
+## Reviewed TCEQ permit evidence
+
+Five exact primary-document matches are stored as `permit_filed` events: Longhorn Data Center
+(Abilene DC 1), Vantage TX2/TX21, Microsoft SAT15, Microsoft SAT09/10, and Microsoft SN7/NADC.
+Each match is supported by the applicant or operator plus a site code, county, or exact street
+address in the linked TCEQ document. Broader name-only candidates are not loaded. The generic
+bulk importer now auto-detects common TCEQ export columns and accepts command-line overrides.
 
 ## `tdlr_registry_matches.csv`
 

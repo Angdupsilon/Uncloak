@@ -1,6 +1,4 @@
 name,county,city,address,lat,lon,llc_name
-Stargate Milam,Milam,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL: Stargate Milam LLC name>>
-Stargate Shackelford,Shackelford,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL: Stargate Shackelford LLC name>>
 1102 McKinzie LLC Data Center,Nueces,Corpus Christi,"1102 McKinzie Rd Corpus Christi, TX 78410",27.8006,-97.3964,1102 McKinzie LLC
 1242 McKinzie LLC Data Center,Nueces,Corpus Christi,"1242 McKinzie Road Corpus Christi, TX 78410",27.8012,-97.397,1242 McKinzie LLC
 3301 Hibbetts Road Data Center,Taylor,Abilene,3301 Hibbetts Road,32.4487,-99.7331,"Coreweave, Inc."

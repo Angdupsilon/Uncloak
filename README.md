@@ -59,6 +59,9 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/001_schema.sql -f db/002_timescale
 psql "$DATABASE_URL" -v ro_password="'choose-a-password'" -f db/003_readonly_role.sql
 ```
 
+For a database created before the canonical-site/data-quality tables were added, run the
+idempotent migration once: `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/004_data_quality.sql`.
+
 Then set `DATABASE_URL_RO` to the same connection string with user `gridsight_ro` and that password.
 
 ### 3. ETL (Python 3.11+)
@@ -99,7 +102,7 @@ Individual steps:
 ```bash
 python etl/load_seed.py --dir data/seed
 python etl/import_locations.py                           # reapply reviewed public locations
-python etl/load_tceq.py --file path/to/tceq_bulk.csv   # set column names at the top of the script first
+python etl/load_tceq.py --file path/to/tceq_bulk.csv   # common TCEQ columns are auto-detected
 python etl/geocode.py
 python etl/score.py                                   # backfill + refresh
 python etl/score.py --project 12 --as-of 2025-06-01   # score one project as of a date
@@ -130,6 +133,20 @@ The map works without it.
    `tenant_named` (`{"tenant": "..."}`), `inspection_done`, `certified`, `permit_filed`
    (`{"permit_id": "..."}`), `status_change` (`{"status": "..."}`). Unknown types fail the load.
 5. `python etl/run_all.py --dir data/seed`
+
+The pipeline also builds a canonical physical-site layer, preserves location method/precision/
+confidence, normalizes observed TDLR lifecycle states, snapshots sourced ownership resolution,
+and records source freshness. `capacity_observations.csv` and `ercot_project_links.csv` are
+intentionally empty until a public source supports a project-level value or queue match; the
+loader never converts a guess into a sourced fact.
+
+TDLR discovery is no longer limited to the phrase “data center.” Supply repeatable project,
+owner, code-name, or address searches with `--query`, or a reviewed list with `--queries-file`:
+
+```bash
+python etl/pull_tdlr_data_centers.py --output data/raw/tdlr_refresh.csv \
+  --query "data center" --query "Abilene DC" --query "Lancium"
+```
 
 Any cell containing `<<FILL>>` counts as missing. Rows missing a required field (a project
 name, or an event date or value) are skipped and listed in the output.
@@ -220,10 +237,10 @@ it allows up to 4 tool rounds.
   instance, so run `db/001` and `db/002` against Tiger Cloud first. Ask GridSight was tested at
   the tool-dispatch level only, because no Gemini key was available.
 
-## `<<FILL>>` index (team supplies)
+## Optional deployment inputs
 
-`DATABASE_URL`, `DATABASE_URL_RO`, `GEMINI_API_KEY`, `GEMINI_MODEL`, `MW_COST_PER_MW_USD`,
-`web/public/tx_counties.geojson`, the TCEQ bulk file path and column names (top of
-`etl/load_tceq.py`), and all `<<FILL>>` cells in `data/seed/*.csv`: the Alamo Mission project
-row, the Stargate LLC names, the 11 Stargate Shackelford registration dates and values, the
-Stargate Milam tenant record, record IDs, source URLs, and ERCOT queue data points.
+`DATABASE_URL`, `DATABASE_URL_RO`, `GEMINI_API_KEY`, and `GEMINI_MODEL` are deployment
+secrets. `MW_COST_PER_MW_USD` can override the documented default, and
+`web/public/tx_counties.geojson` can add county outlines. The production seed contains no
+`<<FILL>>` placeholders; unsupported Stargate placeholders were removed instead of being
+presented as projects, while the primary TDLR Milam County/OpenAI record remains canonical.

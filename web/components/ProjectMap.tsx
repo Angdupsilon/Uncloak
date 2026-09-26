@@ -207,11 +207,13 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
               center={[p.lat!, p.lon!]}
               radius={radiusFor(p.mw_est)}
               pathOptions={{
-                color: selected ? "#0f172a" : (p.parent_color ?? "#475569"),
-                weight: selected ? 4 : 2.5,
+                // Parent ownership is available in the project details and filters;
+                // keeping markers un-stroked lets evidence tier remain the sole map
+                // encoding, including when a project is selected.
+                stroke: false,
                 opacity,
                 fillColor: TIER_COLORS_MAP[p.tier],
-                fillOpacity: opacity * 0.75,
+                fillOpacity: opacity * (selected ? 0.9 : 0.75),
               }}
               eventHandlers={{ click: () => onSelect(p.project_id) }}
             >
@@ -242,7 +244,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
           ))}
         </div>
         <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">
-          Each dot is one public-record project. Size reflects estimated MW (enlarged); outline = parent.
+          Each dot is one public-record project. Size reflects estimated MW (enlarged); color = evidence tier.
         </div>
         {unlocated > 0 && (
           <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">
