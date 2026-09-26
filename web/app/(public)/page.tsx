@@ -140,7 +140,7 @@ export default async function Home() {
                 <section aria-labelledby="read-h">
                   <SectionTitle id="read-h">How to read this site</SectionTitle>
                   <ul className="space-y-4">
-                    {(["documented", "derived", "context"] as MetricKind[]).map((k) => (
+                    {(["documented", "derived", "modeled", "context"] as MetricKind[]).map((k) => (
                       <li key={k} className="flex gap-3">
                         <div className="w-[128px] shrink-0 pt-0.5">
                           <KindBadge kind={k} />

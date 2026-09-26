@@ -6,7 +6,7 @@ import SpareCapacityMethod from "@/components/public/SpareCapacityMethod";
 import { SourceLink } from "@/components/public/Source";
 import { Container, ErrorState, KindBadge } from "@/components/public/ui";
 import { query } from "@/lib/db";
-import { getConfig, todayUtc } from "@/lib/queries";
+import { getConfig, getEstimateMethods, todayUtc } from "@/lib/queries";
 import { fmtDate, fmtUSD } from "@/lib/format";
 import { METRICS, SOURCES, type MetricKind, type SourceKey } from "@/lib/metrics";
 import { TIER_LABELS } from "@/lib/constants";
@@ -15,14 +15,15 @@ export const metadata: Metadata = { title: "Methodology · Uncloak" };
 
 async function load(asOf: string) {
   try {
-    const [config, stats] = await Promise.all([
+    const [config, models, stats] = await Promise.all([
       getConfig(asOf),
+      getEstimateMethods(),
       query<{ source: string; records: number; first: Date | null; last: Date | null; retrieved: string | null }>(
         `SELECT source, COUNT(*) AS records, MIN(ts) AS first, MAX(ts) AS last, MAX(payload->>'retrieved') AS retrieved
          FROM evidence_events GROUP BY source ORDER BY COUNT(*) DESC`,
       ),
     ]);
-    return { ok: true as const, config, stats };
+    return { ok: true as const, config, models, stats };
   } catch (err) {
     console.error("[gridsight methodology]", err);
     return { ok: false as const };
@@ -35,6 +36,7 @@ const TOC = [
   ["kinds", "Documented, estimated, context"],
   ["scoring", "Evidence index"],
   ["mw", "Estimated power demand"],
+  ["floor-area-model", "Modeled IT load"],
   ["grid", "Grid operator tag"],
   ["missing", "Missing data"],
   ["counting", "Avoiding double counting"],
@@ -136,6 +138,7 @@ export default async function Methodology() {
                     [
                       ["documented", "Copied or added up directly from a public record, like a registered construction cost or a certification date."],
                       ["derived", "Calculated by Uncloak from documented values, using the methods below. Useful for scale, never a measurement."],
+                      ["modeled", "A statistical range from an Uncloak model, shown as low to high with the model's version and tested error. Never a record and never part of the evidence index."],
                       ["context", "Background that helps interpret a finding, like statewide grid figures. Not a measurement of the organization or site you're viewing."],
                     ] as [MetricKind, string][]
                   ).map(([k, text]) => (
@@ -209,6 +212,41 @@ export default async function Methodology() {
                 <p>
                   The estimate exists only where a construction cost is registered. Actual demand can be much higher or lower, and the estimate isn&apos;t a requested,
                   contracted or measured load.
+                </p>
+              </Section>
+
+              <Section id="floor-area-model" title="Modeled IT load (floor area)">
+                <p>
+                  Where a site has no registered construction cost, Uncloak shows a modeled range for its IT load from its size. The model looks at Texas data
+                  centers that have both a registered floor area and a construction cost, turns each cost into megawatts as above, and records the megawatts per
+                  square foot. The 10th, 50th and 90th percentiles of that ratio, times a site&apos;s floor area, give the low, middle and high values.
+                </p>
+                {data.ok && data.models.length > 0 ? (
+                  data.models.map((m) => {
+                    const q = (m.params as { mw_per_100k_sqft?: { low: number; mid: number; high: number } }).mw_per_100k_sqft;
+                    return (
+                      <div key={`${m.method}-${m.method_version}`} className="rounded-lg border border-[var(--hairline)] bg-white p-4 text-[15px]">
+                        <p className="text-black">
+                          Version {m.method_version}, fitted {fmtDate(m.fitted_at)} on {m.validation.n} Texas data centers
+                          {q ? `: ${q.low} / ${q.mid} / ${q.high} MW per 100,000 sq ft (10th / 50th / 90th percentile).` : "."}
+                        </p>
+                        <p className="mt-2">
+                          Tested by leaving out each training site in turn and predicting it from the rest: the middle value was off by a median of{" "}
+                          <strong className="font-semibold text-black">{m.validation.median_abs_pct_error}%</strong>, and{" "}
+                          <strong className="font-semibold text-black">{m.validation.interval_coverage_pct}%</strong> of true values fell inside the{" "}
+                          {m.validation.nominal_interval_pct}% range. {m.estimates.toLocaleString()} sites currently show this estimate.
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>No model version is loaded.</p>
+                )}
+                <p>
+                  Limits: the training megawatts are themselves derived from construction cost, so the model inherits that estimate&apos;s uncertainty. Outside
+                  Texas the size comes from the mapped building footprint in the IM3 atlas, which is ground coverage, not floor area, so multi-storey buildings come
+                  out low. The range is wide on purpose. It is labeled &ldquo;Uncloak estimate (modeled)&rdquo; everywhere, never replaces a documented or
+                  cost-derived value, and never counts toward the evidence index.
                 </p>
               </Section>
 

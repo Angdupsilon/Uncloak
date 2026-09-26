@@ -72,7 +72,8 @@ For one created before grid-operator tags (no `site_regions` table), run
 `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/007_site_regions.sql`. For one created before load
 reports (`ercot_queue` still a table), run
 `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/008_load_reports.sql -f db/004_queue_timeline.sql`, then
-reload `data/seed` for the quotes.
+reload `data/seed` for the quotes. For one created before modeled estimates, run
+`psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/009_estimates.sql`.
 
 Then set `DATABASE_URL_RO` to the same connection string with user `gridsight_ro` and that password.
 
@@ -87,7 +88,7 @@ python etl/run_all.py --dir data/seed              # real data (no code changes)
 
 `run_all.py` checks the schema, loads the CSVs, optionally loads a TCEQ file
 (`--tceq-file path`), geocodes missing coordinates (`--skip-geocode` to skip), backfills weekly
-scores, refreshes the continuous aggregate, and prints a summary. It is idempotent, so re-run it
+scores, refreshes the continuous aggregate, fits the modeled estimates, and prints a summary. It is idempotent, so re-run it
 after editing any CSV. Loading a non-sample directory removes previously loaded SAMPLE rows.
 `--reset` truncates everything first.
 
@@ -217,6 +218,19 @@ and never calls it a probability. Tiers: verified ≥ 0.7, likely ≥ 0.4, other
 A score dated D uses only evidence dated on or before D (whole day, UTC). The backfill writes a
 row for every Monday from `BACKFILL_START` to today, plus today, for each project with at least
 one event by then.
+
+## Modeled estimates
+
+`etl/models/floor_area_mw.py` (run by `run_all.py` after scoring) fits a site's **IT load range
+from its floor area**: the 10th/50th/90th percentiles of MW per square foot across the Texas
+projects with both TDLR floor area and a registered construction cost (MW = cost ÷ `$ per MW`; 43
+projects today). It is backtested by leave-one-out (median error of the middle value, and how often
+the true value falls inside the range), and both are stored with the method version in
+`estimate_methods`. Every project with no registered cost but a floor area (TDLR) or mapped footprint
+(IM3 atlas) gets a low/mid/high row in `estimates`, with its inputs. The UI labels it
+**"Uncloak estimate (modeled)"** and shows the backtest next to it. Estimates never feed
+`project_scores` and never replace a documented or cost-derived value (`check_integrity.py` checks
+both).
 
 ## Tiger Data / TimescaleDB features used
 

@@ -130,11 +130,27 @@ export interface RegionTag {
   source_url: string;
 }
 
+/** A modeled range (estimates table) with its method's backtest. Never a record, never scored. */
+export interface Estimate {
+  metric: string;
+  as_of: string;
+  low: number;
+  mid: number;
+  high: number;
+  unit: string;
+  method: string;
+  method_version: string;
+  inputs: { sqft?: number; sqft_source?: string; sqft_source_url?: string | null; training_n?: number };
+  validation: { n?: number; median_abs_pct_error?: number; interval_coverage_pct?: number; nominal_interval_pct?: number };
+}
+
 export interface Timeline {
   as_of: string;
   project: ProjectInfo & Partial<Project>;
   /** Balancing authorities EIA-861 lists for the site's county (lookup only; 1/n each). */
   regions: RegionTag[];
+  /** Modeled ranges for this project (estimates table). */
+  estimates: Estimate[];
   scores: ScorePoint[];
   events: EvidenceEvent[];
 }

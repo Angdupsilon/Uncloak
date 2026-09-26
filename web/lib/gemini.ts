@@ -13,7 +13,7 @@ import {
 } from "./queries";
 import type { AskResponse } from "./types";
 
-const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage. Coverage is national, but ERCOT figures and the evidence-score factors come from Texas records: a site outside Texas scores 0 because those record types do not exist there, not because evidence was checked and failed. Sites whose only record is "site_mapped" come from the IM3 data-center atlas (OpenStreetMap); say so when you cite one.`;
+const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage. Coverage is national. ERCOT figures cover Texas. Evidence-score factors are public-record types: Texas has all of them, Illinois, Minnesota, Indiana and Wisconsin have a state incentive registry, and elsewhere a site can score 0 because those record types are not loaded there, not because evidence was checked and failed. it_mw_modeled is a modeled range (low-high), never a record: always call it "an Uncloak estimate (modeled)" and give its range, not one number. Sites whose only record is "site_mapped" come from the IM3 data-center atlas (OpenStreetMap); say so when you cite one.`;
 
 const MAX_ROUNDS = 4;
 const MAX_PROJECTS_TO_MODEL = 40;
@@ -148,6 +148,13 @@ export async function runTool(call: FunctionCall, dashboardAsOf: string, state: 
           evidence_score: tl.project.probability ?? null,
           tier: tl.project.tier ?? null,
           mw_est: tl.project.mw_est ?? null,
+          it_mw_modeled: (() => {
+            const m = tl.estimates.find((e) => e.metric === "it_mw");
+            return m
+              ? { low: Math.round(m.low), mid: Math.round(m.mid), high: Math.round(m.high), unit: m.unit, label: "Uncloak estimate (modeled)",
+                  input: m.inputs.sqft_source, backtest_median_error_pct: m.validation.median_abs_pct_error ?? null }
+              : null;
+          })(),
           total_registered_cost_usd: tl.project.total_cost ?? null,
           is_sample: tl.project.is_sample,
         },

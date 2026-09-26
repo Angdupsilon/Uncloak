@@ -4,9 +4,10 @@
 // kind:
 //   documented  copied or summed straight from a public record
 //   derived     calculated by Uncloak from documented values (method on /methodology)
+//   modeled     a statistical estimate, always a low-high range with its method version and backtest
 //   context     background that helps interpret a number; not a measurement of this site
 
-export type MetricKind = "documented" | "derived" | "context";
+export type MetricKind = "documented" | "derived" | "modeled" | "context";
 
 export interface MetricDef {
   label: string;
@@ -144,6 +145,16 @@ export const METRICS = {
       "Not a measured or requested load. The real power draw can be much higher or lower. Available only where a construction cost is registered.",
     local: "Data centers use electricity continuously. Large new loads are part of what grid planners and utilities must serve, but this estimate says nothing about local rates or reliability.",
   },
+  it_mw_modeled: {
+    label: "Modeled IT load",
+    unit: "megawatts (MW), a 10th-90th percentile range",
+    kind: "modeled",
+    source: "Uncloak model: floor area (or the atlas building footprint) × the MW per square foot seen at Texas data centers with both a registered floor area and a construction cost",
+    meaning:
+      "A range for how much IT load a building of this size typically has, based on Texas data centers whose floor area and construction cost are both on record.",
+    caveat:
+      "A statistical estimate, not a record. The training MW is itself cost-derived, an atlas footprint is ground coverage rather than floor area (so multi-storey buildings come out low), and the range is wide on purpose. It never feeds the evidence index.",
+  },
   evidence: {
     label: "Evidence index",
     unit: "0–100% (uncalibrated)",
@@ -218,12 +229,14 @@ export type MetricKey = keyof typeof METRICS;
 export const KIND_LABEL: Record<MetricKind, string> = {
   documented: "Documented",
   derived: "Uncloak estimate",
+  modeled: "Uncloak estimate (modeled)",
   context: "Context",
 };
 
 export const KIND_HELP: Record<MetricKind, string> = {
   documented: "Taken or summed directly from a public record.",
   derived: "Calculated by Uncloak from public records. See Methodology.",
+  modeled: "A statistical range from an Uncloak model, with its method version and backtest error. Never a record, never scored.",
   context: "Background for interpretation. Not a measurement of this organization or site.",
 };
 

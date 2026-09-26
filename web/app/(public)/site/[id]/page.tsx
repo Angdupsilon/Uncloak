@@ -25,6 +25,7 @@ import { TIER_LABELS } from "@/lib/constants";
 import { countyLabel, fmtDistance } from "@/lib/geo";
 import { describeRegions, EIA861_URL } from "@/lib/regions";
 import { coverageNote, factorCoverage, factorNote } from "@/lib/coverage";
+import { backtestNote, estimateNote, fmtRange, itLoad } from "@/lib/estimates";
 import { PROGRAM_HELP, RESOLVED_BY_LABEL, SOURCES, type SourceKey } from "@/lib/metrics";
 import { orgHref, siteHref } from "@/lib/slug";
 import type { FactorConfig } from "@/lib/types";
@@ -98,6 +99,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
       : atlasOnly || p.timeline?.project.location_method === "osm_atlas"
         ? "Mapped building or campus centroid from the IM3 data-center atlas (OpenStreetMap), not a public-record address."
         : "Location from a reviewed public-record compilation (see Methodology).";
+  const modeled = s.mw_est == null ? itLoad(p.timeline?.estimates) : null;
   const grid = describeRegions(p.timeline?.regions ?? [], s.state, p.timeline?.project.county_fips ?? null);
   const dashboardHref = `/dashboard?site=${s.project_id}${s.parent ? `&parent=${encodeURIComponent(s.parent)}` : ""}`;
 
@@ -220,25 +222,44 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             period="Registrations filed to date"
             sources={<SourceLink url={SOURCES.TDLR.url} label="TDLR TABS" />}
           />
-          <BigStat
-            metric="mw_est"
-            label="Estimated power demand"
-            value={s.mw_est != null ? (s.mw_est < 1 ? "<1 MW" : fmtMW(s.mw_est)) : null}
-            note={s.mw_est != null ? "From construction cost, not measured" : "Needs a construction cost"}
-            period={asOfLabel}
-            sources={
-              <Link href="/methodology#mw" className="rw-link">
-                How it&apos;s estimated
-              </Link>
-            }
-          />
+          {modeled ? (
+            <BigStat
+              metric="it_mw_modeled"
+              label="Modeled IT load"
+              value={fmtRange(modeled)}
+              note={
+                <>
+                  {estimateNote(modeled)} {backtestNote(modeled)}
+                </>
+              }
+              period={`Model ${modeled.method_version}, ${fmtDate(modeled.as_of)}`}
+              sources={
+                <Link href="/methodology#floor-area-model" className="rw-link">
+                  How it&apos;s modeled
+                </Link>
+              }
+            />
+          ) : (
+            <BigStat
+              metric="mw_est"
+              label="Estimated power demand"
+              value={s.mw_est != null ? (s.mw_est < 1 ? "<1 MW" : fmtMW(s.mw_est)) : null}
+              note={s.mw_est != null ? "From construction cost, not measured" : "Needs a construction cost"}
+              period={asOfLabel}
+              sources={
+                <Link href="/methodology#mw" className="rw-link">
+                  How it&apos;s estimated
+                </Link>
+              }
+            />
+          )}
           <BigStat
             metric="evidence"
             label="Evidence strength"
             value={s.tier ? TIER_LABELS[s.tier] : null}
             note={
               s.score != null
-                ? `${s.score} of 100 checklist points${s.state === "TX" ? "" : " · checklist uses Texas record types"}`
+                ? `${s.score} of 100 checklist points${s.state === "TX" ? "" : " · most checklist items are Texas record types"}`
                 : "Not scored yet"
             }
             period={s.scored_at ? `Scored ${fmtDate(s.scored_at)}` : asOfLabel}

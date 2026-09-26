@@ -19,11 +19,12 @@ import load_tceq
 import score
 import sync_dimensions
 from common import connect
+from models import floor_area_mw
 
 REQUIRED = ["parents", "entities", "projects", "evidence_events", "project_scores",
             "dc_load_reports", "ercot_queue", "scoring_config", "sites", "project_sites", "project_status_history",
             "entity_parent_history", "capacity_observations", "ercot_project_links",
-            "source_refreshes", "grid_regions", "site_regions", "weekly_project_state", "weekly_realistic_demand"]
+            "source_refreshes", "grid_regions", "site_regions", "estimates", "estimate_methods", "weekly_project_state", "weekly_realistic_demand"]
 
 
 def schema_check() -> None:
@@ -36,7 +37,7 @@ def schema_check() -> None:
         if missing:
             raise SystemExit(
                 f"Missing database objects: {missing}.\n"
-                "Run db/004_data_quality.sql, db/007_site_regions.sql and db/008_load_reports.sql for an existing database, or db/001_schema.sql + "
+                "Run db/004_data_quality.sql, db/007_site_regions.sql, db/008_load_reports.sql and db/009_estimates.sql for an existing database, or db/001_schema.sql + "
                 "db/002_timescale.sql + db/003_readonly_role.sql for a new database.")
         cur.execute("SELECT hypertable_name FROM timescaledb_information.hypertables")
         hts = {r[0] for r in cur.fetchall()}
@@ -101,6 +102,8 @@ def main() -> None:
     assign_regions.main()
     print("5/6 backfill scores + 6/6 refresh continuous aggregate")
     score.backfill()
+    print("    modeled estimates (never read by scoring)")
+    floor_area_mw.main()
     summary()
 
 

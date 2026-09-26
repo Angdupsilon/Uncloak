@@ -11,6 +11,7 @@ import type {
   Project,
   ProjectInfo,
   QueueTimeline,
+  Estimate,
   LoadRegion,
   LoadReport,
   LoadReports,
@@ -309,6 +310,18 @@ export async function getQueueTimeline(asOf: string): Promise<QueueTimeline> {
 
 export const DEFAULT_LOAD_REGION = "ERCO";
 
+/** Model versions with their backtests, for the methodology page. */
+export async function getEstimateMethods(): Promise<
+  { method: string; method_version: string; fitted_at: string; description: string; params: Record<string, unknown>; validation: Estimate["validation"]; estimates: number }[]
+> {
+  const rows = await query<{ method: string; method_version: string; fitted_at: Date; description: string; params: Record<string, unknown>; validation: Estimate["validation"]; estimates: number }>(
+    `SELECT m.method, m.method_version, m.fitted_at, m.description, m.params, m.validation,
+            (SELECT COUNT(*)::int FROM estimates x WHERE x.method = m.method AND x.method_version = m.method_version) AS estimates
+     FROM estimate_methods m ORDER BY m.method, m.method_version`,
+  );
+  return rows.map((r) => ({ ...r, fitted_at: r.fitted_at.toISOString() }));
+}
+
 export async function getLoadReports(asOf: string, region: string | null): Promise<LoadReports> {
   const regions = await query<Omit<LoadRegion, "first_ts" | "last_ts"> & { first_ts: Date; last_ts: Date }>(
     `SELECT r.region_key, g.name, g.kind, MIN(r.source_key) AS source_key, COUNT(*)::int AS rows,
@@ -384,7 +397,7 @@ const PROJECT_INFO = `
   ) st ON true`;
 
 export async function getTimeline(projectId: number, asOf: string): Promise<Timeline | null> {
-  const [info, scored, scores, events, regions] = await Promise.all([
+  const [info, scored, scores, events, regions, estimates] = await Promise.all([
     query<ProjectInfo>(`${PROJECT_INFO} WHERE p.project_id = $1`, [projectId]),
     getProjects(asOf, { ids: [projectId] }),
     query<Omit<ScorePoint, "ts"> & { ts: Date }>(
@@ -403,12 +416,19 @@ export async function getTimeline(projectId: number, asOf: string): Promise<Time
        WHERE ps.project_id = $1 ORDER BY g.name`,
       [projectId],
     ),
+    query<Estimate>(
+      `SELECT x.metric, to_char(x.as_of, 'YYYY-MM-DD') AS as_of, x.low, x.mid, x.high, x.unit, x.method, x.method_version, x.inputs, m.validation
+       FROM estimates x JOIN estimate_methods m USING (method, method_version)
+       WHERE x.project_id = $1 ORDER BY x.metric`,
+      [projectId],
+    ),
   ]);
   if (!info[0]) return null;
   return {
     as_of: asOf,
     project: { ...info[0], ...(scored[0] ?? {}) },
     regions,
+    estimates: estimates.map((x) => ({ ...x, low: Number(x.low), mid: Number(x.mid), high: Number(x.high) })),
     scores: scores.map((s) => ({ ...s, ts: s.ts.toISOString() })),
     events: events.map((e) => ({ ...e, ts: e.ts.toISOString() })),
   };

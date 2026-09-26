@@ -4,6 +4,7 @@ import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
 import { countyLabel } from "@/lib/geo";
 import { describeRegions, EIA861_URL } from "@/lib/regions";
 import { coverageNote, factorCoverage, factorNote } from "@/lib/coverage";
+import { backtestNote, estimateNote, fmtRange, itLoad } from "@/lib/estimates";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
 import TimeMachine from "./TimeMachine";
@@ -100,6 +101,7 @@ export default function ProjectPanel({
   const entityName = p.llc_name?.replace(/ \(OSM operator\)$/, "") ?? null;
   const atlasOnly = events.length > 0 && events.every((e) => e.event_type === "site_mapped");
   const grid = describeRegions(data.regions ?? [], p.state, p.county_fips ?? null);
+  const modeled = p.sourced_mw == null && p.mw_est == null ? itLoad(data.estimates) : null;
 
   return (
     <div className={`flex h-full flex-col bg-white transition-opacity ${loading ? "opacity-70" : ""}`}>
@@ -184,13 +186,22 @@ export default function ProjectPanel({
                 detail={scored ? TIER_LABELS[p.tier!] : "Not scored"}
                 color={scored ? TIER_COLORS[p.tier!] : undefined}
               />
-              <MetricCard
-                label={p.sourced_mw != null ? `${p.capacity_type ?? "Sourced"} load` : "Modeled load"}
-                value={fmtMW(p.sourced_mw ?? p.mw_est)}
-                detail={p.sourced_mw != null ? "Public-source figure" : "From registered cost"}
-              />
+              {modeled ? (
+                <MetricCard label="Modeled IT load" value={fmtRange(modeled)} detail="Uncloak estimate (modeled)" />
+              ) : (
+                <MetricCard
+                  label={p.sourced_mw != null ? `${p.capacity_type ?? "Sourced"} load` : "Estimated load"}
+                  value={fmtMW(p.sourced_mw ?? p.mw_est)}
+                  detail={p.sourced_mw != null ? "Public-source figure" : "From registered cost"}
+                />
+              )}
               <MetricCard label="Registered cost" value={fmtUSD(p.total_cost)} />
             </div>
+            {modeled && (
+              <p className="mt-2 text-[11px] leading-4 text-slate-500">
+                Modeled IT load: {estimateNote(modeled)} {backtestNote(modeled)} Not a record and not scored.
+              </p>
+            )}
           </section>
 
           <section>

@@ -32,7 +32,7 @@ def check(area, name, ok, detail=""):
 # ---------- schema ----------
 expected_tables = {"parents","entities","projects","evidence_events","project_scores","dc_load_reports","scoring_config",
                    "sites","project_sites","project_status_history","entity_parent_history",
-                   "capacity_observations","ercot_project_links","source_refreshes","grid_regions","site_regions"}
+                   "capacity_observations","ercot_project_links","source_refreshes","grid_regions","site_regions","estimates","estimate_methods"}
 tables = {r[0] for r in q("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'")}
 check("schema","GridSight tables present", expected_tables <= tables, f"missing={sorted(expected_tables-tables)}")
 check("schema","no unexpected tables", tables <= expected_tables, f"extra={sorted(tables-expected_tables)}")
@@ -50,7 +50,7 @@ fks = {(r[0], r[1]) for r in q("""select conrelid::regclass::text, confrelid::re
 need_fk = {("entities","parents"),("projects","entities"),("evidence_events","projects"),("project_scores","projects"),
            ("project_sites","projects"),("project_sites","sites"),("project_status_history","projects"),
            ("capacity_observations","projects"),("ercot_project_links","projects"),
-           ("site_regions","sites"),("site_regions","grid_regions")}
+           ("site_regions","sites"),("site_regions","grid_regions"),("estimates","projects"),("estimates","estimate_methods")}
 check("schema","foreign keys declared", need_fk <= fks, f"missing={sorted(need_fk-fks)}")
 
 # ---------- read-only role ----------
@@ -223,6 +223,19 @@ n = one("select count(*) from dc_load_reports where metric in ('forecast','forec
 check("load reports","forecasts name their year", n == 0, f"bad={n}")
 view = q("select count(*), count(gw_requested), count(gw_approved), count(gw_observed_peak) from ercot_queue")[0]
 check("load reports","ercot_queue view rows", view[0] > 0, f"rows/requested/approved/peak={view}")
+
+# ---------- modeled estimates (never read by scoring) ----------
+n = one("select count(*) from estimates where not (low <= mid and mid <= high) or coalesce(method_version,'') = '' or inputs = '{}'::jsonb")
+check("estimates","every estimate is a range with a method version and inputs", n == 0, f"bad={n}")
+n = one("""select count(*) from estimates x join evidence_events e on e.project_id = x.project_id
+          where e.event_type = 'building_registered' and e.value_num > 0""")
+check("estimates","no estimate on a project with a documented cost (never replaces it)", n == 0, f"bad={n}")
+n = one("select count(*) from estimate_methods where not (validation ? 'median_abs_pct_error' and validation ? 'n')")
+check("estimates","every method version stores its backtest", n == 0, f"bad={n}")
+m = q("select method, method_version, validation->>'n', validation->>'median_abs_pct_error', validation->>'interval_coverage_pct' from estimate_methods")
+check("estimates","methods and leave-one-out error", True, str(m))
+n = one("select count(*) from pg_views where schemaname='public' and definition ilike '%estimates%' and viewname in ('weekly_realistic_demand','queue_timeline')")
+check("estimates","no scoring or ERCOT view reads estimates", n == 0, f"views={n}")
 
 # ---------- seed parity ----------
 # data/seed always loads; data/seed_national is counted only when the database holds its rows.
