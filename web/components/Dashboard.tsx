@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AskGridSight from "@/components/AskGridSight";
 import DateSlider from "@/components/DateSlider";
-import HowScoring from "@/components/HowScoring";
 import ParentFilter from "@/components/ParentFilter";
 import ProjectPanel from "@/components/ProjectPanel";
 import SummaryBar from "@/components/SummaryBar";
@@ -81,24 +80,31 @@ export default function Dashboard({
       work on any screen.
     </div>
     )}
-    <div className={embedded ? "flex h-[780px] min-w-[1000px] flex-col gap-4 text-black" : "flex h-screen min-w-[1040px] flex-col gap-4 p-5 text-black"}>
+    <div className={embedded ? "flex h-[780px] min-w-[1000px] flex-col text-black" : "flex h-screen min-w-[1040px] flex-col text-black"}>
       {!embedded && (
-      <header className="-mx-5 -mt-5 mb-1 flex items-center justify-between gap-6 bg-white px-5 py-4 shadow-[var(--shadow-topbar)]">
-        <div className="min-w-0">
-          
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-[#e2e2e2] bg-white px-5">
+        <div className="flex min-w-0 items-center gap-4">
+          <Link href="/" className="gs-wordmark shrink-0 text-[28px] font-bold leading-none tracking-[-1.1px] text-black" aria-label="Uncloak home">
+            Uncloak
+          </Link>
+          <span className="h-5 w-px bg-[#e2e2e2]" aria-hidden />
           <div className="min-w-0">
-            <Link href="/" className="mb-1 inline-block text-[13px] font-medium text-[#5e5e5e] hover:text-black hover:underline">
-              ← Back to search
-            </Link>
-            <h1 className="ub-display-lg gs-wordmark">Uncloak</h1>
-            <p className="ub-body ub-body-md mt-1 truncate">
-              Texas data-center load: requested vs. verified
-            </p>
+            <p className="text-[14px] font-medium leading-4 text-black">Advanced dashboard</p>
+            <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">Texas data-center load · requested vs. verified</p>
           </div>
         </div>
-        <HowScoring config={config.data} />
+        <nav aria-label="Dashboard navigation" className="flex shrink-0 items-center gap-1 text-[13px] font-medium">
+          <Link href="/" className="rounded-full px-3 py-2 text-[#5e5e5e] transition-colors hover:bg-[#f3f3f3] hover:text-black">
+            Search
+          </Link>
+          <Link href="/methodology#scoring" className="rounded-full bg-black px-3.5 py-2 text-white transition-colors hover:bg-[#282828]">
+            Methodology
+          </Link>
+        </nav>
       </header>
       )}
+
+      <div className={embedded ? "flex min-h-0 flex-1 flex-col gap-4" : "flex min-h-0 flex-1 flex-col gap-4 p-5"}>
 
       {showingSample && (
         <div className="flex items-center gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900">
@@ -177,6 +183,7 @@ export default function Dashboard({
       </footer>
 
       {!embedded && <AskGridSight asOf={asOf} onResult={onAsk} />}
+      </div>
     </div>
     </>
   );
