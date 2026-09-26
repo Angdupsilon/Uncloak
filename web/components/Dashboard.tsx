@@ -130,7 +130,7 @@ export default function Dashboard({ today }: { today: string }) {
         </div>
       </main>
 
-      <QueueTimeline data={queue.data} error={queue.error} asOf={asOf} onPick={setAsOf} />
+      <QueueTimeline data={queue.data} error={queue.error} asOf={asOf} today={today} onPick={setAsOf} />
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
       <footer className="flex items-center gap-8 rounded-xl border border-[#e2e2e2] bg-white px-5 py-3 pr-[420px] shadow-[var(--shadow-card)]">

@@ -5,7 +5,7 @@ import type { Summary } from "@/lib/types";
 
 /** Queue colours. Black is the only conversion colour in the design system, so
  *  "real" load is ink and phantom load is the empty canvas it sits on. */
-const INK = {
+export const INK = {
   energized: "#000000",
   approved: "#8a8a8a",
   phantom: "#e6e6e6",
