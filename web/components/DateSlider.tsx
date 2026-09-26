@@ -53,7 +53,7 @@ export default function DateSlider({
     <div className="flex min-w-0 flex-1 items-center gap-3">
       <button
         onClick={togglePlay}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white hover:bg-slate-700"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white transition-colors hover:bg-slate-700"
         aria-label={isPlaying ? "Pause" : "Play weekly"}
         title={isPlaying ? "Pause" : "Play: step weekly through time"}
       >
@@ -75,7 +75,7 @@ export default function DateSlider({
             setPlaying(false);
             onChange(steps[Number(e.target.value)]);
           }}
-          className="w-full accent-slate-900"
+          className="w-full"
           aria-label="As-of date"
         />
       </div>
