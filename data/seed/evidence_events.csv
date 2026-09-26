@@ -1,0 +1,14 @@
+ts,project_name,source,event_type,value_num,payload_json,source_url
+<<FILL>>,<<FILL: Alamo Mission LLC project name>>,COMPTROLLER,certified,,"{""registry_id"": ""<<FILL>>""}",<<FILL>>
+<<FILL>>,Stargate Milam,TDLR,tenant_named,,"{""tenant"": ""OpenAI"", ""record_id"": ""<<FILL>>""}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 1}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 2}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 3}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 4}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 5}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 6}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 7}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 8}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 9}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 10}",<<FILL>>
+<<FILL>>,Stargate Shackelford,TDLR,building_registered,<<FILL>>,"{""record_id"": ""<<FILL>>"", ""building"": 11}",<<FILL>>

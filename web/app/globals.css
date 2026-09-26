@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.leaflet-container {
+  font-family: inherit;
+  background: #e2e8f0;
+}
+
+/* Leaflet SVG paths get a browser focus ring on click. */
+.leaflet-interactive:focus {
+  outline: none;
+}

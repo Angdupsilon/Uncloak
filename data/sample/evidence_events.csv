@@ -1,0 +1,35 @@
+ts,project_name,source,event_type,value_num,payload_json,source_url
+2024-03-11,SAMPLE Project A,TDLR,building_registered,450000000,"{""record_id"": ""SAMPLE-A-building_registered-2024-03-11""}",SAMPLE
+2024-03-11,SAMPLE Project A,TDLR,square_footage,300000,"{""record_id"": ""SAMPLE-A-square_footage-2024-03-11""}",SAMPLE
+2024-09-02,SAMPLE Project A,TDLR,building_registered,400000000,"{""record_id"": ""SAMPLE-A-building_registered-2024-09-02""}",SAMPLE
+2024-10-14,SAMPLE Project A,TDLR,tenant_named,,"{""tenant"": ""SAMPLE Hyperscaler A"", ""record_id"": ""SAMPLE-A-tenant_named-2024-10-14""}",SAMPLE
+2025-01-20,SAMPLE Project A,COMPTROLLER,certified,,"{""record_id"": ""SAMPLE-A-certified-2025-01-20""}",SAMPLE
+2025-04-07,SAMPLE Project A,TCEQ,permit_filed,,"{""permit_id"": ""SAMPLE-P-A1"", ""record_id"": ""SAMPLE-A-permit_filed-2025-04-07""}",SAMPLE
+2026-02-16,SAMPLE Project A,TDLR,inspection_done,,"{""record_id"": ""SAMPLE-A-inspection_done-2026-02-16""}",SAMPLE
+2025-06-02,SAMPLE Project B,TDLR,building_registered,120000000,"{""record_id"": ""SAMPLE-B-building_registered-2025-06-02""}",SAMPLE
+2024-05-06,SAMPLE Project C,TDLR,building_registered,300000000,"{""record_id"": ""SAMPLE-C-building_registered-2024-05-06""}",SAMPLE
+2024-05-06,SAMPLE Project C,TDLR,square_footage,250000,"{""record_id"": ""SAMPLE-C-square_footage-2024-05-06""}",SAMPLE
+2024-11-04,SAMPLE Project C,COMPTROLLER,certified,,"{""record_id"": ""SAMPLE-C-certified-2024-11-04""}",SAMPLE
+2024-02-05,SAMPLE Project D,TDLR,building_registered,700000000,"{""building"": 1, ""record_id"": ""SAMPLE-D-building_registered-2024-02-05""}",SAMPLE
+2024-02-05,SAMPLE Project D,TDLR,building_registered,650000000,"{""building"": 2, ""record_id"": ""SAMPLE-D-building_registered-2024-02-05""}",SAMPLE
+2024-08-19,SAMPLE Project D,TDLR,building_registered,600000000,"{""building"": 3, ""record_id"": ""SAMPLE-D-building_registered-2024-08-19""}",SAMPLE
+2025-02-10,SAMPLE Project D,TDLR,tenant_named,,"{""tenant"": ""SAMPLE Hyperscaler B"", ""record_id"": ""SAMPLE-D-tenant_named-2025-02-10""}",SAMPLE
+2025-03-03,SAMPLE Project E,TDLR,building_registered,1200000000,"{""record_id"": ""SAMPLE-E-building_registered-2025-03-03""}",SAMPLE
+2025-07-14,SAMPLE Project E,TCEQ,permit_filed,,"{""permit_id"": ""SAMPLE-P-E1"", ""record_id"": ""SAMPLE-E-permit_filed-2025-07-14""}",SAMPLE
+2025-09-08,SAMPLE Project E,COMPTROLLER,certified,,"{""record_id"": ""SAMPLE-E-certified-2025-09-08""}",SAMPLE
+2024-06-10,SAMPLE Project F,TCEQ,permit_filed,,"{""permit_id"": ""SAMPLE-P-F1"", ""record_id"": ""SAMPLE-F-permit_filed-2024-06-10""}",SAMPLE
+2025-01-13,SAMPLE Project G,TDLR,building_registered,1100000000,"{""building"": 1, ""record_id"": ""SAMPLE-G-building_registered-2025-01-13""}",SAMPLE
+2025-04-21,SAMPLE Project G,TDLR,building_registered,1100000000,"{""building"": 2, ""record_id"": ""SAMPLE-G-building_registered-2025-04-21""}",SAMPLE
+2025-05-05,SAMPLE Project G,TDLR,tenant_named,,"{""tenant"": ""SAMPLE AI Lab C"", ""record_id"": ""SAMPLE-G-tenant_named-2025-05-05""}",SAMPLE
+2025-08-18,SAMPLE Project G,TCEQ,permit_filed,,"{""permit_id"": ""SAMPLE-P-G1"", ""record_id"": ""SAMPLE-G-permit_filed-2025-08-18""}",SAMPLE
+2025-09-15,SAMPLE Project G,TDLR,building_registered,1100000000,"{""building"": 3, ""record_id"": ""SAMPLE-G-building_registered-2025-09-15""}",SAMPLE
+2025-11-10,SAMPLE Project G,TDLR,building_registered,1100000000,"{""building"": 4, ""record_id"": ""SAMPLE-G-building_registered-2025-11-10""}",SAMPLE
+2026-03-02,SAMPLE Project G,OTHER,status_change,,"{""status"": ""SAMPLE under construction"", ""record_id"": ""SAMPLE-G-status_change-2026-03-02""}",SAMPLE
+2026-06-01,SAMPLE Project G,TDLR,inspection_done,,"{""record_id"": ""SAMPLE-G-inspection_done-2026-06-01""}",SAMPLE
+2025-10-06,SAMPLE Project H,TDLR,building_registered,2300000000,"{""record_id"": ""SAMPLE-H-building_registered-2025-10-06""}",SAMPLE
+2026-01-12,SAMPLE Project I,TDLR,building_registered,800000000,"{""building"": 1, ""record_id"": ""SAMPLE-I-building_registered-2026-01-12""}",SAMPLE
+2026-04-20,SAMPLE Project I,TDLR,building_registered,900000000,"{""building"": 2, ""record_id"": ""SAMPLE-I-building_registered-2026-04-20""}",SAMPLE
+2026-05-18,SAMPLE Project I,COMPTROLLER,certified,,"{""record_id"": ""SAMPLE-I-certified-2026-05-18""}",SAMPLE
+2024-07-15,SAMPLE Project J,TDLR,building_registered,250000000,"{""record_id"": ""SAMPLE-J-building_registered-2024-07-15""}",SAMPLE
+2024-07-15,SAMPLE Project J,TDLR,tenant_named,,"{""tenant"": ""SAMPLE Colo D"", ""record_id"": ""SAMPLE-J-tenant_named-2024-07-15""}",SAMPLE
+2025-05-12,SAMPLE Project J,TDLR,inspection_done,,"{""record_id"": ""SAMPLE-J-inspection_done-2025-05-12""}",SAMPLE

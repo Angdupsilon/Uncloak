@@ -1,0 +1,209 @@
+# GridSight
+
+A live intelligence dashboard for Texas data-center electricity demand. It assembles
+data-center projects from public records (TDLR, Texas Comptroller, TCEQ), resolves shell
+LLCs to their parent companies, scores how likely each project is to be built, and compares
+evidence-weighted demand with ERCOT's large-load queue. The difference is **shadow load**.
+
+Every score is stored as a time series, so the whole dashboard can be rewound to any past
+week (the **Time Machine**). **Ask GridSight** (Gemini function calling) answers questions
+from the database and filters the map.
+
+Built for HackGT with **Tiger Data** (TimescaleDB on Tiger Cloud) and **Gemini**.
+
+> **Data honesty.** Every number in the UI comes from the database. `data/sample/` holds a
+> small, clearly fake dataset (every name starts with `SAMPLE`, every `source_url` is
+> `SAMPLE`) so the app runs before real data exists. When sample rows are on screen, the UI
+> shows a yellow **"Showing SAMPLE data"** banner. `data/seed/` holds the real, verified rows;
+> anything not yet verified is `<<FILL>>` and is skipped at load time with a warning.
+
+---
+
+## Repository layout
+
+This repository root is the `gridsight/` directory from the build spec.
+
+```
+db/          001_schema.sql, 002_timescale.sql, 003_readonly_role.sql
+etl/         config.py, common.py, load_seed.py, load_tceq.py, geocode.py, score.py, run_all.py
+data/seed/   real rows (team fills <<FILL>>)
+data/sample/ SAMPLE fixtures, same CSV schema
+web/         Next.js app: app/page.tsx, app/api/*, components/*, lib/{db,queries,gemini}.ts
+```
+
+## Setup
+
+### 1. Environment
+
+```bash
+cp .env.example .env    # then fill in the values
+```
+
+| Variable | Used by | Notes |
+|---|---|---|
+| `DATABASE_URL` | ETL, `psql` | Tiger Cloud owner connection string (`...?sslmode=require`) |
+| `DATABASE_URL_RO` | web | Same host, `gridsight_ro` role (read-only, 3 s statement timeout) |
+| `GEMINI_API_KEY` | web | Ask GridSight. Without it, the chat replies that it isn't configured |
+| `GEMINI_MODEL` | web | Gemini model id |
+| `MW_COST_PER_MW_USD` | ETL | Construction USD per MW. If blank, `mw_est` is NULL and the UI shows "—" for MW/GW |
+| `BACKFILL_START` | ETL | First date of the weekly score backfill. Default `2024-01-01` |
+
+For local development, the web app reads the repo-root `.env` too (see `web/next.config.ts`),
+so one file serves both. On Vercel, set `DATABASE_URL_RO`, `GEMINI_API_KEY` and `GEMINI_MODEL`
+in the project settings and set the project **Root Directory** to `web`.
+
+### 2. Database (Tiger Cloud)
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/001_schema.sql -f db/002_timescale.sql
+psql "$DATABASE_URL" -v ro_password="'choose-a-password'" -f db/003_readonly_role.sql
+```
+
+Then set `DATABASE_URL_RO` to the same connection string with user `gridsight_ro` and that password.
+
+### 3. ETL (Python 3.11+)
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -r etl/requirements.txt
+python etl/run_all.py --dir data/sample            # SAMPLE data
+python etl/run_all.py --dir data/seed              # real data (no code changes)
+```
+
+`run_all.py` checks the schema, loads the CSVs, optionally loads a TCEQ file
+(`--tceq-file path`), geocodes missing coordinates (`--skip-geocode` to skip), backfills weekly
+scores, refreshes the continuous aggregate, and prints a summary. It is idempotent, so re-run it
+after editing any CSV. Loading a non-sample directory removes previously loaded SAMPLE rows.
+`--reset` truncates everything first.
+
+Individual steps:
+
+```bash
+python etl/load_seed.py --dir data/seed
+python etl/load_tceq.py --file path/to/tceq_bulk.csv   # set column names at the top of the script first
+python etl/geocode.py
+python etl/score.py                                   # backfill + refresh
+python etl/score.py --project 12 --as-of 2025-06-01   # score one project as of a date
+```
+
+### 4. Web
+
+```bash
+cd web
+npm install
+npm run dev    # http://localhost:3000
+```
+
+Optional: put a Texas county GeoJSON at `web/public/tx_counties.geojson` for county outlines.
+The map works without it.
+
+## How to add a project
+
+1. `data/seed/parents.csv`: add the parent company if it's new (`name,color_hex`).
+2. `data/seed/entities.csv`: add the LLC and how it was resolved to the parent
+   (`resolved_by` = `COMPTROLLER` | `TDLR_TENANT` | `MANUAL`, plus a `source_url`).
+3. `data/seed/projects.csv`: add the project (`name,county,city,address,lat,lon,llc_name`).
+   Leave `lat`/`lon` blank to have `geocode.py` fill them from the address.
+4. `data/seed/evidence_events.csv`: one row per dated piece of evidence
+   (`ts,project_name,source,event_type,value_num,payload_json,source_url`). Allowed
+   `event_type`s: `building_registered` (value = construction USD), `square_footage`,
+   `tenant_named` (`{"tenant": "..."}`), `inspection_done`, `certified`, `permit_filed`
+   (`{"permit_id": "..."}`), `status_change` (`{"status": "..."}`). Unknown types fail the load.
+5. `python etl/run_all.py --dir data/seed`
+
+Any cell containing `<<FILL>>` counts as missing. Rows missing a required field (a project
+name, or an event date or value) are skipped and listed in the output.
+
+## Scoring
+
+`etl/config.py` holds the weights (below), the `$ per MW` constant and the backfill start.
+Each backfill writes this configuration to the `scoring_config` table, and the UI's
+**How scoring works** popover reads it from `/api/config`. The popover always matches the
+stored scores.
+
+| factor | points | rule |
+|---|---|---|
+| `tdlr_registered` | 20 | ≥1 `building_registered` |
+| `multi_building` | 10 | ≥2 `building_registered` |
+| `value_over_500m` | 15 | registered value ≥ $500M |
+| `tenant_named` | 20 | ≥1 `tenant_named` |
+| `comptroller_certified` | 15 | ≥1 `certified` |
+| `tceq_permit` | 15 | ≥1 `permit_filed` |
+| `inspection_done` | 5 | ≥1 `inspection_done` |
+
+The evidence score is points ÷ 100. The UI labels it **"Evidence index (uncalibrated)"** and
+never calls it a probability. Tiers: verified ≥ 0.7, likely ≥ 0.4, otherwise low
+(`web/lib/constants.ts`). `mw_est` is total registered cost ÷ `MW_COST_PER_MW_USD`.
+
+A score dated D uses only evidence dated on or before D (whole day, UTC). The backfill writes a
+row for every Monday from `BACKFILL_START` to today, plus today, for each project with at least
+one event by then.
+
+## Tiger Data / TimescaleDB features used
+
+- **Hypertables**: `evidence_events`, `project_scores` and `ercot_queue` are hypertables on `ts`.
+- **Continuous aggregate**: `weekly_project_state` rolls `project_scores` up by week with
+  **`time_bucket('7 days', ts)`** and **`last(value, ts)`**. It is refreshed with
+  `refresh_continuous_aggregate` after each backfill.
+- **View on the aggregate**: `weekly_realistic_demand` sums evidence-weighted and found GW per
+  week. It powers the summary sparkline and the weekly series in `/api/summary`.
+- **As-of queries**: the latest score per project at or before a date (`ORDER BY ts DESC LIMIT 1`
+  on the `(project_id, ts DESC)` index) drive the Time Machine and the date slider.
+- **Optional compression**: `db/002_timescale.sql` includes commented-out
+  `ALTER TABLE evidence_events SET (timescaledb.compress, ...)` and `add_compression_policy`
+  lines. Enable them for native columnar compression of older evidence.
+
+## API
+
+All endpoints accept `as_of=YYYY-MM-DD` (default today, UTC) and echo it back. All SQL is in
+`web/lib/queries.ts`, parameterized, and runs as the read-only role.
+
+- `GET /api/summary`: ERCOT queue (latest row on or before `as_of`), `found_gw`, `realistic_gw`, `shadow_gw`, `projects`, `weekly[]`
+- `GET /api/projects?parent=&county=&min_prob=&max_prob=&min_cost=&has_permit=&ids=`
+- `GET /api/projects/[id]/timeline`: project, score history and events up to `as_of`
+- `GET /api/parents`: MW total / evidence-weighted / in verified projects, by parent
+- `GET /api/config`: scoring weights, `$ per MW`, tier thresholds, backfill start
+- `POST /api/ask` `{question, as_of}`: `{answer, map_filter, open_timeline, tool_calls}`
+
+Ask GridSight gives Gemini four tools (`filter_projects`, `get_project_timeline`, `get_summary`,
+`compare_parents`) that call the same query functions. It never gives Gemini free-form SQL, and
+it allows up to 4 tool rounds.
+
+## Notes and deviations from the build spec
+
+- **Next.js 16** (spec: 14+), React 19, Tailwind 4, react-leaflet 5, Recharts 3,
+  `@google/genai` 2.x. The ETL targets Python 3.11+ and was run locally on 3.14.
+- **Added** a `scoring_config` table, written by `score.py` and read by `/api/config`, so the UI
+  shows the exact weights and `$ per MW` behind the stored scores. `web/` has no access to
+  `etl/config.py` on Vercel.
+- **Added** unique indexes on `entities.llc_name` and `projects.name` so loads can upsert by name.
+  Evidence rows carry a `payload._origin` marker so reloads replace only rows that script inserted.
+- **Added** `etl/common.py` (shared helpers) and `web/components/HowScoring.tsx` (the popover).
+- `web/app/page.tsx` is a thin server wrapper that renders per request and passes today's date
+  to the client dashboard in `web/components/Dashboard.tsx`. This keeps the build from baking in the default as-of date.
+- `/api/summary` also returns `projects_with_mw`. `/api/parents` also returns `mw_verified`
+  (MW in verified-tier projects), the "split verified vs. not" figure.
+  `found_gw`/`realistic_gw`/`shadow_gw` are `null` rather than 0 when no project has an MW estimate.
+- `get_project_timeline` fuzzy-matches project name, LLC name or parent name. If only an LLC
+  matches (for example "Alamo Mission LLC" while its project row is still `<<FILL>>`), it returns
+  the LLC → parent resolution without a timeline.
+- **SAMPLE `$ per MW`:** if `MW_COST_PER_MW_USD` is unset and you load `data/sample`, the ETL uses
+  a placeholder from `data/sample/SAMPLE_settings.env` so the sample map has MW circles. The
+  popover labels it "SAMPLE placeholder". It is not a researched estimate and is never used for
+  `data/seed`.
+- `db/003_readonly_role.sql` takes the role password as a psql variable (`-v ro_password=...`).
+- Metro bounding boxes for `filter_projects` are approximate and live in `web/lib/queries.ts`
+  (`METROS`).
+- **Testing caveat:** the ETL, the API and the UI were tested end to end on local PostgreSQL 17
+  with small stand-ins for `create_hypertable`, `time_bucket`, `last()` and
+  `refresh_continuous_aggregate`. They were **not** run against a real TimescaleDB / Tiger Cloud
+  instance, so run `db/001` and `db/002` against Tiger Cloud first. Ask GridSight was tested at
+  the tool-dispatch level only, because no Gemini key was available.
+
+## `<<FILL>>` index (team supplies)
+
+`DATABASE_URL`, `DATABASE_URL_RO`, `GEMINI_API_KEY`, `GEMINI_MODEL`, `MW_COST_PER_MW_USD`,
+`web/public/tx_counties.geojson`, the TCEQ bulk file path and column names (top of
+`etl/load_tceq.py`), and all `<<FILL>>` cells in `data/seed/*.csv`: the Alamo Mission project
+row, the Stargate LLC names, the 11 Stargate Shackelford registration dates and values, the
+Stargate Milam tenant record, record IDs, source URLs, and ERCOT queue data points.

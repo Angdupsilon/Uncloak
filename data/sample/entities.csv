@@ -1,0 +1,7 @@
+llc_name,parent_name,resolved_by,source_url
+SAMPLE Bluebonnet Data LLC,SAMPLE Hyperscaler A,COMPTROLLER,SAMPLE
+SAMPLE Prairie Power LLC,SAMPLE Hyperscaler A,MANUAL,SAMPLE
+SAMPLE Mesquite Compute LLC,SAMPLE Hyperscaler B,TDLR_TENANT,SAMPLE
+SAMPLE Pecan Ridge LLC,SAMPLE AI Lab C,MANUAL,SAMPLE
+SAMPLE Longhorn Colo LLC,SAMPLE Colo D,COMPTROLLER,SAMPLE
+SAMPLE Caliche Ventures LLC,,,SAMPLE

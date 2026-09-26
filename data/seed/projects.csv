@@ -1,0 +1,4 @@
+name,county,city,address,lat,lon,llc_name
+<<FILL: Alamo Mission LLC project name>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,Alamo Mission LLC
+Stargate Milam,Milam,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL: Stargate Milam LLC name>>
+Stargate Shackelford,Shackelford,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL>>,<<FILL: Stargate Shackelford LLC name>>

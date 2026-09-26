@@ -1,0 +1,11 @@
+name,county,city,address,lat,lon,llc_name
+SAMPLE Project A,Dallas,SAMPLE Garland,SAMPLE 100 Example Rd,32.91,-96.64,SAMPLE Bluebonnet Data LLC
+SAMPLE Project B,Ellis,SAMPLE Red Oak,SAMPLE 200 Example Rd,32.52,-96.8,SAMPLE Caliche Ventures LLC
+SAMPLE Project C,Tarrant,SAMPLE Fort Worth,SAMPLE 300 Example Rd,32.75,-97.33,SAMPLE Longhorn Colo LLC
+SAMPLE Project D,Harris,SAMPLE Houston,SAMPLE 400 Example Rd,29.95,-95.4,SAMPLE Mesquite Compute LLC
+SAMPLE Project E,Williamson,SAMPLE Round Rock,SAMPLE 500 Example Rd,30.55,-97.65,SAMPLE Pecan Ridge LLC
+SAMPLE Project F,Bexar,SAMPLE San Antonio,SAMPLE 600 Example Rd,29.4,-98.6,SAMPLE Prairie Power LLC
+SAMPLE Project G,Taylor,SAMPLE Abilene,SAMPLE 700 Example Rd,32.4,-99.75,SAMPLE Pecan Ridge LLC
+SAMPLE Project H,Jones,SAMPLE Anson,SAMPLE 800 Example Rd,32.75,-99.9,SAMPLE Caliche Ventures LLC
+SAMPLE Project I,Ward,SAMPLE Monahans,SAMPLE 900 Example Rd,31.5,-103.1,SAMPLE Mesquite Compute LLC
+SAMPLE Project J,Hood,SAMPLE Granbury,SAMPLE 1000 Example Rd,32.44,-97.79,SAMPLE Longhorn Colo LLC
