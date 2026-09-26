@@ -6,6 +6,8 @@ import type {
   ErcotPoint,
   EvidenceEvent,
   ParentRow,
+  Plant,
+  PlantDetail,
   Project,
   ProjectInfo,
   QueueTimeline,
@@ -429,4 +431,80 @@ export async function getConfig(asOf: string): Promise<ScoringConfig> {
 function formatLocalDate(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+// ---------------------------------------------------------------------------
+// Spare-capacity finder (power_plants, plant_output, plant_output_daily)
+// ---------------------------------------------------------------------------
+
+// Statistics over the latest 365 days of data, rolled up from the daily continuous
+// aggregate. rollup() merges the daily UddSketches, so percentiles come from ~365
+// sketches per plant rather than a sort over every hourly row.
+const PLANT_STATS = `
+  WITH w AS (SELECT max(day) AS last_day FROM plant_output_daily),
+  agg AS (
+    SELECT d.plant_id,
+           sum(d.hours)::int AS hours,
+           sum(d.avg_mw * d.hours) / NULLIF(sum(d.hours), 0) AS avg_mw,
+           min(d.day) AS window_start, max(d.day) AS window_end,
+           rollup(d.pct) AS sk
+    FROM plant_output_daily d, w
+    WHERE d.day > w.last_day - interval '365 days'
+    GROUP BY d.plant_id
+  )
+  SELECT p.plant_id, p.name, p.owner, p.technology, p.fuel, p.connection_mw, p.region, p.county,
+         p.lat, p.lon, p.operating_year, p.retirement_year, p.open_acres, p.fiber_within_2mi,
+         p.water_nearby, p.output_source, p.source_url, p.is_sample,
+         a.hours, a.avg_mw,
+         to_char(a.window_start AT TIME ZONE 'America/Chicago', 'YYYY-MM-DD') AS window_start,
+         to_char(a.window_end AT TIME ZONE 'America/Chicago', 'YYYY-MM-DD') AS window_end,
+         GREATEST(0, p.connection_mw - approx_percentile(0.80, a.sk)) AS spare_p80_mw,
+         GREATEST(0, p.connection_mw - approx_percentile(0.95, a.sk)) AS spare_p95_mw,
+         1 - approx_percentile_rank(0.5 * p.connection_mw, a.sk) AS share_over_half
+  FROM power_plants p
+  LEFT JOIN agg a USING (plant_id)`;
+
+export async function getPlants(): Promise<Plant[]> {
+  return query<Plant>(`${PLANT_STATS} ORDER BY spare_p80_mw DESC NULLS LAST, p.name`);
+}
+
+export const PLANT_ID_RE = /^[A-Za-z0-9_-]{1,40}$/;
+
+export async function getPlantDetail(plantId: string): Promise<PlantDetail | null> {
+  const [plant] = await query<Plant>(`${PLANT_STATS} WHERE p.plant_id = $1`, [plantId]);
+  if (!plant) return null;
+
+  const window = `
+    WITH w AS (SELECT max(day) AS last_day FROM plant_output_daily)`;
+  const [duration, profile, daily] = await Promise.all([
+    // Spare MW free in at least q of hours = connection minus the q-th output percentile.
+    query<{ coverage: number; spare_mw: number }>(
+      `${window},
+       sk AS (SELECT rollup(pct) AS sk FROM plant_output_daily, w
+              WHERE plant_id = $1 AND day > w.last_day - interval '365 days')
+       SELECT g.n / 100.0 AS coverage, GREATEST(0, $2::float8 - approx_percentile(g.n / 100.0, sk.sk)) AS spare_mw
+       FROM sk, generate_series(0, 100, 2) AS g(n)
+       WHERE sk.sk IS NOT NULL
+       ORDER BY g.n`,
+      [plantId, plant.connection_mw],
+    ),
+    query<{ hour: number; summer_mw: number | null; rest_mw: number | null }>(
+      `${window},
+       o AS (SELECT o.output_mw, o.ts AT TIME ZONE 'America/Chicago' AS lt
+             FROM plant_output o, w
+             WHERE o.plant_id = $1 AND o.ts >= w.last_day - interval '364 days')
+       SELECT extract(hour FROM lt)::int AS hour,
+              avg(output_mw) FILTER (WHERE extract(month FROM lt) BETWEEN 6 AND 9) AS summer_mw,
+              avg(output_mw) FILTER (WHERE extract(month FROM lt) NOT BETWEEN 6 AND 9) AS rest_mw
+       FROM o GROUP BY 1 ORDER BY 1`,
+      [plantId],
+    ),
+    query<{ max_mw: number }>(
+      `${window}
+       SELECT max_mw FROM plant_output_daily, w
+       WHERE plant_id = $1 AND day > w.last_day - interval '365 days' ORDER BY day`,
+      [plantId],
+    ),
+  ]);
+  return { plant, duration, profile, daily_max_mw: daily.map((d) => d.max_mw) };
 }

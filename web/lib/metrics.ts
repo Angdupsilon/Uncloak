@@ -135,6 +135,46 @@ export const METRICS = {
     meaning: "Total electricity demand from large new customers (data centers, crypto mining, industry) asking ERCOT to connect.",
     caveat: "Statewide and covers all large-load types, not only data centers. Many requests never connect. Report scope changed over time.",
   },
+  plant_connection: {
+    label: "Grid connection size",
+    unit: "megawatts (MW)",
+    kind: "documented",
+    source: "EIA-860 / EIA-860M generator inventory (nameplate capacity)",
+    meaning: "The most power an existing plant may send onto the grid. A new battery, solar farm or load that shares the connection must stay within it.",
+    caveat: "Nameplate capacity stands in for the interconnection limit, which utilities and ERCOT don't publish per plant. The real limit can be lower.",
+  },
+  spare_p80: {
+    label: "Connection free in 80% of hours",
+    unit: "megawatts (MW)",
+    kind: "derived",
+    source: "Hourly output: EPA CAMPD gross load for fossil units, modeled output for solar and wind, over the latest 365 days",
+    meaning: "How much of the connection sat unused in at least 80% of the year's hours. A battery can use this room and wait out the other hours.",
+    caveat: "Past output doesn't guarantee future room. Any shared project must throttle when the plant runs, and the owner must agree to share.",
+  },
+  spare_p95: {
+    label: "Connection free in 95% of hours",
+    unit: "megawatts (MW)",
+    kind: "derived",
+    source: "Hourly output: EPA CAMPD gross load for fossil units, modeled output for solar and wind, over the latest 365 days",
+    meaning: "The steadier figure: room that was free almost all the time. A load that runs around the clock, such as a data center, would screen on this.",
+    caveat: "The remaining 5% of hours still need a plan, such as curtailment or on-site storage.",
+  },
+  hours_over_half: {
+    label: "Hours above half output",
+    unit: "share of hours",
+    kind: "derived",
+    source: "Hourly output: EPA CAMPD gross load for fossil units, modeled output for solar and wind, over the latest 365 days",
+    meaning: "How often the plant ran at more than half its connection size. Low values mean the connection is mostly idle.",
+    caveat: "Counts hours, not energy. A plant can be rarely busy yet run flat out on the hottest afternoons.",
+  },
+  spare_sites: {
+    label: "Sites that pass a screen",
+    unit: "plants",
+    kind: "derived",
+    source: "Uncloak screening rules applied to the spare-capacity figures and site data",
+    meaning: "Plants with enough free connection for at least one use: a battery, a steady load, or solar plus storage.",
+    caveat: "A screen, not a feasibility study. Land, permits, owner consent and grid rules decide whether a project can actually be built.",
+  },
 } as const satisfies Record<string, MetricDef>;
 
 export type MetricKey = keyof typeof METRICS;

@@ -1,0 +1,25 @@
+plant_id,name,owner,technology,fuel,connection_mw,region,county,lat,lon,operating_year,retirement_year,open_acres,fiber_within_2mi,water_nearby,output_source,source_url,is_sample
+SAMPLE-01,SAMPLE Peaker Station A,SAMPLE Power Co.,peaker,Natural gas,450,ERCOT,Harris,29.742,-95.148,1999,,120,true,true,SAMPLE,SAMPLE,true
+SAMPLE-02,SAMPLE Peaker Station B,SAMPLE Power Co.,peaker,Natural gas,320,ERCOT,Dallas,32.635,-96.672,2002,2031,65,true,true,SAMPLE,SAMPLE,true
+SAMPLE-03,SAMPLE Peaker Station C,SAMPLE Grid Holdings,peaker,Natural gas,180,ERCOT,Bexar,29.318,-98.402,2008,,40,true,false,SAMPLE,SAMPLE,true
+SAMPLE-04,SAMPLE Peaker Station D,SAMPLE Grid Holdings,peaker,Natural gas,240,ERCOT,Ector,31.902,-102.402,2011,,300,false,false,SAMPLE,SAMPLE,true
+SAMPLE-05,SAMPLE Peaker Station E,SAMPLE Energy LP,peaker,Natural gas,95,ERCOT,Nueces,27.812,-97.518,1994,2029,15,true,true,SAMPLE,SAMPLE,true
+SAMPLE-06,SAMPLE Peaker Station F,SAMPLE Energy LP,peaker,Natural gas,410,ERCOT,Fort Bend,29.498,-95.664,2014,,85,true,true,SAMPLE,SAMPLE,true
+SAMPLE-07,SAMPLE Peaker Station G,SAMPLE Power Co.,peaker,Natural gas,150,ERCOT,Travis,30.148,-97.612,2005,,25,true,false,SAMPLE,SAMPLE,true
+SAMPLE-08,SAMPLE Combined Cycle H,SAMPLE Grid Holdings,gas_cc,Natural gas,800,ERCOT,Ellis,32.388,-96.918,2001,,40,true,true,SAMPLE,SAMPLE,true
+SAMPLE-09,SAMPLE Combined Cycle I,SAMPLE Power Co.,gas_cc,Natural gas,1150,ERCOT,Brazoria,29.078,-95.612,2004,,210,true,true,SAMPLE,SAMPLE,true
+SAMPLE-10,SAMPLE Combined Cycle J,SAMPLE Energy LP,gas_cc,Natural gas,620,ERCOT,Hood,32.402,-97.802,2010,,140,false,true,SAMPLE,SAMPLE,true
+SAMPLE-11,SAMPLE Combined Cycle K,SAMPLE Energy LP,gas_cc,Natural gas,540,ERCOT,Guadalupe,29.602,-97.918,2000,2033,90,true,true,SAMPLE,SAMPLE,true
+SAMPLE-12,SAMPLE Steam Plant L,SAMPLE Legacy Generation,steam,Coal,1250,ERCOT,Freestone,31.748,-96.198,1982,2030,650,false,true,SAMPLE,SAMPLE,true
+SAMPLE-13,SAMPLE Steam Plant M,SAMPLE Legacy Generation,steam,Natural gas,700,ERCOT,Galveston,29.402,-94.988,1972,2028,55,true,true,SAMPLE,SAMPLE,true
+SAMPLE-14,SAMPLE Steam Plant N,SAMPLE Power Co.,steam,Coal,900,ERCOT,Fayette,29.918,-96.752,1979,2032,480,false,true,SAMPLE,SAMPLE,true
+SAMPLE-15,SAMPLE Solar Farm O,SAMPLE Sun Partners,solar,Sun,120,ERCOT,Pecos,30.902,-102.908,2019,,160,false,false,SAMPLE,SAMPLE,true
+SAMPLE-16,SAMPLE Solar Farm P,SAMPLE Sun Partners,solar,Sun,250,ERCOT,Upton,31.302,-102.118,2021,,90,false,false,SAMPLE,SAMPLE,true
+SAMPLE-17,SAMPLE Solar Farm Q,SAMPLE Renewables LLC,solar,Sun,180,ERCOT,Milam,30.748,-97.002,2022,,45,true,true,SAMPLE,SAMPLE,true
+SAMPLE-18,SAMPLE Solar Farm R,SAMPLE Renewables LLC,solar,Sun,75,ERCOT,Webb,27.652,-99.402,2018,,30,true,false,SAMPLE,SAMPLE,true
+SAMPLE-19,SAMPLE Solar Farm S,SAMPLE Sun Partners,solar,Sun,300,ERCOT,Hill,32.008,-97.148,2023,,70,true,true,SAMPLE,SAMPLE,true
+SAMPLE-20,SAMPLE Wind Farm T,SAMPLE Wind Co.,wind,Wind,210,ERCOT,Nolan,32.402,-100.402,2008,,,false,false,SAMPLE,SAMPLE,true
+SAMPLE-21,SAMPLE Wind Farm U,SAMPLE Wind Co.,wind,Wind,160,ERCOT,Scurry,32.748,-100.902,2011,,,false,false,SAMPLE,SAMPLE,true
+SAMPLE-22,SAMPLE Wind Farm V,SAMPLE Coastal Wind,wind,Wind,280,ERCOT,Kenedy,26.902,-97.648,2015,,,false,false,SAMPLE,SAMPLE,true
+SAMPLE-23,SAMPLE Wind Farm W,SAMPLE Wind Co.,wind,Wind,120,ERCOT,Taylor,32.252,-99.902,2006,2030,20,true,false,SAMPLE,SAMPLE,true
+SAMPLE-24,SAMPLE Peaker Station X,SAMPLE Grid Holdings,peaker,Natural gas,210,ERCOT,Tarrant,32.702,-97.198,1998,,10,true,true,SAMPLE,SAMPLE,true

@@ -1,15 +1,8 @@
 import Link from "next/link";
 import SearchBox from "./SearchBox";
+import PrimaryNav from "./PrimaryNav";
 import { Container } from "./ui";
 import { SOURCES } from "@/lib/metrics";
-
-const NAV = [
-  { href: "/org", label: "Organizations" },
-  { href: "/near", label: "Near me" },
-  { href: "/search", label: "Search" },
-  { href: "/queue", label: "Queue Timeline" },
-  { href: "/methodology", label: "Methodology" },
-];
 
 /**
  * Nav bar per DESIGN.md: wordmark left, centred links, right cluster of a quiet grey pill
@@ -24,24 +17,13 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
       >
         Skip to content
       </a>
-      {/* ≥1280: wordmark · centred links · search + buttons.
-          1024–1279: links stay on one line; header search and Sources hide (Search is a link).
-          <1024: wordmark + button on top, links in one scrollable row underneath. */}
+      {/* ≥1024: wordmark · centred navigation · search + button.
+          <1024: wordmark + button on top, grouped navigation underneath. */}
       <div className="flex min-h-16 w-full flex-wrap items-center gap-x-6 gap-y-1 px-4 py-3 sm:px-8 xl:gap-x-8">
         <Link href="/" className="shrink-0" aria-label="Uncloak home">
           <span className="gs-wordmark text-[30px] font-bold leading-10 tracking-[-1.2px] text-black sm:text-[34px] sm:tracking-[-1.4px]">Uncloak</span>
         </Link>
-        <nav aria-label="Main" className="order-3 -mx-4 w-[calc(100%+2rem)] overflow-x-auto px-4 [scrollbar-width:none] sm:-mx-8 sm:w-[calc(100%+4rem)] sm:px-8 lg:order-none lg:mx-0 lg:w-auto lg:flex-1 lg:overflow-visible lg:px-0">
-          <ul className="flex items-center gap-x-5 whitespace-nowrap text-[15px] font-medium text-[var(--ink-soft)] lg:justify-center lg:gap-x-6 xl:gap-x-9">
-            {NAV.map((n) => (
-              <li key={n.href} className="shrink-0">
-                <Link href={n.href} className="inline-block py-2 hover:underline hover:underline-offset-4">
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <PrimaryNav />
         <div className="ml-auto flex shrink-0 items-center gap-2">
           {search ? (
             <div className="hidden w-[260px] xl:block">

@@ -26,7 +26,7 @@ Gemini powering the optional question-answering experience.
 
 ```
 db/          001_schema.sql, 002_timescale.sql, 003_readonly_role.sql
-etl/         config.py, common.py, load_seed.py, load_tceq.py, geocode.py, score.py, run_all.py
+etl/         config.py, common.py, load_seed.py, load_plants.py, load_tceq.py, geocode.py, score.py, run_all.py
 data/seed/   real rows (team fills <<FILL>>)
 data/sample/ SAMPLE fixtures, same CSV schema
 web/         Next.js app: app/page.tsx, app/api/*, components/*, lib/{db,queries,gemini}.ts
@@ -192,6 +192,42 @@ one event by then.
 - **Optional compression**: `db/002_timescale.sql` includes commented-out
   `ALTER TABLE evidence_events SET (timescaledb.compress, ...)` and `add_compression_policy`
   lines. Enable them for native columnar compression of older evidence.
+- **Spare capacity** (`db/005_spare_capacity.sql`): `plant_output` is an hourly hypertable
+  with native compression segmented by plant. The continuous aggregate `plant_output_daily`
+  buckets it by day in ERCOT local time and stores a **timescaledb_toolkit `percentile_agg`**
+  sketch per day. `/api/plants` merges 365 daily sketches with `rollup()` and reads
+  `approx_percentile` / `approx_percentile_rank` for the MW free in 80% and 95% of hours.
+
+## Spare capacity
+
+The public `/spare-capacity` page maps existing plants whose grid connection sits mostly idle, where a battery,
+solar + storage, or a steady load could share the connection. For each plant it shows how
+many MW of the connection are free in at least 80% and 95% of hours, a duration curve, an
+hour-of-day profile, a battery sizing slider, and screening-rule "best-fit uses"
+(`web/lib/spare.ts`).
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/005_spare_capacity.sql
+python etl/load_plants.py --dir data/sample     # SAMPLE plants + synthetic hourly output
+```
+
+**Data status: SAMPLE only.** `data/sample/power_plants.csv` is fake, and `load_plants.py`
+synthesizes a year of hourly output for SAMPLE plants. The page shows a SAMPLE banner.
+Real Texas data is available from both planned sources (checked 2026-09-26):
+
+- **EIA-860M** (`api.eia.gov/v2/electricity/operating-generator-capacity`): about 2,260
+  operating ERCOT generators per month, with nameplate MW, owner, technology and lat/lon.
+- **EPA CAMPD** (`api.epa.gov/easey`): 224 Texas facilities with unit-level hourly gross load.
+
+To load real data, write `data/seed/power_plants.csv` (same columns) and
+`data/seed/plant_output.csv` (`ts,plant_id,output_mw`, UTC hour start), then run
+`python etl/load_plants.py --dir data/seed`. This removes the SAMPLE plants. Solar and wind
+have no CAMPD data and need modeled hourly output (`output_source = EIA923_MODELED`).
+Open land, fiber and water still need a parcel/fiber source.
+
+ERCOT caveat: FERC's surplus interconnection service (Order 845) does not govern most of
+ERCOT. The page's per-region rules note (`REGION_RULES` in `web/lib/spare.ts`) says so and
+should be reviewed before anyone relies on it.
 
 ## Public research experience
 
@@ -206,8 +242,9 @@ dashboard is available at `/dashboard` and accepts deep links (`?parent=Google&s
 | `/site/[id]` | Site profile: what it is, who is behind it, location basis, evidence history with a link to each record |
 | `/near?q=` or `?lat=&lon=` | Sites within a radius, list + map, with distance and why each appears |
 | `/queue` | ERCOT large-load queue history alongside the records represented in Uncloak |
+| `/spare-capacity` | Existing Texas plants ranked by idle grid-connection room: use filters, map, plant card (SAMPLE data for now) |
 | `/ask?q=` | Read-only, evidence-grounded answers to analytical questions |
-| `/methodology` | Sources, linking, scoring, MW estimate, missing data, double counting, coverage limits |
+| `/methodology` | Sources, linking, scoring, MW estimate, missing data, double counting, coverage limits, spare connection capacity |
 
 Every public figure comes from `web/lib/publicQueries.ts` (one site query shared by all pages)
 and is explained in one place, `web/lib/metrics.ts`, as **documented**, **Uncloak estimate** or
@@ -233,6 +270,7 @@ the read-only role.
 - `GET /api/search?q=`: typed search hits for the public search box
 - `GET /api/orgs/[slug]`: organization profile (sites, entities, weekly trend, sources, comparison)
 - `GET /api/geocode?q=` and `GET /api/near?q=|lat=&lon=&radius_mi=&county=`: place lookup and nearby sites
+- `GET /api/plants` and `GET /api/plants/[id]`: plants with spare-capacity statistics over the latest 365 days; one plant's duration curve, hour-of-day profile and daily peaks
 
 Ask Uncloak gives Gemini four tools (`filter_projects`, `get_project_timeline`, `get_summary`,
 `compare_parents`) that call the same query functions. It never gives Gemini free-form SQL, and

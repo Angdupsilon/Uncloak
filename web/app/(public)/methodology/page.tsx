@@ -2,6 +2,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import type { Metadata } from "next";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
+import SpareCapacityMethod from "@/components/public/SpareCapacityMethod";
 import { SourceLink } from "@/components/public/Source";
 import { Container, ErrorState, KindBadge } from "@/components/public/ui";
 import { query } from "@/lib/db";
@@ -37,6 +38,7 @@ const TOC = [
   ["missing", "Missing data"],
   ["counting", "Avoiding double counting"],
   ["limits", "Coverage limits"],
+  ["spare-capacity", "Spare connection capacity"],
   ["metrics", "Every metric, explained"],
 ] as const;
 
@@ -234,6 +236,10 @@ export default async function Methodology() {
                   </li>
                   <li>TDLR doesn&apos;t publish inspection dates. Inspections are dated when the status was observed.</li>
                 </ul>
+              </Section>
+
+              <Section id="spare-capacity" title="Spare connection capacity">
+                <SpareCapacityMethod />
               </Section>
 
               <Section id="metrics" title="Every metric, explained">
