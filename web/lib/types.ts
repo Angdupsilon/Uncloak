@@ -170,3 +170,128 @@ export interface QueueTimeline {
   /** Raw ERCOT queue reports (the dates ERCOT actually published a requested-GW figure). */
   ercot_reports: { ts: string; gw_requested: number; source_url: string | null }[];
 }
+// ---------------------------------------------------------------------------
+// Public research pages (search, organization/site profiles, nearby)
+// ---------------------------------------------------------------------------
+
+/** One site with everything the public pages show. Scored fields are null before the first score. */
+export interface Site {
+  project_id: number;
+  name: string;
+  county: string | null;
+  city: string | null;
+  address: string | null;
+  lat: number | null;
+  lon: number | null;
+  is_sample: boolean;
+  llc_name: string | null;
+  resolved_by: string | null;
+  entity_source_url: string | null;
+  parent: string | null;
+  parent_color: string | null;
+  scored_at: string | null;
+  score: number | null;
+  probability: number | null;
+  tier: Tier | null;
+  mw_est: number | null;
+  total_cost: number | null;
+  sqft: number | null;
+  tdlr_registrations: number;
+  certified_at: string | null;
+  program: string | null;
+  tenants: string[];
+  has_permit: boolean;
+  inspected: boolean;
+  first_evidence: string | null;
+  last_evidence: string | null;
+  sources: string[];
+}
+
+export type SearchKind = "org" | "site" | "entity" | "city" | "county" | "zip" | "place";
+
+export interface SearchHit {
+  kind: SearchKind;
+  label: string;
+  sublabel: string;
+  href: string;
+  is_sample?: boolean;
+}
+
+export interface SearchResults {
+  q: string;
+  hits: SearchHit[];
+}
+
+export interface OrgEntity {
+  llc_name: string;
+  resolved_by: string | null;
+  source_url: string | null;
+  sites: { project_id: number; name: string }[];
+}
+
+export interface OrgTrendPoint {
+  week: string;
+  sites: number;
+  mw: number | null;
+}
+
+export interface SourceStat {
+  source: string;
+  records: number;
+  first: string | null;
+  last: string | null;
+  retrieved: string | null;
+}
+
+export interface OrgProfile {
+  as_of: string;
+  name: string;
+  slug: string;
+  color: string | null;
+  sites: Site[];
+  entities: OrgEntity[];
+  trend: OrgTrendPoint[];
+  sources: SourceStat[];
+  comparison: {
+    orgs_ranked: number;
+    rank_sites: number | null;
+    rank_mw: number | null;
+    total_sites: number;
+    total_mw: number | null;
+    median_sites: number | null;
+  };
+  computed_at: string | null;
+}
+
+export interface GeocodeResult {
+  ok: true;
+  label: string;
+  lat: number;
+  lon: number;
+  method: "coordinates" | "dataset" | "census" | "osm";
+  /** County name when the match is a county (sites without coordinates are listed for it). */
+  county: string | null;
+}
+
+export interface GeocodeFailure {
+  ok: false;
+  reason: "not_found" | "outside_texas" | "lookup_failed";
+  message: string;
+}
+
+export interface NearbySite extends Site {
+  distance_km: number;
+  direction: string;
+}
+
+export interface NearbyResult {
+  as_of: string;
+  center: { lat: number; lon: number; label: string };
+  radius_mi: number;
+  sites: NearbySite[];
+  /** Sites in the matched county whose exact location is unknown. */
+  unlocated: Site[];
+  total_located: number;
+  /** Closest located site when none fall inside the radius. */
+  nearest: NearbySite | null;
+}

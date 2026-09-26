@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AskGridSight from "@/components/AskGridSight";
 import DateSlider from "@/components/DateSlider";
@@ -17,10 +18,22 @@ const ProjectMap = dynamic(() => import("@/components/ProjectMap"), {
   loading: () => <div className="h-full w-full animate-pulse rounded-xl bg-[#efefef]" />,
 });
 
-export default function Dashboard({ today }: { today: string }) {
+export default function Dashboard({
+  today,
+  initialParent = null,
+  initialSiteId = null,
+  embedded = false,
+}: {
+  today: string;
+  initialParent?: string | null;
+  initialSiteId?: number | null;
+  /** Rendered inside a public profile: no page header, no floating Ask launcher, fixed height. */
+  embedded?: boolean;
+}) {
   const [asOf, setAsOf] = useState(today);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [activeParents, setActiveParents] = useState<Set<string>>(new Set());
+  // Deep links from the public profile pages (/dashboard?parent=Google&site=12).
+  const [selectedId, setSelectedId] = useState<number | null>(initialSiteId);
+  const [activeParents, setActiveParents] = useState<Set<string>>(() => new Set(initialParent ? [initialParent] : []));
   const [highlight, setHighlight] = useState<number[] | null>(null);
   const [fitRequest, setFitRequest] = useState(0);
 
@@ -61,12 +74,26 @@ export default function Dashboard({ today }: { today: string }) {
   }, []);
 
   return (
-    <div className="flex h-screen min-w-[1040px] flex-col gap-4 p-5 text-black">
+    <>
+    {!embedded && (
+    <div role="note" className="bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900 lg:hidden">
+      The advanced dashboard is designed for wide screens and scrolls sideways here.{" "}
+      <Link href="/" className="font-medium underline">
+        Search and profiles
+      </Link>{" "}
+      work on any screen.
+    </div>
+    )}
+    <div className={embedded ? "flex h-[780px] min-w-[1000px] flex-col gap-4 text-black" : "flex h-screen min-w-[1040px] flex-col gap-4 p-5 text-black"}>
+      {!embedded && (
       <header className="-mx-5 -mt-5 mb-1 flex items-center justify-between gap-6 bg-white px-5 py-4 shadow-[var(--shadow-topbar)]">
         <div className="min-w-0">
           
           <div className="min-w-0">
-            <h1 className="ub-display-lg gs-wordmark">GridSight</h1>
+            <Link href="/" className="mb-1 inline-block text-[13px] font-medium text-[#5e5e5e] hover:text-black hover:underline">
+              ← Back to search
+            </Link>
+            <h1 className="ub-display-lg gs-wordmark">Uncloak</h1>
             <p className="ub-body ub-body-md mt-1 truncate">
               Texas data-center load: requested vs. verified
             </p>
@@ -74,6 +101,7 @@ export default function Dashboard({ today }: { today: string }) {
         </div>
         <HowScoring config={config.data} />
       </header>
+      )}
 
       {showingSample && (
         <div className="flex items-center gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900">
@@ -133,7 +161,7 @@ export default function Dashboard({ today }: { today: string }) {
       <QueueTimeline data={queue.data} error={queue.error} asOf={asOf} today={today} onPick={setAsOf} />
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
-      <footer className="flex items-center gap-8 rounded-xl border border-[#e2e2e2] bg-white px-5 py-3 pr-[420px] shadow-[var(--shadow-card)]">
+      <footer className={`flex items-center gap-8 rounded-xl border border-[#e2e2e2] bg-white px-5 py-3 shadow-[var(--shadow-card)] ${embedded ? "" : "pr-[420px]"}`}>
         <DateSlider
           start={config.data?.backfill_start ?? null}
           end={today}
@@ -153,7 +181,8 @@ export default function Dashboard({ today }: { today: string }) {
         </div>
       </footer>
 
-      <AskGridSight asOf={asOf} onResult={onAsk} />
+      {!embedded && <AskGridSight asOf={asOf} onResult={onAsk} />}
     </div>
+    </>
   );
 }

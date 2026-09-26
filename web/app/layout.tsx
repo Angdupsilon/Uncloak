@@ -27,8 +27,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GridSight",
-  description: "Live intelligence on Texas data-center electricity demand",
+  title: "Uncloak: Texas data-center public records",
+  description:
+    "Search who is building data centers in Texas and where. Company and site profiles built from state public records, with every figure linked to its source.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
