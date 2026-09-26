@@ -21,7 +21,7 @@ plant_id,name,owner,technology,fuel,connection_mw,region,county,lat,lon,operatin
 3601,Sim Gideon,Lower Colorado River Authority,steam,Natural gas,623.0,ERCOT,Bastrop,30.1456,-97.2708,1965,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3601,False
 3609,Leon Creek,City of San Antonio - (TX),peaker,Natural gas,229.6,ERCOT,Bexar,29.3525,-98.5761,2004,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3609,False
 3611,O W Sommers,City of San Antonio - (TX),steam,Natural gas,892.0,ERCOT,Bexar,29.308056,-98.3242,1972,2029,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3611,False
-3612,V H Braunig,City of San Antonio - (TX),peaker,Natural gas,244.0,ERCOT,Bexar,29.2567,-98.3825,2010,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3612,False
+3612,V H Braunig,City of San Antonio - (TX),gas_cc,Natural gas,1236.0,ERCOT,Bexar,29.2567,-98.3825,1970,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3612,False
 3628,R W Miller,RW Miller Power LLC,steam,Natural gas,537.6,ERCOT,Palo Pinto,32.6581,-98.3103,1972,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3628,False
 3631,Sam Rayburn,"South Texas Electric Coop, Inc",gas_cc,Natural gas,192.8,ERCOT,Victoria,28.8947,-97.135,1991,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3631,False
 4195,Powerlane Plant,City of Greenville - (TX),steam,Oil,112.2,ERCOT,Hunt,33.1707,-96.1264,1966,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/4195,False

@@ -20,6 +20,8 @@ Output: EPA CAMPD apportioned hourly emissions data, gross load (MW) x operating
   summed over the facility's units. CAMPD facility IDs are EIA plant codes. CAMPD dates and
   hours are local standard time; ERCOT is Central, so UTC = local standard + 6 h all year.
   Plants with no CAMPD hours in the window are dropped (they are not Part 75 reporters).
+  CAMPD gross output is reconciled to the EIA connection where its observed peak is more
+  than 12.5% above it; this keeps the two sources on a comparable capacity basis.
   Solar and wind are not built here: CAMPD does not cover them and the modeled profiles
   (output_source EIA923_MODELED) are not implemented yet.
 
@@ -67,6 +69,13 @@ MONTHS = ["january", "february", "march", "april", "may", "june", "july", "augus
 ERCOT_BA = "ERCO"
 CENTRAL_STANDARD_OFFSET = pd.Timedelta(hours=6)  # UTC = CST + 6 h
 GRID_SECTORS = ("electric utility", "ipp")         # prefixes of the EIA-860M sector name
+
+# CAMPD facility 3612 reports V H Braunig together with the adjacent Arthur Von Rosenberg
+# combined-cycle plant (EIA 7512). Braunig unit 3 was out of service in the August inventory
+# but reported during this historical CAMPD window, so retain it in the shared connection.
+EIA_TO_CAMPD_FACILITY = {"7512": "3612"}
+HISTORICALLY_REPORTING_GENERATORS = {("3612", "3")}
+CAMPD_GROSS_SCALE_THRESHOLD = 1.125
 
 FOSSIL_FUELS = {"NG", "BIT", "SUB", "LIG", "RC", "WC", "PC", "DFO", "RFO", "KER", "JF", "WO",
                 "OG", "BFG", "PG", "SGC", "SC"}
@@ -168,28 +177,38 @@ def is_operating(status: str) -> bool:
 
 def build_plants(gens: pd.DataFrame) -> pd.DataFrame:
     g = gens[(gens["state"].str.upper() == "TX") & (gens["ba"].str.upper() == ERCOT_BA)]
-    g = g[g["status"].map(is_operating)]
+    historic = [
+        (str(pid).strip(), str(gid).strip()) in HISTORICALLY_REPORTING_GENERATORS
+        for pid, gid in zip(g["plant_id"], g["generator_id"])
+    ]
+    g = g[g["status"].map(is_operating) | pd.Series(historic, index=g.index)]
     g = g[g["sector"].str.lower().str.startswith(GRID_SECTORS)]
     g = g.assign(category=[classify(pm, es) for pm, es in zip(g["prime_mover"], g["energy_source"])])
     g = g[g["category"].notna() & (g["nameplate_mw"] > 0)]
+    g["eia_plant_id"] = g["plant_id"]
+    g["plant_id"] = g["plant_id"].replace(EIA_TO_CAMPD_FACILITY)
 
     rows = []
     for plant_id, pg in g.groupby("plant_id", sort=True):
         by_cat = pg.groupby("category")["nameplate_mw"].sum()
         tech = by_cat.idxmax()
         lead = pg[pg["category"] == tech].sort_values("nameplate_mw", ascending=False).iloc[0]
+        # When several EIA plants share one CAMPD facility, use the facility's own EIA
+        # record for identity fields rather than the largest contributing technology.
+        identity = pg[pg["eia_plant_id"] == plant_id]
+        identity = identity.iloc[0] if not identity.empty else lead
         retire = pg["retirement_year"]
         rows.append({
             "plant_id": plant_id,
-            "name": str(lead["plant_name"]).strip(),
-            "owner": str(lead["entity_name"]).strip() if pd.notna(lead["entity_name"]) else None,
+            "name": str(identity["plant_name"]).strip(),
+            "owner": str(identity["entity_name"]).strip() if pd.notna(identity["entity_name"]) else None,
             "technology": tech,
             "fuel": FUEL_LABELS.get(lead["energy_source"].upper()),
             "connection_mw": round(float(pg["nameplate_mw"].sum()), 1),
             "region": "ERCOT",
-            "county": str(lead["county"]).strip() if pd.notna(lead["county"]) else None,
-            "lat": lead["lat"] if pd.notna(lead["lat"]) else None,
-            "lon": lead["lon"] if pd.notna(lead["lon"]) else None,
+            "county": str(identity["county"]).strip() if pd.notna(identity["county"]) else None,
+            "lat": identity["lat"] if pd.notna(identity["lat"]) else None,
+            "lon": identity["lon"] if pd.notna(identity["lon"]) else None,
             "operating_year": int(pg["operating_year"].min()) if pg["operating_year"].notna().any() else None,
             # A plant retires when its last fossil generator does; partial retirements are not shown.
             "retirement_year": int(retire.max()) if retire.notna().all() else None,
@@ -199,6 +218,26 @@ def build_plants(gens: pd.DataFrame) -> pd.DataFrame:
             "is_sample": False,
         })
     return pd.DataFrame(rows, columns=PLANT_COLUMNS)
+
+
+def reconcile_campd_gross_output(plants: pd.DataFrame, hours: pd.DataFrame) -> pd.DataFrame:
+    """Scale materially incompatible CAMPD gross-output profiles to the EIA connection.
+
+    CAMPD's gross-load measure and EIA's nameplate connection are normally within a few
+    percent. A much larger gap means the raw CAMPD emissions-unit output cannot be used
+    directly as grid injection. Scale the entire plant profile to its observed EIA-capacity
+    peak, preserving its duration curve without treating gross station output as spare-use
+    capacity. Small (<=12.5%) station-service differences are left as reported.
+    """
+    peaks = hours.groupby("plant_id")["output_mw"].max()
+    capacity = plants.set_index("plant_id")["connection_mw"]
+    scale = (peaks / capacity.reindex(peaks.index)).dropna()
+    scale = scale[scale > CAMPD_GROSS_SCALE_THRESHOLD]
+    if scale.empty:
+        return hours
+    print(f"  NOTE scaled CAMPD gross output to EIA connection for {len(scale)} plants "
+          f"whose peak exceeded it by more than {(CAMPD_GROSS_SCALE_THRESHOLD - 1):.1%}")
+    return hours.assign(output_mw=hours["output_mw"] / hours["plant_id"].map(scale).fillna(1.0))
 
 
 # ---------------------------------------------------------------------------
@@ -353,6 +392,7 @@ def main() -> None:
     lo = pd.Timestamp(start) + CENTRAL_STANDARD_OFFSET
     hi = pd.Timestamp(end + timedelta(days=1)) + CENTRAL_STANDARD_OFFSET
     hours = hours[(hours["ts"] >= lo.tz_localize("UTC")) & (hours["ts"] < hi.tz_localize("UTC"))]
+    hours = reconcile_campd_gross_output(plants, hours)
 
     have = set(hours["plant_id"].unique())
     dropped = plants[~plants["plant_id"].isin(have)]

@@ -194,7 +194,8 @@ one event by then.
   lines. Enable them for native columnar compression of older evidence.
 - **Spare capacity** (`db/005_spare_capacity.sql`): `plant_output` is an hourly hypertable
   with native compression segmented by plant. The continuous aggregate `plant_output_daily`
-  buckets it by day in ERCOT local time and stores a **timescaledb_toolkit `percentile_agg`**
+  buckets it by ERCOT standard-time day (the fixed CST basis CAMPD uses) and stores a
+  **timescaledb_toolkit `percentile_agg`**
   sketch per day. `/api/plants` merges 365 daily sketches with `rollup()` and reads
   `approx_percentile` / `approx_percentile_rank` for the MW free in 80% and 95% of hours.
 
@@ -223,7 +224,10 @@ python etl/load_plants.py --dir data/sample     # SAMPLE plants + synthetic hour
   EIA operating entity. No API key is needed.
 - **EPA CAMPD** apportioned hourly emissions: gross load × operating time, summed over the
   facility's units (CAMPD facility ID = EIA plant code). CAMPD hours are local standard time,
-  converted to UTC as CST + 6 h. Plants with no CAMPD hours in the window are dropped.
+  converted to UTC as CST + 6 h. If a plant's observed CAMPD gross peak is more than 12.5%
+  above its EIA connection, its full hourly profile is scaled to that connection so gross
+  output is not mistaken for available grid capacity. Plants with no CAMPD hours in the window
+  are dropped.
 
 ```bash
 # EPA_API_KEY: free api.data.gov key (DEMO_KEY is used otherwise and is heavily rate-limited)
