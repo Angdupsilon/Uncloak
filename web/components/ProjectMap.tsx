@@ -1,7 +1,7 @@
 "use client";
 import "leaflet/dist/leaflet.css";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { CircleMarker, GeoJSON, MapContainer, Tooltip, useMap } from "react-leaflet";
 import type { FeatureCollection } from "geojson";
 import { latLngBounds } from "leaflet";
@@ -19,6 +19,11 @@ export interface MapProps {
   highlightIds: number[] | null;
   fitRequest: number; // increments when the map should fit to highlightIds
   loading: boolean;
+  /**
+   * The map sits inside a scrolling page: a plain wheel/two-finger scroll moves
+   * the page, and only Ctrl/Cmd + scroll (or a trackpad pinch) zooms the map.
+   */
+  cooperativeZoom?: boolean;
 }
 
 /** Multiplier applied to every vector label's text-size. */
@@ -189,7 +194,44 @@ function FitBounds({ projects, ids, request }: { projects: Project[]; ids: numbe
   return null;
 }
 
-export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading }: MapProps) {
+/**
+ * Cooperative wheel zoom. A capture listener on the map container stops
+ * unmodified wheel events before Leaflet's own scroll-zoom handler sees them,
+ * so they fall through to the page. Modified ones (Ctrl/Cmd + wheel, which is
+ * also what browsers emit for a trackpad pinch) reach Leaflet and zoom as usual.
+ */
+function CooperativeWheel({ onBlocked }: { onBlocked: () => void }) {
+  const map = useMap();
+  useEffect(() => {
+    const el = map.getContainer();
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return;
+      e.stopPropagation();
+      onBlocked();
+    };
+    el.addEventListener("wheel", onWheel, { capture: true });
+    return () => el.removeEventListener("wheel", onWheel, { capture: true });
+  }, [map, onBlocked]);
+  return null;
+}
+
+const HINT_MS = 1400;
+
+export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading, cooperativeZoom = false }: MapProps) {
+  const [zoomHint, setZoomHint] = useState(false);
+  const hintTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const flashZoomHint = useCallback(() => {
+    setZoomHint(true);
+    clearTimeout(hintTimer.current);
+    hintTimer.current = setTimeout(() => setZoomHint(false), HINT_MS);
+  }, []);
+  useEffect(() => () => clearTimeout(hintTimer.current), []);
+  const zoomKey = useSyncExternalStore(
+    () => () => {},
+    () => (/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘" : "Ctrl"),
+    () => "Ctrl",
+  );
+
   const [legendOpen, setLegendOpen] = useState(true);
   const highlight = useMemo(() => (highlightIds ? new Set(highlightIds) : null), [highlightIds]);
   const located = projects.filter((p) => p.lat != null && p.lon != null);
@@ -201,6 +243,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
   return (
     <div className="gs-map relative h-full w-full overflow-hidden bg-[#aad3df]">
       <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" preferCanvas={false} zoomControl={false} zoomSnap={1} zoomDelta={1}>
+        {cooperativeZoom && <CooperativeWheel onBlocked={flashZoomHint} />}
         <VectorBasemap />
         <TexasSpotlight />
         <Counties />
@@ -308,6 +351,17 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
           </>
         )}
       </div>
+
+      {cooperativeZoom && (
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute inset-0 z-[1001] flex items-center justify-center bg-black/35 transition-opacity duration-300 ${
+            zoomHint ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <div className="ub-body-md-strong text-white">Use {zoomKey} + scroll or pinch to zoom the map</div>
+        </div>
+      )}
 
       {loading && (
         <div className="absolute right-3 top-3 z-[1000] rounded bg-white/90 px-2 py-1 text-xs text-[#5e5e5e] shadow">Loading…</div>
