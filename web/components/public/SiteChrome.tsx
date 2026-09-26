@@ -66,7 +66,12 @@ export function SiteFooter({ updated }: { updated?: string | null }) {
     <footer className="mt-24 bg-[#030303] text-white">
       <Container className="grid gap-10 py-16 text-[15px] leading-6 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <div className="gs-wordmark text-[30px] font-bold tracking-[-1.2px]">Uncloak</div>
+          <Link href="/" className="inline-flex items-center gap-2.5" aria-label="Uncloak home">
+            <svg aria-hidden viewBox="0 0 256 256" className="h-7 w-7 fill-current">
+              <path d="M121 19c4.3-2.6 9.7-2.6 14 0l87 53c6 3.7 9 8.5 9 16 0 19-2.3 39-10 57l26 16c5.3 3.2 5.3 8 0 11l-112 69c-4.3 2.6-9.7 2.6-14 0L9 172c-5.3-3.2-5.3-8 0-11l39-24c3.2-2 6.4-2 9.7 0l88 53c10 6 17 4 25-2 31-24 49-62 51-91 .5-9-2-11-9-8-31 13-53 39-72 66-5 7-10 9-17 5L9 90c-5.3-3.2-5.3-8 0-11l112-60Z" />
+            </svg>
+            <span className="gs-wordmark text-[30px] font-bold tracking-[-1.2px]">Uncloak</span>
+          </Link>
           <p className="mt-3 max-w-sm text-white/70">
             An independent research tool built from Texas public records. Every figure links to the record it came from. Missing data is labeled
             unavailable, never shown as zero.
