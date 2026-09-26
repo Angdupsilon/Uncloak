@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 .DS_Store
 .claude/
+
+# Source downloads and API responses (etl/pull_power_plants.py)
+data/raw/cache/

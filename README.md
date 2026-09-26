@@ -26,7 +26,7 @@ Gemini powering the optional question-answering experience.
 
 ```
 db/          001_schema.sql, 002_timescale.sql, 003_readonly_role.sql
-etl/         config.py, common.py, load_seed.py, load_plants.py, load_tceq.py, geocode.py, score.py, run_all.py
+etl/         config.py, common.py, load_seed.py, load_plants.py, pull_power_plants.py, load_tceq.py, geocode.py, score.py, run_all.py
 data/seed/   real rows (team fills <<FILL>>)
 data/sample/ SAMPLE fixtures, same CSV schema
 web/         Next.js app: app/page.tsx, app/api/*, components/*, lib/{db,queries,gemini}.ts
@@ -194,7 +194,8 @@ one event by then.
   lines. Enable them for native columnar compression of older evidence.
 - **Spare capacity** (`db/005_spare_capacity.sql`): `plant_output` is an hourly hypertable
   with native compression segmented by plant. The continuous aggregate `plant_output_daily`
-  buckets it by day in ERCOT local time and stores a **timescaledb_toolkit `percentile_agg`**
+  buckets it by ERCOT standard-time day (the fixed CST basis CAMPD uses) and stores a
+  **timescaledb_toolkit `percentile_agg`**
   sketch per day. `/api/plants` merges 365 daily sketches with `rollup()` and reads
   `approx_percentile` / `approx_percentile_rank` for the MW free in 80% and 95% of hours.
 
@@ -211,19 +212,38 @@ psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/005_spare_capacity.sql
 python etl/load_plants.py --dir data/sample     # SAMPLE plants + synthetic hourly output
 ```
 
-**Data status: SAMPLE only.** `data/sample/power_plants.csv` is fake, and `load_plants.py`
-synthesizes a year of hourly output for SAMPLE plants. The page shows a SAMPLE banner.
-Real Texas data is available from both planned sources (checked 2026-09-26):
+**Real data** (`etl/pull_power_plants.py`) builds `data/seed/power_plants.csv` and
+`data/seed/plant_output.csv.gz` from two public sources:
 
-- **EIA-860M** (`api.eia.gov/v2/electricity/operating-generator-capacity`): about 2,260
-  operating ERCOT generators per month, with nameplate MW, owner, technology and lat/lon.
-- **EPA CAMPD** (`api.epa.gov/easey`): 224 Texas facilities with unit-level hourly gross load.
+- **EIA-860M** monthly generator inventory (the "Operating" sheet of
+  `https://www.eia.gov/electricity/data/eia860m/`). It keeps operating Texas generators in the
+  ERCOT balancing authority, drops industrial and commercial plants (mostly behind-the-meter),
+  and classifies fossil generators by prime mover: GT/IC → `peaker`, CT/CA/CS → `gas_cc`,
+  fossil ST → `steam`. `connection_mw` is the summed nameplate of those generators; batteries
+  or renewables at the same plant are excluded from both connection and output. `owner` is the
+  EIA operating entity. No API key is needed.
+- **EPA CAMPD** apportioned hourly emissions: gross load × operating time, summed over the
+  facility's units (CAMPD facility ID = EIA plant code). CAMPD hours are local standard time,
+  converted to UTC as CST + 6 h. If a plant's observed CAMPD gross peak is more than 12.5%
+  above its EIA connection, its full hourly profile is scaled to that connection so gross
+  output is not mistaken for available grid capacity. Plants with no CAMPD hours in the window
+  are dropped.
 
-To load real data, write `data/seed/power_plants.csv` (same columns) and
-`data/seed/plant_output.csv` (`ts,plant_id,output_mw`, UTC hour start), then run
-`python etl/load_plants.py --dir data/seed`. This removes the SAMPLE plants. Solar and wind
-have no CAMPD data and need modeled hourly output (`output_source = EIA923_MODELED`).
-Open land, fiber and water still need a parcel/fiber source.
+```bash
+# EPA_API_KEY: free api.data.gov key (DEMO_KEY is used otherwise and is heavily rate-limited)
+python etl/pull_power_plants.py --out data/seed      # 4 latest published quarters by default
+python etl/load_plants.py --dir data/seed            # removes the SAMPLE plants
+```
+
+Offline alternatives: `--eia860m-xlsx july_generator2026.xlsx` for a downloaded workbook, and
+`--campd-csv file.csv ...` for CAMPD bulk hourly files (`https://campd.epa.gov/data/bulk-data-files`).
+API responses and downloads are cached in `data/raw/cache/` (gitignored). The script prints
+plants left out, plants with partial reporting (ozone-season reporters), and thin months that
+may not be published yet. The default window is the four calendar quarters ending with the
+last quarter that closed at least 60 days ago; override with `--start` / `--end`.
+
+Not yet covered: solar and wind (no CAMPD data; modeled `EIA923_MODELED` output is still to
+be built), and open land, fiber and water (need a parcel/fiber source; shown as Unavailable).
 
 ERCOT caveat: FERC's surplus interconnection service (Order 845) does not govern most of
 ERCOT. The page's per-region rules note (`REGION_RULES` in `web/lib/spare.ts`) says so and
@@ -242,7 +262,7 @@ dashboard is available at `/dashboard` and accepts deep links (`?parent=Google&s
 | `/site/[id]` | Site profile: what it is, who is behind it, location basis, evidence history with a link to each record |
 | `/near?q=` or `?lat=&lon=` | Sites within a radius, list + map, with distance and why each appears |
 | `/queue` | ERCOT large-load queue history alongside the records represented in Uncloak |
-| `/spare-capacity` | Existing Texas plants ranked by idle grid-connection room: use filters, map, plant card (SAMPLE data for now) |
+| `/spare-capacity` | Existing Texas plants ranked by idle grid-connection room: use filters, map, plant card (EIA-860M + EPA CAMPD once `data/seed` is loaded; SAMPLE otherwise) |
 | `/ask?q=` | Read-only, evidence-grounded answers to analytical questions |
 | `/methodology` | Sources, linking, scoring, MW estimate, missing data, double counting, coverage limits, spare connection capacity |
 

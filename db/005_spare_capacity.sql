@@ -49,12 +49,14 @@ EXCEPTION WHEN OTHERS THEN
 END $$;
 SELECT add_compression_policy('plant_output', INTERVAL '60 days', if_not_exists => true);
 
--- Daily rollup in ERCOT local time. The UddSketch (percentile_agg) lets the API
+-- Daily rollup in ERCOT standard time. CAMPD labels hours in fixed CST, so anchor each
+-- day at 06:00 UTC instead of applying Chicago daylight-saving time. The UddSketch
+-- (percentile_agg) lets the API
 -- answer "how many MW are free in 80% of hours over the last year" by rolling up
 -- 365 daily sketches instead of sorting ~8,760 raw rows per plant.
 CREATE MATERIALIZED VIEW IF NOT EXISTS plant_output_daily
 WITH (timescaledb.continuous, timescaledb.materialized_only = false) AS
-SELECT time_bucket(INTERVAL '1 day', ts, 'America/Chicago') AS day,
+SELECT time_bucket(INTERVAL '1 day', ts, TIMESTAMPTZ '1970-01-01 06:00:00+00') AS day,
        plant_id,
        count(*)               AS hours,
        avg(output_mw)         AS avg_mw,

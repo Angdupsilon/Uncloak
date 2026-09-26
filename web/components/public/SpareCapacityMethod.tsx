@@ -12,8 +12,10 @@ export default function SpareCapacityMethod() {
         <Link href="/spare-capacity" className="rw-link">
           Spare capacity
         </Link>{" "}
-        compares each existing plant&apos;s grid connection with its hourly output. The connection size is the plant&apos;s nameplate capacity from the
-        EIA-860 generator inventory. Hourly output comes from EPA CAMPD for fossil units and is modeled for solar and wind, which CAMPD doesn&apos;t cover.
+        compares each existing plant&apos;s grid connection with its hourly output. The connection size is the summed nameplate capacity of the
+        plant&apos;s operating fossil generators in the EIA-860M monthly generator inventory. Hourly output is the gross load EPA CAMPD reports for those
+        units, weighted by the share of each hour they ran. CAMPD doesn&apos;t cover solar and wind, so those plants aren&apos;t listed yet; batteries or
+        renewables already sharing a fossil plant&apos;s connection are left out of both the connection size and the output.
       </p>
       <p>
         For every hour of the latest 365 days, the free room is the connection size minus that hour&apos;s output. &ldquo;Free in 80% of hours&rdquo; is the

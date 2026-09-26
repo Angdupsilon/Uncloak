@@ -1,11 +1,12 @@
 """Load power plants and their hourly output for the spare-capacity finder.
 
-Reads <dir>/power_plants.csv and, when present, <dir>/plant_output.csv
-(columns: ts, plant_id, output_mw; ts is the UTC start of the hour).
+Reads <dir>/power_plants.csv and, when present, <dir>/plant_output.csv or
+<dir>/plant_output.csv.gz (columns: ts, plant_id, output_mw; ts is the UTC start of the hour).
 
-Real data (to be built): power_plants.csv from EIA-860/860M (connection size, owner,
-location), plant_output.csv from EPA CAMPD hourly gross load for fossil units and
-modeled profiles for solar and wind. Both cover Texas/ERCOT.
+Real data: etl/pull_power_plants.py writes data/seed/power_plants.csv from EIA-860M
+(connection size, operator, location) and data/seed/plant_output.csv.gz from EPA CAMPD
+hourly gross load for ERCOT fossil plants. Solar and wind need modeled profiles
+(output_source EIA923_MODELED), which are not built yet.
 
 SAMPLE data: data/sample has no plant_output.csv. For SAMPLE plants only, this script
 synthesizes a deterministic year of hourly output from simple technology profiles, so
@@ -182,9 +183,9 @@ def main(directory: Path, end: str) -> None:
     sample_dir = directory.resolve().name == "sample"
     if not sample_dir and any(p["is_sample"] for p in plants):
         raise SystemExit("is_sample rows are only allowed in data/sample")
-    output_path = directory / "plant_output.csv"
+    output_path = next((p for p in (directory / "plant_output.csv", directory / "plant_output.csv.gz") if p.exists()), None)
 
-    if output_path.exists():
+    if output_path:
         output = pd.read_csv(output_path, dtype={"plant_id": str})
         output["ts"] = pd.to_datetime(output["ts"], utc=True)
     else:
