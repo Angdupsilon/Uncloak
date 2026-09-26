@@ -22,9 +22,13 @@
   --accent: #0f766e;
   --accent-soft: #ccfbf1;
 
-  /* Two-step elevation. Cards sit at 1, floating things at 2. */
-  --shadow-1: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
-  --shadow-2: 0 4px 6px -2px rgb(16 24 40 / 0.03), 0 12px 16px -4px rgb(16 24 40 / 0.08);
+  /* Card elevation only. Uber uses shadow to lift cards and floating pills,
+     never as atmosphere. */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.06);
+  --shadow-float: 0 2px 6px rgb(0 0 0 / 0.12), 0 8px 24px rgb(0 0 0 / 0.12);
+  /* Top bar: a hairline plus a short downward falloff. Light enough to read as
+     a separation, not as an elevated card. */
+  --shadow-topbar: 0 1px 0 rgb(0 0 0 / 0.05), 0 2px 8px -2px rgb(0 0 0 / 0.08);
 }
 
 body {
@@ -36,26 +40,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Headings are tight; body text is not. Default Tailwind leaves both loose,
-   which is most of why an unstyled dashboard reads as "unfinished". */
-h1,
-h2,
-h3 {
-  letter-spacing: -0.018em;
+/* Wordmark only. Neuzeit Grotesk is a licensed Monotype family: it is named
+   first so it takes over automatically if a viewer has it, or once the team
+   drops licensed files into public/fonts and adds an @font-face. Outfit is the
+   web fallback, the closest free geometric grotesque in proportion and
+   x-height. Deliberately scoped to the GridSight lockup: every other headline
+   stays on the body face. */
+.gs-wordmark {
+  font-family: "Neuzeit Grotesk", "NeuzeitGro", "Neuzeit S", var(--font-display), var(--font-sans-ui), sans-serif;
+}
+
+/* ── Type scale, straight from DESIGN.md ─────────────────────────────────
+   Display is weight 700, sentence-case, tight leading, never letter-spaced.
+   Text is 400/500 at 12-18px. The two roles never cross: display never
+   carries a paragraph, text never carries a headline. */
+
+.ub-display-xl {
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .leaflet-container {
   font-family: inherit;
-  background: var(--surface-sunken);
+  background: #aad3df;
 }
 
-/* Leaflet SVG paths get a browser focus ring on click. */
-.leaflet-interactive:focus {
-  outline: none;
+/* Basemap is standard OpenStreetMap at native colour. The only treatment is a
+   light desaturation, because OSM's yellow roads and green parks otherwise
+   compete with the evidence-tier colours drawn on top. */
+.gs-map .leaflet-tile-pane {
+  filter: saturate(0.82);
 }
 
-/* Leaflet's default controls and popups are the loudest default on the page. */
-.leaflet-control-zoom a {
+.gs-vignette {
+  z-index: 420;
+  background: radial-gradient(135% 105% at 50% 45%, transparent 72%, rgb(0 0 0 / 0.1) 100%);
+}
+
+.gs-map .leaflet-control-zoom a {
   border: none !important;
   background: var(--surface-card) !important;
   color: var(--text-secondary) !important;

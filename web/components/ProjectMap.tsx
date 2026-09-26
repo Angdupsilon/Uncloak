@@ -23,6 +23,59 @@ function radiusFor(mw: number | null): number {
   return Math.min(UI.markerMaxRadiusPx, UI.markerMinRadiusPx + UI.markerRadiusPerSqrtMw * Math.sqrt(mw));
 }
 
+/**
+ * Spotlight mask: a world-sized polygon with Texas punched out as a hole, drawn
+ * over the basemap. Everything outside the state recedes, so a wide panel that
+ * unavoidably shows Oklahoma and Chihuahua still reads as a map OF Texas.
+ * Texas is close to square, so fitting it into a 3:2 panel always leaves
+ * neighbours on screen; dimming them is what makes the subject obvious.
+ */
+function TexasSpotlight() {
+  const [mask, setMask] = useState<FeatureCollection | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch("/tx_state.geojson")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((tx) => {
+        if (!alive || !tx?.geometry) return;
+        // Outer ring covers the whole world; each Texas ring becomes a hole.
+        const world = [
+          [-180, -85],
+          [180, -85],
+          [180, 85],
+          [-180, 85],
+          [-180, -85],
+        ];
+        const geom = tx.geometry;
+        const holes: number[][][] =
+          geom.type === "MultiPolygon" ? geom.coordinates.map((poly: number[][][]) => poly[0]) : [geom.coordinates[0]];
+        setMask({
+          type: "FeatureCollection",
+          features: [
+            { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...holes] } },
+            { type: "Feature", properties: { outline: true }, geometry: geom },
+          ],
+        } as FeatureCollection);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+  if (!mask) return null;
+  return (
+    <GeoJSON
+      data={mask}
+      interactive={false}
+      style={(f) =>
+        f?.properties?.outline
+          ? { color: "#000000", weight: 2, opacity: 0.85, fill: false }
+          : { stroke: false, fillColor: "#ffffff", fillOpacity: 0.62 }
+      }
+    />
+  );
+}
+
 function Counties() {
   const [data, setData] = useState<FeatureCollection | null>(null);
   useEffect(() => {
@@ -33,7 +86,20 @@ function Counties() {
       .catch(() => {});
   }, []);
   if (!data) return null;
-  return <GeoJSON data={data} style={{ color: "#64748b", weight: 0.6, fill: false, opacity: 0.6 }} interactive={false} />;
+  // Hairline county borders: present enough to read as a grid, faint enough
+  // that the data markers stay the brightest thing on the canvas.
+  return <GeoJSON data={data} style={{ color: "#000000", weight: 0.5, fill: false, opacity: 0.18 }} interactive={false} />;
+}
+
+/** Frames Texas once on mount. Fitting beats a fixed zoom because the map
+ *  panel is fluid: the same zoom that frames the state at 1440px shows half of
+ *  Mexico at 1920px. */
+function FitTexas() {
+  const map = useMap();
+  useEffect(() => {
+    map.fitBounds(latLngBounds(UI.txBounds), { padding: [6, 6], animate: false });
+  }, [map]);
+  return null;
 }
 
 function FitBounds({ projects, ids, request }: { projects: Project[]; ids: number[] | null; request: number }) {
@@ -60,12 +126,25 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
   const ordered = [...located].sort((a, b) => (b.mw_est ?? 0) - (a.mw_est ?? 0));
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-lg border border-slate-200">
-      <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" preferCanvas={false}>
+    <div className="gs-map relative h-full w-full overflow-hidden bg-[#aad3df]">
+      <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" preferCanvas={false} zoomControl={false} zoomSnap={0.5} zoomDelta={0.5}>
+        {/* Standard OpenStreetMap raster: the colourful basemap the project
+            started with. No key, no account. Left largely ungraded so parks,
+            roads and water keep their colour.
+            OSM bakes label size into the raster at each zoom level, so the only
+            way to enlarge city names is to change which tile is drawn where.
+            tileSize 512 + zoomOffset -1 pulls tiles one zoom SHALLOWER and draws
+            them at double size: the geography lines up exactly, but every label
+            renders 2x. (detectRetina does the opposite and must stay off — it
+            pulls a zoom deeper and halves the labels.) */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
+          tileSize={512}
+          zoomOffset={-1}
         />
+        <TexasSpotlight />
         <Counties />
         <FitBounds projects={projects} ids={highlightIds} request={fitRequest} />
         {ordered.map((p) => {

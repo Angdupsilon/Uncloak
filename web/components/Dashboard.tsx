@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AskGridSight from "@/components/AskGridSight";
 import DateSlider from "@/components/DateSlider";
 import HowScoring from "@/components/HowScoring";
@@ -40,6 +40,15 @@ export default function Dashboard({ today }: { today: string }) {
     });
   }, []);
 
+  const panelOpen = selectedId != null;
+
+  useEffect(() => {
+    if (!panelOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSelectedId(null);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [panelOpen]);
+
   const onAsk = useCallback((r: AskResponse) => {
     if (r.map_filter) {
       setHighlight(r.map_filter.ids);
@@ -49,14 +58,14 @@ export default function Dashboard({ today }: { today: string }) {
   }, []);
 
   return (
-    <div className="flex h-screen min-w-[960px] flex-col gap-4 p-5 text-slate-900">
-      <header className="flex items-center justify-between gap-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <span aria-hidden className="h-7 w-1.5 shrink-0 rounded-full bg-teal-700" />
+    <div className="flex h-screen min-w-[1040px] flex-col gap-4 p-5 text-black">
+      <header className="-mx-5 -mt-5 mb-1 flex items-center justify-between gap-6 bg-white px-5 py-4 shadow-[var(--shadow-topbar)]">
+        <div className="min-w-0">
+          
           <div className="min-w-0">
-            <h1 className="text-xl font-semibold leading-none tracking-tight">GridSight</h1>
-            <p className="mt-1 truncate text-[13px] leading-none text-slate-500">
-              Texas data-center load: what ERCOT is asked for vs. what public records can find
+            <h1 className="ub-display-lg gs-wordmark">GridSight</h1>
+            <p className="ub-body ub-body-md mt-1 truncate">
+              Texas data-center load: requested vs. verified
             </p>
           </div>
         </div>
@@ -70,10 +79,14 @@ export default function Dashboard({ today }: { today: string }) {
         </div>
       )}
 
-      <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
-
       <main className="flex min-h-0 flex-1 gap-4">
-        <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
+        {/* Summary rail. Stacking the four figures down the left gives the map
+            the full column height instead of a squashed band under a header. */}
+        <div className="flex w-[280px] shrink-0 flex-col">
+          <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
+        </div>
+
+        <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)]">
           <ProjectMap
             projects={projectList}
             selectedId={selectedId}
@@ -99,17 +112,26 @@ export default function Dashboard({ today }: { today: string }) {
               </span>
             </button>
           )}
+          {/* Slide-over: the panel rides over the map instead of holding a
+              permanent 400px column, so the map keeps the full width until a
+              project is actually selected. Clipped by the map card's
+              overflow-hidden, so it slides within the rounded surface. */}
+          <aside
+            aria-hidden={!panelOpen}
+            className={`absolute inset-y-0 right-0 z-[1200] w-[400px] max-w-full border-l border-[#efefef] bg-white shadow-[var(--shadow-float)] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              panelOpen ? "translate-x-0" : "pointer-events-none translate-x-full"
+            }`}
+          >
+            <ProjectPanel projectId={selectedId} asOf={asOf} factors={config.data?.factors ?? []} onClose={() => setSelectedId(null)} />
+          </aside>
         </div>
-        <aside className="w-[400px] shrink-0 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
-          <ProjectPanel projectId={selectedId} asOf={asOf} factors={config.data?.factors ?? []} onClose={() => setSelectedId(null)} />
-        </aside>
       </main>
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
       <footer className="flex items-center gap-8 rounded-xl border border-[var(--border-soft)] bg-white px-5 py-3 pr-[420px] shadow-[var(--shadow-1)]">
         <DateSlider start={config.data?.backfill_start ?? null} end={today} value={asOf} onChange={setAsOf} />
         <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
-        <div className="max-w-[50%]">
+        <div className="min-w-0 flex-1">
           <ParentFilter
             parents={parents.data?.parents ?? null}
             active={activeParents}

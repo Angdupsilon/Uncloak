@@ -30,14 +30,14 @@ function Card({
   accent?: string;
 }) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-[var(--border-soft)] bg-white px-4 py-3.5 shadow-[var(--shadow-1)] transition-shadow hover:shadow-[var(--shadow-2)]">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">{title}</div>
-      <div className="mt-1.5 flex items-end justify-between gap-3">
-        <div className={`text-[28px] font-semibold leading-none tracking-tight tabular-nums ${accent ?? "text-slate-900"}`}>{value}</div>
+    <div className="ub-card flex min-h-0 min-w-0 flex-1 flex-col justify-center overflow-hidden px-4 py-3 transition-shadow hover:shadow-[var(--shadow-float)]">
+      <div className="ub-body-md-strong text-[#5e5e5e]">{title}</div>
+      <div className="mt-1 flex items-end justify-between gap-2">
+        <div className={`ub-display-xl tabular-nums ${accent ?? "text-black"}`}>{value}</div>
         {children}
       </div>
-      {sub && <div className="mt-2 truncate text-xs leading-snug text-slate-600">{sub}</div>}
-      <div className="mt-auto truncate pt-2 text-[11px] text-slate-400">{foot}</div>
+      {sub && <div className="ub-body-sm mt-1.5 truncate text-[#5e5e5e]">{sub}</div>}
+      <div className="ub-caption mt-1 truncate text-[#afafaf]">{foot}</div>
     </div>
   );
 }
@@ -48,9 +48,9 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
   }
   if (!summary) {
     return (
-      <div className="flex gap-4">
+      <div className="flex h-full flex-col gap-3">
         {["ERCOT queue", "Found on map", "Evidence-weighted", "Shadow load"].map((t) => (
-          <div key={t} className="h-[112px] flex-1 animate-pulse rounded-xl border border-[var(--border-soft)] bg-slate-100" />
+          <div key={t} className="min-h-0 flex-1 animate-pulse rounded-2xl bg-[#efefef]" />
         ))}
       </div>
     );
@@ -61,7 +61,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
   const spark = s.weekly.map((w) => ({ t: Date.parse(w.week), realistic: w.realistic_gw, found: w.found_gw }));
 
   return (
-    <div className={`flex gap-4 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}>
+    <div className={`flex h-full flex-col gap-3 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}>
       <Card
         title="ERCOT large-load queue"
         value={s.ercot ? fmtGW(s.ercot.gw_requested) : "No data"}
@@ -102,7 +102,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
         foot={<>As of {fmtDate(s.as_of)} · Evidence index (uncalibrated)</>}
       >
         {spark.length > 1 && !noMw && (
-          <div className="h-10 w-28 shrink-0" aria-label="Weekly evidence-weighted vs found GW">
+          <div className="h-9 w-20 shrink-0" aria-label="Weekly evidence-weighted vs found GW">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={spark} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
                 <XAxis dataKey="t" type="number" domain={["dataMin", "dataMax"]} hide />
