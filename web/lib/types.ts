@@ -47,7 +47,8 @@ export interface Summary {
   ercot: ErcotPoint | null;
   found_gw: number | null;
   realistic_gw: number | null;
-  shadow_gw: number | null;
+  shadow_gw: number | null; // requested − found: our public-record coverage gap, not phantom load
+  phantom_gw: number | null; // requested − approved: queue load ERCOT has not approved to energize
   projects: number;
   projects_with_mw: number;
   weekly: WeeklyPoint[];

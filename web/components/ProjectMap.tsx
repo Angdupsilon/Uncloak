@@ -8,7 +8,7 @@ import { latLngBounds } from "leaflet";
 import maplibreGL from "@maplibre/maplibre-gl-leaflet";
 import { setWorkerUrl } from "maplibre-gl";
 import { TIER_COLORS_MAP, TIER_LABELS, TIER_ORDER, UI, UNRESOLVED_PARENT } from "@/lib/constants";
-import { fmtMW, fmtPct } from "@/lib/format";
+import { fmtGW, fmtMW, fmtPct } from "@/lib/format";
 import type { Project } from "@/lib/types";
 
 export interface MapProps {
@@ -19,6 +19,8 @@ export interface MapProps {
   highlightIds: number[] | null;
   fitRequest: number; // increments when the map should fit to highlightIds
   loading: boolean;
+  /** ERCOT queue totals, drawn as rings on the same area scale as the markers. */
+  queue: { requestedGw: number; approvedGw: number | null } | null;
 }
 
 /** Multiplier applied to every vector label's text-size. */
@@ -51,6 +53,30 @@ function scaleTextSize<T>(value: T): T {
 function radiusFor(mw: number | null): number {
   if (mw == null || mw <= 0) return UI.markerMinRadiusPx;
   return Math.min(UI.markerMaxRadiusPx, UI.markerMinRadiusPx + UI.markerRadiusPerSqrtMw * Math.sqrt(mw));
+}
+
+/** True-scale radius: area strictly proportional to MW, floored only so a
+ *  marker stays clickable. `pxPerSqrtMw` comes from fitting the queue ring. */
+function scaledRadiusFor(mw: number | null, pxPerSqrtMw: number): number {
+  if (mw == null || mw <= 0) return UI.scaleMarkerMinRadiusPx;
+  return Math.max(UI.scaleMarkerMinRadiusPx, pxPerSqrtMw * Math.sqrt(mw));
+}
+
+/** Reports the map's pixel size so the queue ring can be fitted to the panel. */
+function MapSize({ onSize }: { onSize: (px: number) => void }) {
+  const map = useMap();
+  useEffect(() => {
+    const report = () => {
+      const { x, y } = map.getSize();
+      onSize(Math.min(x, y));
+    };
+    report();
+    map.on("resize", report);
+    return () => {
+      map.off("resize", report);
+    };
+  }, [map, onSize]);
+  return null;
 }
 
 /**
@@ -199,8 +225,17 @@ function FitBounds({ projects, ids, request }: { projects: Project[]; ids: numbe
   return null;
 }
 
-export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading }: MapProps) {
+export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading, queue }: MapProps) {
   const highlight = useMemo(() => (highlightIds ? new Set(highlightIds) : null), [highlightIds]);
+  const [toScale, setToScale] = useState(true);
+  const [mapPx, setMapPx] = useState(0);
+
+  // Fit the requested-queue ring to the panel, then draw every marker on that
+  // same px-per-sqrt(MW) scale, so ring area vs. dot area is the real ratio.
+  const requestedMw = queue && queue.requestedGw > 0 ? queue.requestedGw * 1000 : null;
+  const ringPx = mapPx * UI.queueRingFraction;
+  const pxPerSqrtMw = toScale && requestedMw && ringPx > 0 ? ringPx / Math.sqrt(requestedMw) : null;
+  const approvedPx = pxPerSqrtMw && queue?.approvedGw ? pxPerSqrtMw * Math.sqrt(queue.approvedGw * 1000) : null;
   const located = projects.filter((p) => p.lat != null && p.lon != null);
   const unlocated = projects.length - located.length;
 
@@ -214,6 +249,36 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
         <TexasSpotlight />
         <Counties />
         <FitBounds projects={projects} ids={highlightIds} request={fitRequest} />
+        <MapSize onSize={setMapPx} />
+        {pxPerSqrtMw && queue && (
+          <>
+            {/* Anchored on Texas; pixel-sized like the markers, so the ratio holds at any zoom. */}
+            <CircleMarker
+              key={`ring-req-${ringPx}`}
+              center={UI.txCenter}
+              radius={ringPx}
+              interactive={false}
+              pathOptions={{ color: "#000000", weight: 1.5, opacity: 0.55, dashArray: "6 6", fillColor: "#000000", fillOpacity: 0.04 }}
+            >
+              <Tooltip permanent direction="top" offset={[0, -ringPx]} className="gs-ring-label">
+                {fmtGW(queue.requestedGw)} requested
+              </Tooltip>
+            </CircleMarker>
+            {approvedPx && (
+              <CircleMarker
+                key={`ring-appr-${approvedPx}`}
+                center={UI.txCenter}
+                radius={approvedPx}
+                interactive={false}
+                pathOptions={{ color: "#000000", weight: 1.5, opacity: 0.9, fillColor: "#000000", fillOpacity: 0.18 }}
+              >
+                <Tooltip permanent direction="right" offset={[approvedPx, 0]} className="gs-ring-label">
+                  {fmtGW(queue.approvedGw)} approved
+                </Tooltip>
+              </CircleMarker>
+            )}
+          </>
+        )}
         {ordered.map((p) => {
           const parentKey = p.parent ?? UNRESOLVED_PARENT;
           const dimmed = (activeParents.size > 0 && !activeParents.has(parentKey)) || (highlight !== null && !highlight.has(p.project_id));
@@ -223,7 +288,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
             <CircleMarker
               key={p.project_id}
               center={[p.lat!, p.lon!]}
-              radius={radiusFor(p.mw_est)}
+              radius={pxPerSqrtMw ? scaledRadiusFor(p.mw_est, pxPerSqrtMw) : radiusFor(p.mw_est)}
               pathOptions={{
                 color: selected ? "#0f172a" : (p.parent_color ?? "#475569"),
                 weight: selected ? 4 : 2.5,
@@ -249,7 +314,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
         })}
       </MapContainer>
 
-      <div className="ub-card ub-body-sm pointer-events-none absolute bottom-4 left-4 z-[1000] px-5 py-4 text-[#5e5e5e]">
+      <div className="ub-card ub-body-sm absolute bottom-4 left-4 z-[1000] w-[228px] px-5 py-4 text-[#5e5e5e]">
         <div className="ub-body-md-strong mb-3 text-black">Evidence tier</div>
         <div className="space-y-1.5">
           {TIER_ORDER.map((t) => (
@@ -259,8 +324,34 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
             </div>
           ))}
         </div>
-        <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">Size &prop; &radic;MW &middot; outline = parent</div>
-        {unlocated > 0 && <div className="ub-caption mt-1 text-[#afafaf]">{unlocated} not shown (no coordinates)</div>}
+        {pxPerSqrtMw ? (
+          <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#5e5e5e]">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border border-dashed border-black/60" />
+              ERCOT queue (requested)
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border border-black bg-black/20" />
+              Approved to energize
+            </div>
+            <div className="mt-1 text-[#afafaf]">Rings and dots share one scale: area &prop; MW. Outline = parent.</div>
+          </div>
+        ) : (
+          <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">Size &prop; &radic;MW (enlarged) &middot; outline = parent</div>
+        )}
+        {unlocated > 0 && (
+          <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">
+            {unlocated} of {projects.length} projects not shown (no coordinates)
+          </div>
+        )}
+        {requestedMw && (
+          <button
+            onClick={() => setToScale((v) => !v)}
+            className="ub-caption mt-2 w-full rounded-full bg-[#efefef] px-3 py-1 font-medium text-black transition-colors hover:bg-[#e2e2e2]"
+          >
+            {toScale ? "Enlarge project dots" : "Show queue to scale"}
+          </button>
+        )}
       </div>
 
       {loading && (

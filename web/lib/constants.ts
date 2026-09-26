@@ -45,6 +45,10 @@ export const UI = {
   markerMinRadiusPx: 5,
   markerRadiusPerSqrtMw: 1.1,
   markerMaxRadiusPx: 40,
+  /** True-scale mode: the ERCOT-queue ring's radius as a share of the map's
+   *  shorter side, and the smallest marker radius that stays clickable. */
+  queueRingFraction: 0.42,
+  scaleMarkerMinRadiusPx: 3.5,
   /** Soft outer glow drawn behind each marker, as a multiple of core radius. */
   markerHaloScale: 2.4,
   txCenter: [31.0, -99.3] as [number, number],

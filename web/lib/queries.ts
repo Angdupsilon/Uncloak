@@ -201,6 +201,7 @@ export async function getSummary(asOf: string): Promise<Summary> {
       }
     : null;
   const shadow_gw = ercot?.gw_requested != null && found_gw != null ? ercot.gw_requested - found_gw : null;
+  const phantom_gw = ercot?.gw_requested != null && ercot.gw_approved != null ? ercot.gw_requested - ercot.gw_approved : null;
 
   return {
     as_of: asOf,
@@ -208,6 +209,7 @@ export async function getSummary(asOf: string): Promise<Summary> {
     found_gw,
     realistic_gw,
     shadow_gw,
+    phantom_gw,
     projects: t?.projects ?? 0,
     projects_with_mw: t?.projects_with_mw ?? 0,
     weekly: weeklyRows.map((w) => ({

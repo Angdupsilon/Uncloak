@@ -382,3 +382,19 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Labels on the queue rings: plain text on a soft pill, no tooltip arrow. */
+.gs-map .leaflet-tooltip.gs-ring-label {
+  border: none;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.88);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 3px 9px;
+  box-shadow: var(--shadow-card);
+}
+.gs-map .leaflet-tooltip.gs-ring-label::before {
+  display: none;
+}

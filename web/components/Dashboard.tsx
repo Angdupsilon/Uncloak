@@ -80,8 +80,8 @@ export default function Dashboard({ today }: { today: string }) {
       )}
 
       <main className="flex min-h-0 flex-1 gap-4">
-        {/* Summary rail. Stacking the four figures down the left gives the map
-            the full column height instead of a squashed band under a header. */}
+        {/* Summary rail: one reconciliation panel down the left, so the map
+            keeps the full column height. */}
         <div className="flex w-[280px] shrink-0 flex-col">
           <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
         </div>
@@ -95,6 +95,11 @@ export default function Dashboard({ today }: { today: string }) {
             highlightIds={highlight}
             fitRequest={fitRequest}
             loading={projects.loading && !projects.data}
+            queue={
+              summary.data?.ercot?.gw_requested != null
+                ? { requestedGw: summary.data.ercot.gw_requested, approvedGw: summary.data.ercot.gw_approved }
+                : null
+            }
           />
           {projects.error && (
             <div className="absolute left-3 top-3 z-[1000] rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-[#5e5e5e] shadow-[var(--shadow-card)]">

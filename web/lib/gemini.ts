@@ -13,7 +13,7 @@ import {
 } from "./queries";
 import type { AskResponse } from "./types";
 
-const SYSTEM_PROMPT = `You are GridSight's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them.`;
+const SYSTEM_PROMPT = `You are GridSight's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage.`;
 
 const MAX_ROUNDS = 4;
 const MAX_PROJECTS_TO_MODEL = 40;
@@ -52,7 +52,7 @@ export const TOOL_DECLARATIONS: FunctionDeclaration[] = [
   {
     name: "get_summary",
     description:
-      "Totals as of a date: ERCOT large-load queue (GW requested/approved/observed peak, with date and source), GW found in public records, evidence-weighted realistic GW, shadow load (requested minus found) and project count.",
+      "Totals as of a date: ERCOT large-load queue (GW requested/approved/observed peak, with date and source), GW found in public records, evidence-weighted realistic GW, phantom load (requested minus ERCOT-approved), shadow load (requested minus found in public records) and project count.",
     parametersJsonSchema: { type: "object", properties: { as_of: asOfProp } },
   },
   {
