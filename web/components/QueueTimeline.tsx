@@ -284,13 +284,17 @@ export default function QueueTimeline({
   asOf,
   today,
   onPick,
+  variant = "strip",
 }: {
   data: QueueTimelineData | null;
   error: string | null;
   asOf: string;
   today: string;
   onPick: (asOf: string) => void;
+  /** "strip" is the collapsible dashboard card; "page" is the full-width Queue Timeline tab. */
+  variant?: "strip" | "page";
 }) {
+  const isPage = variant === "page";
   const [open, setOpen] = useState(true);
   const [tab, setTab] = useState<"queue" | "connect">("queue");
   const [log, setLog] = useState(true);
@@ -336,8 +340,9 @@ export default function QueueTimeline({
   );
 
   return (
-    <section className="ub-card shrink-0 overflow-hidden px-4 py-3">
+    <section className={`ub-card shrink-0 overflow-hidden ${isPage ? "px-6 py-5" : "px-4 py-3"}`}>
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
+        {!isPage && (
         <button
           onClick={() => setOpen((o) => !o)}
           className="mt-0.5 shrink-0 text-[#5e5e5e]"
@@ -346,11 +351,12 @@ export default function QueueTimeline({
         >
           <span aria-hidden className={`inline-block transition-transform ${open ? "rotate-90" : ""}`}>›</span>
         </button>
+        )}
 
         <div className="min-w-0 flex-1">
           {current && approved100 != null ? (
             <>
-              <p className="ub-body-md text-black">
+              <p className={isPage ? "text-[20px] leading-7 text-black" : "ub-body-md text-black"}>
                 Of every <b>100 MW</b> asking to join the Texas grid, only <b>{approved100} MW</b> is approved to connect
                 {found100 != null && (
                   <>
@@ -394,7 +400,7 @@ export default function QueueTimeline({
             {noErcot && (
               <div className="ub-caption text-amber-700">No ERCOT queue reports loaded yet: add rows to ercot_queue.csv to draw the queue line.</div>
             )}
-            <div className="h-[140px]">
+            <div className={isPage ? "h-[300px]" : "h-[140px]"}>
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                   data={rows}

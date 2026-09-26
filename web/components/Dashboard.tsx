@@ -7,10 +7,9 @@ import DateSlider from "@/components/DateSlider";
 import HowScoring from "@/components/HowScoring";
 import ParentFilter from "@/components/ParentFilter";
 import ProjectPanel from "@/components/ProjectPanel";
-import QueueTimeline from "@/components/QueueTimeline";
 import SummaryBar from "@/components/SummaryBar";
 import { useJson } from "@/lib/useJson";
-import type { AskResponse, ParentRow, Project, QueueTimeline as QueueTimelineData, ScoringConfig, Summary } from "@/lib/types";
+import type { AskResponse, ParentRow, Project, ScoringConfig, Summary } from "@/lib/types";
 
 // Leaflet touches `window`, so the map renders client-side only.
 const ProjectMap = dynamic(() => import("@/components/ProjectMap"), {
@@ -41,8 +40,6 @@ export default function Dashboard({
   const summary = useJson<Summary>(`/api/summary?as_of=${asOf}`);
   const projects = useJson<{ as_of: string; projects: Project[] }>(`/api/projects?as_of=${asOf}`);
   const parents = useJson<{ parents: ParentRow[] }>(`/api/parents?as_of=${asOf}`);
-  // Full history once (as of today); the chart marks the current as-of week with a cursor.
-  const queue = useJson<QueueTimelineData>(`/api/queue-timeline?as_of=${today}`);
 
   const projectList = useMemo(() => projects.data?.projects ?? [], [projects.data]);
   const showingSample = projectList.some((p) => p.is_sample);
@@ -157,8 +154,6 @@ export default function Dashboard({
           </aside>
         </div>
       </main>
-
-      <QueueTimeline data={queue.data} error={queue.error} asOf={asOf} today={today} onPick={setAsOf} />
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
       <footer className={`flex items-center gap-8 rounded-xl border border-[#e2e2e2] bg-white px-5 py-3 shadow-[var(--shadow-card)] ${embedded ? "" : "pr-[420px]"}`}>
