@@ -158,6 +158,52 @@ To merge a held feature into its project, add a reviewed location or match; to l
 site, change the rule in the importer. Unlocated Texas registry projects can still duplicate a
 loaded atlas site; this file is where to check.
 
+## `eia861_ba_county_2024_2026-09-26.csv`
+
+Form EIA-861 balancing-authority service territory by county, report year 2024, from Catalyst
+Cooperative's PUDL nightly mirror (`out_eia861__yearly_balancing_authority_service_territory.parquet`,
+BA names from `core_eia861__yearly_balancing_authority.parquet`; retrieved 2026-09-26, CC-BY-4.0 for
+PUDL, EIA data public domain). One row per county and balancing authority: 4,435 rows, 3,107 counties,
+57 balancing authorities. `eia861_county` is the name as EIA publishes it; `county_fips` is PUDL's.
+
+It is a **lookup only**: it says which grid operators serve a county, so a site can be placed on the
+grid. No demand figure comes from it.
+
+### How it was verified
+
+- **Report year.** PUDL's 2025 year is partial. It lists 2,970 counties against 3,107 for every year
+  2022–2024, dropping DC and most of northern New Jersey, and 382 of the counties it keeps list fewer
+  balancing authorities than 2024 (Alabama loses Southern Company, for example). From 2023 to 2024 only
+  8 counties changed. 2024 is used; `etl/import_grid_regions.py` prints the per-year county counts.
+- **County vintage.** EIA-861 keys counties by 2010-vintage FIPS (the eight Connecticut counties, not
+  the 2022 planning regions), so sites are placed with the 2010 Census county boundaries from the same
+  mirror (`out_censusdp1tract__counties.parquet`).
+- **Name collisions.** Where a county shares its name with an independent city, PUDL assigns EIA's bare
+  name to the city: "Fairfax" → Fairfax city (51600), and Fairfax County (51059) never appears; the same
+  holds for Baltimore, Richmond, Roanoke and Franklin. St. Louis shows the error: EIA lists "St. Louis"
+  and "St. Louis City" separately and PUDL maps both to the city. For a site in such a county, the rows
+  EIA publishes under that name are used, and the tag's method reads `county_name` instead of
+  `county_fips`. This affects 26 Fairfax County sites and 1 Baltimore County site.
+
+## `project_counties.csv`
+
+Every seed project with its county FIPS, written by `etl/import_grid_regions.py`:
+
+- `spatial_join` (1,437): the project's coordinates fall in the county polygon.
+- `record_county` (43): no coordinates; the county named in the project's own record, matched by name
+  within its state (only when exactly one county has that name).
+- Untagged (70): 64 have neither coordinates nor a county, and 6 are held because the point and the
+  record name different counties (`stated_county_agrees = no`; `note` says which): Bull Data Center and
+  Horizon (point in Cottle, record says Childress), Sweetwater II (Jones vs Fisher), Switch AUS 4
+  (Williamson vs Travis), Digital Realty ATL11 (Douglas vs Cobb) and Google NBY-6 (Franklin vs Licking).
+  Connecticut atlas sites carry 2022 planning-region names, which can't be compared with 2010 counties
+  (`not_comparable`); they are tagged from their point.
+
+`etl/assign_regions.py` turns the two files into `sites.county_fips` and `site_regions` at load time. A
+county with n balancing authorities gives each n rows with confidence 1/n: 1,460 of 1,530 sites are
+tagged, 511 of them in counties with several. The two Puerto Rico sites get no tag because EIA-861 has
+no territory there, which the UI shows as "not published here".
+
 ## `us_source_catalog.csv`
 
 Candidate public sources for coverage outside Texas, one row per source, with its role

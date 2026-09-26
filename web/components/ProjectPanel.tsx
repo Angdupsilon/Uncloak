@@ -2,6 +2,7 @@
 import { TIER_COLORS, TIER_LABELS, UNRESOLVED_PARENT } from "@/lib/constants";
 import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
 import { countyLabel, STATE_NAMES } from "@/lib/geo";
+import { describeRegions, EIA861_URL } from "@/lib/regions";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
 import TimeMachine from "./TimeMachine";
@@ -97,6 +98,7 @@ export default function ProjectPanel({
   const osmOperator = p.resolved_by === "OSM_OPERATOR";
   const entityName = p.llc_name?.replace(/ \(OSM operator\)$/, "") ?? null;
   const atlasOnly = events.length > 0 && events.every((e) => e.event_type === "site_mapped");
+  const grid = describeRegions(data.regions ?? [], p.state, p.county_fips ?? null);
 
   return (
     <div className={`flex h-full flex-col bg-white transition-opacity ${loading ? "opacity-70" : ""}`}>
@@ -118,6 +120,16 @@ export default function ProjectPanel({
                 <circle cx="8" cy="6.25" r="1.5" />
               </svg>
               <span className="truncate">{[p.city, p.county && countyLabel(p.county, p.state), p.state].filter(Boolean).join(", ")}</span>
+            </div>
+            <div className="mt-2">
+              <span
+                title={grid.detail}
+                className={`inline-flex max-w-full items-center gap-1 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                  grid.status === "tagged" || grid.status === "several" ? "bg-sky-50 text-sky-800 ring-1 ring-inset ring-sky-200" : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <span className="font-normal text-slate-500">Grid operator</span> {grid.value}
+              </span>
             </div>
           </div>
           <button
@@ -193,6 +205,15 @@ export default function ProjectPanel({
                   {p.current_status?.replaceAll("_", " ") ?? "Unknown"}
                   {p.status_observed_at ? ` · observed ${fmtDate(p.status_observed_at)}` : ""}
                 </span>
+              </div>
+              <div className="mt-2 border-t border-slate-100 pt-2">
+                <div className="flex justify-between gap-4">
+                  <span className="shrink-0 text-slate-400">Grid operator</span>
+                  <span className="text-right font-medium text-slate-700">{grid.value}</span>
+                </div>
+                <p className="mt-1 text-[11px] leading-4 text-slate-500">
+                  {grid.detail} Lookup only, not a measurement. <SourceLink url={EIA861_URL} label="EIA-861" />
+                </p>
               </div>
               <div className="mt-2 flex justify-between gap-4 border-t border-slate-100 pt-2">
                 <span className="text-slate-400">Location quality</span>

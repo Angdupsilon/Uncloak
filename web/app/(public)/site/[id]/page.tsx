@@ -23,6 +23,7 @@ import { getConfig, todayUtc } from "@/lib/queries";
 import { describeEvent, fmtDate, fmtMW, fmtUSD } from "@/lib/format";
 import { TIER_LABELS } from "@/lib/constants";
 import { countyLabel, fmtDistance } from "@/lib/geo";
+import { describeRegions, EIA861_URL } from "@/lib/regions";
 import { PROGRAM_HELP, RESOLVED_BY_LABEL, SOURCES, type SourceKey } from "@/lib/metrics";
 import { orgHref, siteHref } from "@/lib/slug";
 import type { FactorConfig } from "@/lib/types";
@@ -93,6 +94,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
       : atlasOnly
         ? "Mapped building or campus centroid from the IM3 data-center atlas (OpenStreetMap), not a public-record address."
         : "Location from a reviewed public-record compilation (see Methodology).";
+  const grid = describeRegions(p.timeline?.regions ?? [], s.state, p.timeline?.project.county_fips ?? null);
   const dashboardHref = `/dashboard?site=${s.project_id}${s.parent ? `&parent=${encodeURIComponent(s.parent)}` : ""}`;
 
   return (
@@ -111,6 +113,12 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             <span className="ub-eyebrow">Facility</span>
             <span className="rounded-full bg-[var(--canvas-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--hairline-mid)]">
               {atlasOnly ? "Mapped site, not a headquarters" : "From public records, not a headquarters"}
+            </span>
+            <span
+              title={grid.detail}
+              className="rounded-full border border-[var(--hairline)] px-2 py-0.5 text-[11px] font-medium text-[var(--hairline-mid)]"
+            >
+              Grid operator: {grid.value}
             </span>
             {s.is_sample && <SampleBadge />}
           </div>
@@ -296,6 +304,14 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             <div>
               <dt className="text-[12px] text-[var(--body)]">How we know</dt>
               <dd className="text-[var(--hairline-mid)]">{locationBasis}</dd>
+            </div>
+            <div>
+              <dt className="text-[12px] text-[var(--body)]">Grid operator (balancing authority)</dt>
+              <dd className="text-black">{grid.value}</dd>
+              <dd className="text-[13px] text-[var(--hairline-mid)]">
+                {grid.detail} A lookup by county, not a measurement of this site.{" "}
+                <SourceLink url={EIA861_URL} label="EIA-861 service territories" />
+              </dd>
             </div>
           </dl>
         </section>

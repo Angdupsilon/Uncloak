@@ -68,6 +68,8 @@ For a database created before the canonical-site/data-quality tables were added,
 idempotent migration once: `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/004_data_quality.sql`.
 For a database created before national coverage (no `projects.state` column), run
 `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/006_national.sql -f db/004_queue_timeline.sql`.
+For one created before grid-operator tags (no `site_regions` table), run
+`psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/007_site_regions.sql`.
 
 Then set `DATABASE_URL_RO` to the same connection string with user `gridsight_ro` and that password.
 
@@ -95,6 +97,7 @@ python etl/import_comptroller.py --file data/raw/comptroller_data_centers_2026-0
 python etl/import_tdlr.py --file data/raw/tdlr_data_centers_2026-09-26.csv
 python etl/import_locations.py
 python etl/import_im3_atlas.py                      # national layer -> data/seed_national/
+python etl/import_grid_regions.py                   # county FIPS + EIA-861 grid-operator lookup (needs pyarrow, shapely)
 python etl/run_all.py --dir data/seed --dir data/seed_national
 ```
 
@@ -105,6 +108,13 @@ Texas atlas sites that may duplicate an existing Texas project are held back and
 `data/raw/im3_texas_review.csv`. ERCOT comparisons (`weekly_realistic_demand`,
 `queue_timeline`, `/api/summary` totals) count Texas projects with a public record only, so
 loading the national layer leaves every Texas figure unchanged.
+
+`import_grid_regions.py` downloads EIA-861 service territories and Census 2010 county boundaries
+from the PUDL mirror into `data/raw/cache/` (not committed), places every project in a county and
+writes `data/raw/project_counties.csv` plus a dated EIA-861 county → balancing-authority snapshot.
+Rerun it after any importer changes project coordinates. `run_all.py` then tags each canonical site
+with the balancing authorities serving its county (`site_regions`, confidence 1/n where a county
+has n). It is a lookup that places a site on the grid, never a demand figure.
 
 Run the location import after the two source importers: those importers intentionally rebuild
 their project rows, while `import_locations.py` reapplies the separately reviewed, sourced

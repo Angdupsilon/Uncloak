@@ -35,6 +35,7 @@ const TOC = [
   ["kinds", "Documented, estimated, context"],
   ["scoring", "Evidence index"],
   ["mw", "Estimated power demand"],
+  ["grid", "Grid operator tag"],
   ["missing", "Missing data"],
   ["counting", "Avoiding double counting"],
   ["limits", "Coverage limits"],
@@ -202,6 +203,24 @@ export default async function Methodology() {
                 <p>
                   The estimate exists only where a construction cost is registered. Actual demand can be much higher or lower, and the estimate isn&apos;t a requested,
                   contracted or measured load.
+                </p>
+              </Section>
+
+              <Section id="grid" title="Grid operator tag">
+                <p>
+                  Each located site shows the balancing authority (grid operator) that serves its county, from the U.S. Energy Information
+                  Administration&apos;s Form EIA-861 service-territory table for 2024 (read through Catalyst Cooperative&apos;s PUDL mirror). The site&apos;s
+                  county comes from its coordinates, using the 2010 Census county boundaries EIA-861 still uses, or from the county named in its record when
+                  it has no coordinates. When the two disagree the site isn&apos;t tagged.
+                </p>
+                <p>
+                  Where EIA-861 lists several balancing authorities for a county, the tag reads &ldquo;one of N&rdquo;: EIA-861 doesn&apos;t say which one
+                  serves the site, so Uncloak doesn&apos;t pick one. The tag is a lookup that places a site on the grid. It isn&apos;t a measurement and adds
+                  no evidence points. EIA-861 has no service territory for Puerto Rico, so sites there read &ldquo;not published here&rdquo;.
+                </p>
+                <p>
+                  EIA-861 names a few counties only by a name they share with an independent city (Fairfax and Baltimore, for example). PUDL files those rows
+                  under the city. For a site in the county, Uncloak matches those rows by county name and says so on the site.
                 </p>
               </Section>
 

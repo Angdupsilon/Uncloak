@@ -9,9 +9,9 @@ from the record.
 > through `etl/import_im3_atlas.py` into `data/seed_national/` (1,368 sites; 14 Texas features held
 > for review), every project and site carries a `state`, and the dashboard, public pages and
 > Ask Uncloak use the same display for every state, with an **Area** picker. ERCOT comparisons
-> stay Texas-only, and Texas scores are unchanged. Still to do: role-based scoring (section 5),
-> grid-operator tags (`site_regions`), data-center load reports (Phase 2) and state records
-> (Phase 3). The EIA NAICS-518 plants were left out: only 3 of 17 match an atlas site within
+> stay Texas-only, and Texas scores are unchanged. Grid-operator tags (`site_regions`, EIA-861 2024
+> by county, 1/n confidence) are loaded for 1,460 of 1,530 sites. Still to do: role-based scoring
+> (section 5), data-center load reports (Phase 2) and state records (Phase 3). The EIA NAICS-518 plants were left out: only 3 of 17 match an atlas site within
 > 500 m with operating capacity.
 
 Companion documents: [`us-coverage.md`](us-coverage.md) (source research) and

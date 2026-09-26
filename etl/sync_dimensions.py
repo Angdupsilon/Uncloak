@@ -26,6 +26,7 @@ SOURCE_FILES = {
     "TDLR": ("tdlr_data_centers_*.csv", "https://www.tdlr.texas.gov/TABS/Search"),
     "ERCOT": ("ercot_large_load_queue.csv", "https://www.ercot.com/gridinfo/resource"),
     "OSM": ("im3_datacenter_atlas_*.geojson", "https://data.msdlive.org/records/65g71-a4731"),
+    "EIA861": ("eia861_ba_county_*_*.csv", "https://www.eia.gov/electricity/data/eia861/"),
 }
 # Location precision for atlas features, by the atlas's own feature type.
 ATLAS_PRECISION = {"building": "building", "campus": "campus", "point": "point"}

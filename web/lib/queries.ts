@@ -11,6 +11,7 @@ import type {
   Project,
   ProjectInfo,
   QueueTimeline,
+  RegionTag,
   QueueWeek,
   ScorePoint,
   ScoringConfig,
@@ -327,7 +328,7 @@ const PROJECT_INFO = `
          COALESCE(si.city,p.city) AS city, COALESCE(si.address,p.address) AS address,
          COALESCE(si.lat,p.lat) AS lat, COALESCE(si.lon,p.lon) AS lon, p.is_sample,
          si.site_id, si.name AS site_name, si.location_source_url, si.location_method,
-         si.location_precision, si.location_confidence,
+         si.location_precision, si.location_confidence, si.county_fips,
          st.status AS current_status, to_char(st.observed_at, 'YYYY-MM-DD') AS status_observed_at,
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color
@@ -342,7 +343,7 @@ const PROJECT_INFO = `
   ) st ON true`;
 
 export async function getTimeline(projectId: number, asOf: string): Promise<Timeline | null> {
-  const [info, scored, scores, events] = await Promise.all([
+  const [info, scored, scores, events, regions] = await Promise.all([
     query<ProjectInfo>(`${PROJECT_INFO} WHERE p.project_id = $1`, [projectId]),
     getProjects(asOf, { ids: [projectId] }),
     query<Omit<ScorePoint, "ts"> & { ts: Date }>(
@@ -355,11 +356,18 @@ export async function getTimeline(projectId: number, asOf: string): Promise<Time
        FROM evidence_events WHERE project_id = $2 AND ts < ${DAY_END} ORDER BY ts`,
       [asOf, projectId],
     ),
+    query<RegionTag>(
+      `SELECT r.region_key, g.name, r.confidence, r.method, r.county_fips, r.source_url
+       FROM project_sites ps JOIN site_regions r USING (site_id) JOIN grid_regions g USING (region_key)
+       WHERE ps.project_id = $1 ORDER BY g.name`,
+      [projectId],
+    ),
   ]);
   if (!info[0]) return null;
   return {
     as_of: asOf,
     project: { ...info[0], ...(scored[0] ?? {}) },
+    regions,
     scores: scores.map((s) => ({ ...s, ts: s.ts.toISOString() })),
     events: events.map((e) => ({ ...e, ts: e.ts.toISOString() })),
   };

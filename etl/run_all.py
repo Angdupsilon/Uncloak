@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import assign_regions
 import config
 import geocode
 import load_seed
@@ -22,7 +23,7 @@ from common import connect
 REQUIRED = ["parents", "entities", "projects", "evidence_events", "project_scores",
             "ercot_queue", "scoring_config", "sites", "project_sites", "project_status_history",
             "entity_parent_history", "capacity_observations", "ercot_project_links",
-            "source_refreshes", "weekly_project_state", "weekly_realistic_demand"]
+            "source_refreshes", "grid_regions", "site_regions", "weekly_project_state", "weekly_realistic_demand"]
 
 
 def schema_check() -> None:
@@ -35,7 +36,7 @@ def schema_check() -> None:
         if missing:
             raise SystemExit(
                 f"Missing database objects: {missing}.\n"
-                "Run db/004_data_quality.sql for an existing database, or db/001_schema.sql + "
+                "Run db/004_data_quality.sql and db/007_site_regions.sql for an existing database, or db/001_schema.sql + "
                 "db/002_timescale.sql + db/003_readonly_role.sql for a new database.")
         cur.execute("SELECT hypertable_name FROM timescaledb_information.hypertables")
         hts = {r[0] for r in cur.fetchall()}
@@ -95,8 +96,9 @@ def main() -> None:
         print("  skipped")
     else:
         geocode.main()
-    print("4/6 sync canonical sites, provenance, lifecycle and links")
+    print("4/6 sync canonical sites, provenance, lifecycle, links and grid-operator tags")
     sync_dimensions.main(directory)
+    assign_regions.main()
     print("5/6 backfill scores + 6/6 refresh continuous aggregate")
     score.backfill()
     summary()

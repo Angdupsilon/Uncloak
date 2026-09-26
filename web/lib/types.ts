@@ -15,6 +15,7 @@ export interface Project {
   location_method: string | null;
   location_precision: string | null;
   location_confidence: number | null;
+  county_fips: string | null;
   current_status: string | null;
   status_observed_at: string | null;
   sourced_mw: number | null;
@@ -120,9 +121,20 @@ export interface ProjectInfo {
   is_sample: boolean;
 }
 
+export interface RegionTag {
+  region_key: string;
+  name: string;
+  confidence: number;
+  method: string;
+  county_fips: string;
+  source_url: string;
+}
+
 export interface Timeline {
   as_of: string;
   project: ProjectInfo & Partial<Project>;
+  /** Balancing authorities EIA-861 lists for the site's county (lookup only; 1/n each). */
+  regions: RegionTag[];
   scores: ScorePoint[];
   events: EvidenceEvent[];
 }

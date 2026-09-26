@@ -44,7 +44,9 @@ CREATE TABLE sites (
   location_precision   text,
   location_confidence  double precision CHECK (location_confidence BETWEEN 0 AND 1),
   location_basis       text,
-  reviewed_at          date
+  reviewed_at          date,
+  county_fips          char(5),                -- 2010-vintage Census FIPS (as EIA-861 uses)
+  county_method        text                    -- spatial_join | record_county
 );
 
 CREATE TABLE project_sites (
@@ -145,6 +147,26 @@ CREATE TABLE scoring_config (
   backfill_start      date NOT NULL,
   computed_at         timestamptz NOT NULL DEFAULT now()
 );
+
+-- Grid-operator tag (lookup only; see db/007_site_regions.sql for the column notes).
+CREATE TABLE grid_regions (
+  region_key  text PRIMARY KEY,
+  kind        text NOT NULL CHECK (kind IN ('ba','rto','utility')),
+  name        text NOT NULL,
+  eia_id      int,
+  source_url  text NOT NULL
+);
+
+CREATE TABLE site_regions (
+  site_id      int  NOT NULL REFERENCES sites ON DELETE CASCADE,
+  region_key   text NOT NULL REFERENCES grid_regions,
+  method       text NOT NULL,
+  confidence   double precision NOT NULL CHECK (confidence > 0 AND confidence <= 1),
+  county_fips  char(5) NOT NULL,
+  source_url   text NOT NULL,
+  PRIMARY KEY (site_id, region_key)
+);
+CREATE INDEX site_regions_region_idx ON site_regions (region_key);
 
 -- Helpers for idempotent loading (not required by the spec, safe to keep).
 CREATE UNIQUE INDEX entities_llc_name_key ON entities (llc_name);

@@ -18,6 +18,7 @@ import psycopg
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import config  # noqa: E402  (loads the repo-root .env)
+from common import STATE_FIPS  # noqa: E402
 from score import backfill_dates, score_events  # noqa: E402
 
 conn = psycopg.connect(os.getenv("DATABASE_URL_RO") or config.database_url(), autocommit=True)
@@ -31,7 +32,7 @@ def check(area, name, ok, detail=""):
 # ---------- schema ----------
 expected_tables = {"parents","entities","projects","evidence_events","project_scores","ercot_queue","scoring_config",
                    "sites","project_sites","project_status_history","entity_parent_history",
-                   "capacity_observations","ercot_project_links","source_refreshes"}
+                   "capacity_observations","ercot_project_links","source_refreshes","grid_regions","site_regions"}
 tables = {r[0] for r in q("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'")}
 check("schema","GridSight tables present", expected_tables <= tables, f"missing={sorted(expected_tables-tables)}")
 check("schema","no unexpected tables", tables <= expected_tables, f"extra={sorted(tables-expected_tables)}")
@@ -48,7 +49,8 @@ fks = {(r[0], r[1]) for r in q("""select conrelid::regclass::text, confrelid::re
       where contype='f' and connamespace='public'::regnamespace""")}
 need_fk = {("entities","parents"),("projects","entities"),("evidence_events","projects"),("project_scores","projects"),
            ("project_sites","projects"),("project_sites","sites"),("project_status_history","projects"),
-           ("capacity_observations","projects"),("ercot_project_links","projects")}
+           ("capacity_observations","projects"),("ercot_project_links","projects"),
+           ("site_regions","sites"),("site_regions","grid_regions")}
 check("schema","foreign keys declared", need_fk <= fks, f"missing={sorted(need_fk-fks)}")
 
 # ---------- read-only role ----------
@@ -113,6 +115,22 @@ n = one("select count(*) from entities where (parent_id is null) <> (resolved_by
 check("values","parent and resolved_by set together", n == 0, f"inconsistent={n}")
 rb = q("select resolved_by, count(*) from entities group by 1 order by 1")
 check("values","resolved_by values allowed", all(r is None or r in config.RESOLVED_BY for r,_ in rb), str(rb))
+# ---------- grid-operator tags (lookup only) ----------
+bad = [r for r in q("select site_id, state, county_fips from sites where county_fips is not null") if STATE_FIPS.get(r[1]) != r[2][:2]]
+check("regions","site county FIPS inside the site's state", not bad, str(bad[:5]))
+n = one("select count(*) from sites where (county_fips is null) <> (county_method is null) or county_method not in ('spatial_join','record_county')")
+check("regions","county method set with every county FIPS", n == 0, f"bad={n}")
+bad = q("select site_id, sum(confidence) from site_regions group by 1 having abs(sum(confidence) - 1) > 1e-9")
+check("regions","each tagged site's operator confidences sum to 1 (1/n each)", not bad, str(bad[:5]))
+n = one("select count(*) from site_regions r where abs(r.confidence * (select count(*) from site_regions x where x.site_id = r.site_id) - 1) > 1e-9")
+check("regions","confidence = 1/n for n operators", n == 0, f"bad={n}")
+n = one("select count(*) from site_regions r join sites s using (site_id) where s.county_fips is null")
+check("regions","operator tags only on sites with a county", n == 0, f"bad={n}")
+n = one("select count(*) from site_regions where source_url !~ '^https://' or method !~ '^eia861_[0-9]{4}_county_(fips|name)$'")
+check("regions","operator tags cite EIA-861", n == 0, f"bad={n}")
+n = one("select count(*) from sites where lat is not null and county_fips is null")
+check("regions","located sites without a county (held for review / outside a county)", True, f"{n}")
+
 pii = one(r"""select count(*) from evidence_events where payload::text ~
              '(\(\d{3}\) ?\d{3}-\d{4}|\m\d{3}-\d{3}-\d{4}\M|[[:alnum:]._%+-]+@[[:alnum:].-]+\.[a-z]{2,})'""")
 check("privacy","no phone numbers or email addresses in payloads", pii == 0, f"hits={pii}")
