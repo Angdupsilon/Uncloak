@@ -7,11 +7,11 @@ export default function HowScoring({ config }: { config: ScoringConfig | null })
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
-      <button onClick={() => setOpen((o) => !o)} className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100">
+      <button onClick={() => setOpen((o) => !o)} className="shrink-0 rounded-lg border border-[var(--border-strong)] bg-white px-3.5 py-2 text-xs font-medium text-slate-700 shadow-[var(--shadow-1)] transition-colors hover:bg-slate-50">
         How scoring works
       </button>
       {open && (
-        <div className="absolute right-0 top-full z-[1200] mt-2 w-[440px] rounded-lg border border-slate-200 bg-white p-4 text-xs shadow-xl">
+        <div className="absolute right-0 top-full z-[1200] mt-2 w-[440px] rounded-xl border border-[var(--border-soft)] bg-white p-5 text-xs shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
           <div className="mb-2 flex items-baseline justify-between">
             <div className="text-sm font-semibold">Evidence index (uncalibrated)</div>
             <button onClick={() => setOpen(false)} className="text-slate-400 hover:text-slate-700" aria-label="Close">

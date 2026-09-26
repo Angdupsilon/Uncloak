@@ -30,27 +30,27 @@ function Card({
   accent?: string;
 }) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col rounded-lg border border-slate-200 bg-white px-4 py-3">
-      <div className="text-xs font-medium uppercase tracking-wide text-slate-500">{title}</div>
-      <div className="flex items-end justify-between gap-3">
-        <div className={`text-2xl font-semibold tabular-nums ${accent ?? "text-slate-900"}`}>{value}</div>
+    <div className="flex min-w-0 flex-1 flex-col rounded-xl border border-[var(--border-soft)] bg-white px-4 py-3.5 shadow-[var(--shadow-1)] transition-shadow hover:shadow-[var(--shadow-2)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-500">{title}</div>
+      <div className="mt-1.5 flex items-end justify-between gap-3">
+        <div className={`text-[28px] font-semibold leading-none tracking-tight tabular-nums ${accent ?? "text-slate-900"}`}>{value}</div>
         {children}
       </div>
-      {sub && <div className="truncate text-xs text-slate-600">{sub}</div>}
-      <div className="mt-1 truncate text-[11px] text-slate-400">{foot}</div>
+      {sub && <div className="mt-2 truncate text-xs leading-snug text-slate-600">{sub}</div>}
+      <div className="mt-auto truncate pt-2 text-[11px] text-slate-400">{foot}</div>
     </div>
   );
 }
 
 export default function SummaryBar({ summary, loading, error }: { summary: Summary | null; loading: boolean; error: string | null }) {
   if (error && !summary) {
-    return <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">Summary unavailable: {error}</div>;
+    return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">Summary unavailable: {error}</div>;
   }
   if (!summary) {
     return (
-      <div className="flex gap-3">
+      <div className="flex gap-4">
         {["ERCOT queue", "Found on map", "Evidence-weighted", "Shadow load"].map((t) => (
-          <div key={t} className="h-[92px] flex-1 animate-pulse rounded-lg border border-slate-200 bg-slate-100" />
+          <div key={t} className="h-[112px] flex-1 animate-pulse rounded-xl border border-[var(--border-soft)] bg-slate-100" />
         ))}
       </div>
     );
@@ -61,7 +61,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
   const spark = s.weekly.map((w) => ({ t: Date.parse(w.week), realistic: w.realistic_gw, found: w.found_gw }));
 
   return (
-    <div className={`flex gap-3 transition-opacity ${loading ? "opacity-70" : ""}`}>
+    <div className={`flex gap-4 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}>
       <Card
         title="ERCOT large-load queue"
         value={s.ercot ? fmtGW(s.ercot.gw_requested) : "No data"}

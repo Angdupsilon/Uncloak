@@ -50,7 +50,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-6 z-[1100] rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-slate-700"
+        className="fixed bottom-6 right-6 z-[1100] rounded-full bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow-[var(--shadow-2)] transition-all hover:-translate-y-0.5 hover:bg-slate-800"
       >
         ✦ Ask GridSight
       </button>
@@ -58,8 +58,8 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
   }
 
   return (
-    <div className="fixed bottom-5 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl">
-      <div className="flex items-center justify-between bg-slate-900 px-4 py-2.5 text-white">
+    <div className="fixed bottom-6 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[var(--border-soft)] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
+      <div className="flex items-center justify-between bg-slate-900 px-4 py-3 text-white">
         <div className="text-sm font-semibold">✦ Ask GridSight</div>
         <button onClick={() => setOpen(false)} className="text-lg leading-none text-slate-300 hover:text-white" aria-label="Collapse">
           –
@@ -72,7 +72,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
               Answers come only from GridSight&apos;s database as of the selected date. Try:
             </div>
             {EXAMPLES.map((q) => (
-              <button key={q} onClick={() => ask(q)} className="block w-full rounded-md border border-slate-200 px-3 py-2 text-left text-xs text-slate-700 hover:bg-slate-50">
+              <button key={q} onClick={() => ask(q)} className="block w-full rounded-lg border border-[var(--border-soft)] px-3 py-2 text-left text-xs text-slate-700 transition-colors hover:border-[var(--border-strong)] hover:bg-slate-50">
                 {q}
               </button>
             ))}
@@ -80,7 +80,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
         )}
         {msgs.map((m, i) => (
           <div key={i} className={m.role === "user" ? "text-right" : ""}>
-            <div className={`inline-block max-w-[90%] whitespace-pre-wrap rounded-lg px-3 py-2 text-left ${m.role === "user" ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-900"}`}>
+            <div className={`inline-block max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-left leading-relaxed ${m.role === "user" ? "rounded-br-md bg-slate-900 text-white" : "rounded-bl-md bg-slate-100 text-slate-900"}`}>
               {m.text}
             </div>
             {m.tools && m.tools.length > 0 && (
@@ -98,15 +98,15 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
           e.preventDefault();
           ask(input);
         }}
-        className="flex gap-2 border-t border-slate-200 p-2"
+        className="flex gap-2 border-t border-[var(--border-soft)] p-2.5"
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about projects, parents, ERCOT…"
-          className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
+          className="flex-1 rounded-lg border border-[var(--border-strong)] px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-teal-600"
         />
-        <button disabled={busy || !input.trim()} className="rounded-md bg-slate-900 px-3 text-sm font-semibold text-white disabled:opacity-40">
+        <button disabled={busy || !input.trim()} className="rounded-lg bg-slate-900 px-3.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 disabled:opacity-35">
           Ask
         </button>
       </form>

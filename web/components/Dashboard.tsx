@@ -49,25 +49,31 @@ export default function Dashboard({ today }: { today: string }) {
   }, []);
 
   return (
-    <div className="flex h-screen min-w-[1024px] flex-col gap-3 bg-slate-50 p-3 text-slate-900">
-      <header className="flex items-center justify-between">
-        <div className="flex items-baseline gap-3">
-          <h1 className="text-lg font-bold tracking-tight">GridSight</h1>
-          <span className="text-sm text-slate-500">Texas data-center load: what ERCOT is asked for vs. what public records can find</span>
+    <div className="flex h-screen min-w-[960px] flex-col gap-4 p-5 text-slate-900">
+      <header className="flex items-center justify-between gap-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <span aria-hidden className="h-7 w-1.5 shrink-0 rounded-full bg-teal-700" />
+          <div className="min-w-0">
+            <h1 className="text-xl font-semibold leading-none tracking-tight">GridSight</h1>
+            <p className="mt-1 truncate text-[13px] leading-none text-slate-500">
+              Texas data-center load: what ERCOT is asked for vs. what public records can find
+            </p>
+          </div>
         </div>
         <HowScoring config={config.data} />
       </header>
 
       {showingSample && (
-        <div className="rounded-md border border-yellow-300 bg-yellow-100 px-4 py-2 text-sm font-semibold text-yellow-900">
-          Showing SAMPLE data. Names, dates, costs and ERCOT figures are fake placeholders.
+        <div className="flex items-center gap-2.5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900">
+          <span className="rounded bg-amber-200/70 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide">Sample</span>
+          <span>Names, dates, costs and ERCOT figures on screen are fake placeholders.</span>
         </div>
       )}
 
       <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
 
-      <main className="flex min-h-0 flex-1 gap-3">
-        <div className="relative min-w-0 flex-1">
+      <main className="flex min-h-0 flex-1 gap-4">
+        <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
           <ProjectMap
             projects={projectList}
             selectedId={selectedId}
@@ -78,24 +84,31 @@ export default function Dashboard({ today }: { today: string }) {
             loading={projects.loading && !projects.data}
           />
           {projects.error && (
-            <div className="absolute left-3 top-3 z-[1000] rounded bg-red-50 px-3 py-2 text-xs text-red-700 shadow">Projects unavailable: {projects.error}</div>
+            <div className="absolute left-3 top-3 z-[1000] rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 shadow-[var(--shadow-1)]">
+              Projects unavailable: {projects.error}
+            </div>
           )}
           {highlight && (
             <button
               onClick={() => setHighlight(null)}
-              className="absolute left-14 top-3 z-[1000] rounded-full bg-sky-700 px-3 py-1 text-xs font-semibold text-white shadow hover:bg-sky-800"
+              className="absolute left-14 top-3 z-[1000] flex items-center gap-2 rounded-full bg-teal-700 py-1.5 pl-3.5 pr-3 text-xs font-medium text-white shadow-[var(--shadow-2)] transition-colors hover:bg-teal-800"
             >
-              Ask filter: {highlight.length} project(s) · clear ×
+              Filtered to {highlight.length} project{highlight.length === 1 ? "" : "s"}
+              <span aria-hidden className="text-sm leading-none text-teal-200">
+                ×
+              </span>
             </button>
           )}
         </div>
-        <aside className="w-[400px] shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white">
+        <aside className="w-[400px] shrink-0 overflow-hidden rounded-xl border border-[var(--border-soft)] bg-white shadow-[var(--shadow-1)]">
           <ProjectPanel projectId={selectedId} asOf={asOf} factors={config.data?.factors ?? []} onClose={() => setSelectedId(null)} />
         </aside>
       </main>
 
-      <footer className="flex items-center gap-6 rounded-lg border border-slate-200 bg-white px-4 py-2 pr-48">
+      {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
+      <footer className="flex items-center gap-8 rounded-xl border border-[var(--border-soft)] bg-white px-5 py-3 pr-[420px] shadow-[var(--shadow-1)]">
         <DateSlider start={config.data?.backfill_start ?? null} end={today} value={asOf} onChange={setAsOf} />
+        <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
         <div className="max-w-[50%]">
           <ParentFilter
             parents={parents.data?.parents ?? null}
