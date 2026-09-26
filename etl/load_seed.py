@@ -1,6 +1,7 @@
 """Load data/seed/*.csv (or data/sample/*.csv) into the database.
 
-Order: parents -> entities -> projects -> evidence_events -> ercot_queue.
+Order: parents -> entities -> projects -> evidence_events -> load reports (dc_load_reports.csv, and
+the older ercot_queue.csv format, which loads as ERCOT large-load rows).
 Names are resolved to IDs. Unknown event_type/source values fail loudly.
 Cells containing <<FILL>> are treated as missing; rows missing a required
 field are skipped with a warning so a partially filled seed still loads.
@@ -54,7 +55,7 @@ def is_sample_dir(directory: Path) -> bool:
 
 def reset_all(cur) -> None:
     print("Resetting all GridSight tables")
-    cur.execute("TRUNCATE project_scores, evidence_events, ercot_queue")
+    cur.execute("TRUNCATE project_scores, evidence_events, dc_load_reports")
     cur.execute("TRUNCATE projects, entities, parents RESTART IDENTITY CASCADE")
 
 
@@ -69,7 +70,7 @@ def purge_sample(cur) -> None:
                 "AND NOT EXISTS (SELECT 1 FROM projects p WHERE p.entity_id = e.entity_id)")
     cur.execute("DELETE FROM parents pa WHERE name LIKE 'SAMPLE %%' "
                 "AND NOT EXISTS (SELECT 1 FROM entities e WHERE e.parent_id = pa.parent_id)")
-    cur.execute("DELETE FROM ercot_queue WHERE source_url = 'SAMPLE'")
+    cur.execute("DELETE FROM dc_load_reports WHERE source_url = 'SAMPLE'")
     if ids:
         print(f"  purged {len(ids)} SAMPLE projects (loading non-sample data)")
 
@@ -216,24 +217,63 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str], origin: str =
     return len(rows)
 
 
+ERCOT_REGION = ("ERCO", "ba", "Electric Reliability Council of Texas, Inc.")
+LOAD_METRICS = {"requested", "approved", "observed_peak", "committed", "contracted", "forecast", "forecast_adjustment"}
+LOAD_SCOPES = {"data_centers", "data_centers_and_crypto", "large_loads_all"}
+
+
+def upsert_region(cur, key: str, kind: str, name: str, url: str) -> None:
+    cur.execute("""INSERT INTO grid_regions (region_key, kind, name, source_url) VALUES (%s, %s, %s, %s)
+                   ON CONFLICT (region_key) DO NOTHING""", (key, kind, name, url))
+
+
 def load_ercot(cur, df: pd.DataFrame) -> int:
+    """The older ercot_queue.csv format (GW columns), kept for data/sample."""
     n = 0
     for i, row in df.iterrows():
         ts_raw = clean(row.get("ts"))
         if not ts_raw:
             warn(f"ercot_queue.csv row {i + 2}: ts missing or <<FILL>>, skipped")
             continue
-        vals = {c: row.get(c) for c in ("gw_requested", "gw_approved", "gw_observed_peak")}
+        vals = {"requested": row.get("gw_requested"), "approved": row.get("gw_approved"), "observed_peak": row.get("gw_observed_peak")}
         if any(is_fill(v) for v in vals.values()):
             warn(f"ercot_queue.csv row {i + 2}: contains <<FILL>> values, skipped")
             continue
         ts = pd.Timestamp(ts_raw)
         ts = (ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")).to_pydatetime()
-        cur.execute("DELETE FROM ercot_queue WHERE ts = %s", (ts,))
-        cur.execute(
-            "INSERT INTO ercot_queue (ts, gw_requested, gw_approved, gw_observed_peak, source_url) VALUES (%s, %s, %s, %s, %s)",
-            (ts, *(to_float(v) for v in vals.values()), clean(row.get("source_url"))),
-        )
+        url = clean(row.get("source_url")) or "SAMPLE"
+        upsert_region(cur, *ERCOT_REGION, url)
+        cur.execute("DELETE FROM dc_load_reports WHERE ts = %s AND region_key = 'ERCO' AND source_key = 'ERCOT'", (ts,))
+        for metric, gw in vals.items():
+            if to_float(gw) is not None:
+                cur.execute("""INSERT INTO dc_load_reports (ts, region_key, metric, scope, value_mw, source_key, source_url, quote)
+                               VALUES (%s, 'ERCO', %s, 'large_loads_all', %s, 'ERCOT', %s, %s)""",
+                            (ts, metric, round(to_float(gw) * 1000, 6), url, "ercot_queue.csv (GW)"))
+        n += 1
+    return n
+
+
+def load_reports(cur, df: pd.DataFrame) -> int:
+    """dc_load_reports.csv (written by etl/import_load_reports.py). Rows of each source in the file replace
+    that source's rows."""
+    if df.empty:
+        return 0
+    bad = df[~df["metric"].isin(LOAD_METRICS) | ~df["scope"].isin(LOAD_SCOPES)]
+    if not bad.empty:
+        raise SystemExit(f"dc_load_reports.csv: unknown metric/scope in rows {[i + 2 for i in bad.index]}")
+    for source in sorted(set(df["source_key"])):
+        cur.execute("DELETE FROM dc_load_reports WHERE source_key = %s", (source,))
+    n = 0
+    for _, row in df.iterrows():
+        upsert_region(cur, row["region_key"], row["region_kind"], row["region_name"], row["source_url"])
+        ts = pd.Timestamp(row["ts"]).tz_localize("UTC").to_pydatetime()
+        cur.execute("""INSERT INTO dc_load_reports (ts, region_key, metric, scope, value_mw, forecast_year, stage, dc_share_pct,
+                         dc_share_quote, source_key, source_url, document, quote)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (ts, row["region_key"], row["metric"], row["scope"], to_float(row["value_mw"]),
+                     int(row["forecast_year"]) if clean(row.get("forecast_year")) else None, clean(row.get("stage")),
+                     to_float(row.get("dc_share_pct")), clean(row.get("dc_share_quote")), row["source_key"], row["source_url"],
+                     clean(row.get("document")), row["quote"]))
         n += 1
     return n
 
@@ -255,6 +295,7 @@ def main(directory: Path, reset: bool = False, purge: bool = True) -> None:
         print(f"  projects: {n}")
         print(f"  events:   {load_events(cur, read_csv(directory, 'evidence_events.csv'), skipped, origin_for(directory))}")
         print(f"  ercot:    {load_ercot(cur, read_csv(directory, 'ercot_queue.csv'))}")
+        print(f"  load reports: {load_reports(cur, read_csv(directory, 'dc_load_reports.csv'))}")
 
 
 if __name__ == "__main__":

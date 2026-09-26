@@ -181,6 +181,42 @@ export interface QueueWeek {
   projects_new: number;
 }
 
+export type LoadScope = "data_centers" | "data_centers_and_crypto" | "large_loads_all";
+
+/** One figure from a large-load / data-center load report (dc_load_reports). */
+export interface LoadReport {
+  ts: string;
+  region_key: string;
+  metric: string;
+  scope: LoadScope;
+  value_mw: number;
+  forecast_year: number | null;
+  stage: string | null;
+  dc_share_pct: number | null;
+  dc_share_quote: string | null;
+  source_key: string;
+  source_url: string;
+  document: string | null;
+  quote: string;
+}
+
+export interface LoadRegion {
+  region_key: string;
+  name: string;
+  kind: string;
+  source_key: string;
+  rows: number;
+  first_ts: string;
+  last_ts: string;
+}
+
+export interface LoadReports {
+  as_of: string;
+  regions: LoadRegion[];
+  region: string;
+  rows: LoadReport[];
+}
+
 export interface QueueTimeline {
   as_of: string;
   weeks: QueueWeek[];

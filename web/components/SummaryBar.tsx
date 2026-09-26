@@ -1,8 +1,11 @@
 "use client";
+import { useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { fmtDate, fmtGW, fmtMonth, isLink } from "@/lib/format";
 import { STATE_NAMES } from "@/lib/geo";
-import type { Summary } from "@/lib/types";
+import { useJson } from "@/lib/useJson";
+import type { LoadReports, Summary } from "@/lib/types";
+import RegionReports, { RegionSelect } from "./RegionReports";
 
 /** Queue colours. Black is the only conversion colour in the design system, so
  *  "real" load is ink and phantom load is the empty canvas it sits on. */
@@ -117,6 +120,9 @@ export default function SummaryBar({
   /** USPS code of the state in focus on the map, or null for the whole country. */
   region?: string | null;
 }) {
+  // ERCOT keeps the reconciliation with Texas records; any other region shows its load report as published.
+  const [reportRegion, setReportRegion] = useState("ERCO");
+  const reports = useJson<LoadReports>(summary ? `/api/load-reports?region=${reportRegion}&as_of=${summary.as_of}` : null);
   if (error && !summary) {
     return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-[#5e5e5e]">Summary unavailable: {error}</div>;
   }
@@ -143,12 +149,21 @@ export default function SummaryBar({
     <div
       className={`ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}
     >
-      {/* ERCOT is the Texas grid; no other grid operator's data-center load report is loaded yet. */}
+      <RegionSelect regions={reports.data?.regions ?? []} value={reportRegion} onChange={setReportRegion} />
+      {reportRegion !== "ERCO" ? (
+        reports.data && reports.data.region === reportRegion ? (
+          <RegionReports data={reports.data} compact />
+        ) : (
+          <p className="text-[12px] text-[#5e5e5e]">{reports.error ? `Load report unavailable: ${reports.error}` : "Loading…"}</p>
+        )
+      ) : (
+      <>
+      {/* ERCOT is the Texas grid: its queue is compared with Texas projects that have a public record. */}
       <div className="rounded-lg bg-[#f3f3f3] px-3 py-2 text-[12px] leading-4 text-[#5e5e5e]">
         {region && region !== "TX" ? (
           <>
-            <span className="font-medium text-black">Texas figures.</span> No grid-operator data-center report is loaded for{" "}
-            {STATE_NAMES[region] ?? region}, so this panel shows ERCOT and Texas projects.
+            <span className="font-medium text-black">Texas figures.</span> The ERCOT comparison covers Texas projects. Pick another load report above
+            for {STATE_NAMES[region] ?? region}&apos;s grid; those are shown as published.
           </>
         ) : (
           <>
@@ -268,6 +283,8 @@ export default function SummaryBar({
         )}
         Records {fmtDate(s.as_of)} (TDLR, Comptroller, TCEQ)
       </footer>
+      </>
+      )}
     </div>
   );
 }

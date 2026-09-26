@@ -30,7 +30,7 @@ def check(area, name, ok, detail=""):
     results.append((area, name, "PASS" if ok else "FAIL", detail))
 
 # ---------- schema ----------
-expected_tables = {"parents","entities","projects","evidence_events","project_scores","ercot_queue","scoring_config",
+expected_tables = {"parents","entities","projects","evidence_events","project_scores","dc_load_reports","scoring_config",
                    "sites","project_sites","project_status_history","entity_parent_history",
                    "capacity_observations","ercot_project_links","source_refreshes","grid_regions","site_regions"}
 tables = {r[0] for r in q("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'")}
@@ -39,7 +39,7 @@ check("schema","no unexpected tables", tables <= expected_tables, f"extra={sorte
 cols = {r[0] for r in q("select column_name from information_schema.columns where table_name='projects'")}
 check("schema","projects has GridSight columns", {"project_id","entity_id","is_sample","lat","lon"} <= cols, str(sorted(cols)))
 hts = {r[0] for r in q("select hypertable_name from timescaledb_information.hypertables")}
-check("timescale","hypertables", hts == {"evidence_events","project_scores","ercot_queue"}, str(sorted(hts)))
+check("timescale","hypertables", hts == {"evidence_events","project_scores","dc_load_reports"}, str(sorted(hts)))
 cagg = q("select view_name, materialized_only from timescaledb_information.continuous_aggregates")
 check("timescale","continuous aggregate weekly_project_state", [c[0] for c in cagg] == ["weekly_project_state"], str(cagg))
 check("timescale","view weekly_realistic_demand", one("select count(*) from information_schema.views where table_name='weekly_realistic_demand'") == 1)
@@ -58,7 +58,7 @@ check("security","connected as gridsight_ro", one("select current_user") == "gri
 check("security","statement_timeout = 3s", one("select current_setting('statement_timeout')") == "3s")
 writable = [t for t in expected_tables if one("select has_table_privilege(current_user, %s, 'INSERT,UPDATE,DELETE,TRUNCATE')", "public."+t)]
 check("security","read-only role cannot write any table", not writable, str(writable))
-readable = [t for t in list(expected_tables)+["weekly_project_state","weekly_realistic_demand"] if not one("select has_table_privilege(current_user, %s, 'SELECT')", "public."+t)]
+readable = [t for t in list(expected_tables)+["weekly_project_state","weekly_realistic_demand","ercot_queue"] if not one("select has_table_privilege(current_user, %s, 'SELECT')", "public."+t)]
 check("security","read-only role can read all tables/views", not readable, str(readable))
 
 # ---------- referential integrity ----------
@@ -208,6 +208,21 @@ er = q("select ts::date, gw_requested, gw_approved, gw_observed_peak, source_url
 bad = [r for r in er if (r[1] is not None and r[2] is not None and r[2] > r[1]) or (r[2] is not None and r[3] is not None and r[3] > r[2])]
 check("ercot","observed <= approved <= requested where stated", not bad, str(bad))
 check("ercot","every row links to an ercot.com document", len(er) > 0 and all((r[4] or "").startswith("https://www.ercot.com/") for r in er), f"rows={len(er)}")
+
+# ---------- load reports (data-center scope) ----------
+n = one("select count(*) from dc_load_reports where source_url !~ '^https://' or coalesce(quote,'') = ''")
+check("load reports","every figure has an https source and its quote", n == 0, f"bad={n}")
+n = one("select count(*) from dc_load_reports where scope = 'large_loads_all' and source_key <> 'ERCOT'")
+check("load reports","large_loads_all only where a report's data-center share can be stated (ERCOT)", n == 0, f"bad={n}")
+n = one("select count(*) from dc_load_reports where dc_share_pct is not null and dc_share_quote !~ '%'")
+check("load reports","a data-center share always carries its quote", n == 0, f"bad={n}")
+bad = q("""select source_key, region_key, ts::date, count(distinct scope) from dc_load_reports
+          where source_key = 'GA_PSC' group by 1,2,3 having count(distinct scope) > 1""")
+check("load reports","one scope per publisher report (never mixed)", not bad, str(bad))
+n = one("select count(*) from dc_load_reports where metric in ('forecast','forecast_adjustment') and forecast_year is null")
+check("load reports","forecasts name their year", n == 0, f"bad={n}")
+view = q("select count(*), count(gw_requested), count(gw_approved), count(gw_observed_peak) from ercot_queue")[0]
+check("load reports","ercot_queue view rows", view[0] > 0, f"rows/requested/approved/peak={view}")
 
 # ---------- seed parity ----------
 # data/seed always loads; data/seed_national is counted only when the database holds its rows.

@@ -11,6 +11,9 @@ import type {
   Project,
   ProjectInfo,
   QueueTimeline,
+  LoadRegion,
+  LoadReport,
+  LoadReports,
   RegionTag,
   QueueWeek,
   ScorePoint,
@@ -296,6 +299,44 @@ export async function getQueueTimeline(asOf: string): Promise<QueueTimeline> {
     as_of: asOf,
     weeks,
     ercot_reports: ercotRows.map((e) => ({ ...e, gw_requested: Number(e.gw_requested), ts: e.ts.toISOString() })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Load reports by region (dc_load_reports). Each figure keeps its own publisher, scope and date;
+// figures from different publishers are never added together.
+// ---------------------------------------------------------------------------
+
+export const DEFAULT_LOAD_REGION = "ERCO";
+
+export async function getLoadReports(asOf: string, region: string | null): Promise<LoadReports> {
+  const regions = await query<Omit<LoadRegion, "first_ts" | "last_ts"> & { first_ts: Date; last_ts: Date }>(
+    `SELECT r.region_key, g.name, g.kind, MIN(r.source_key) AS source_key, COUNT(*)::int AS rows,
+            MIN(r.ts) AS first_ts, MAX(r.ts) AS last_ts
+     FROM dc_load_reports r JOIN grid_regions g USING (region_key)
+     WHERE r.ts < ${DAY_END}
+     GROUP BY r.region_key, g.name, g.kind
+     ORDER BY (r.region_key <> '${DEFAULT_LOAD_REGION}'), MIN(r.source_key), g.name`,
+    [asOf],
+  );
+  const key = region && regions.some((r) => r.region_key === region) ? region : (regions[0]?.region_key ?? DEFAULT_LOAD_REGION);
+  const rows = await query<Omit<LoadReport, "ts"> & { ts: Date }>(
+    `SELECT ts, region_key, metric, scope, value_mw, forecast_year, stage, dc_share_pct, dc_share_quote,
+            source_key, source_url, document, quote
+     FROM dc_load_reports WHERE region_key = $2 AND ts < ${DAY_END}
+     ORDER BY metric, forecast_year NULLS FIRST, ts, stage`,
+    [asOf, key],
+  );
+  return {
+    as_of: asOf,
+    regions: regions.map((r) => ({ ...r, first_ts: r.first_ts.toISOString(), last_ts: r.last_ts.toISOString() })),
+    region: key,
+    rows: rows.map((r) => ({
+      ...r,
+      ts: r.ts.toISOString(),
+      value_mw: Number(r.value_mw),
+      dc_share_pct: r.dc_share_pct == null ? null : Number(r.dc_share_pct),
+    })),
   };
 }
 

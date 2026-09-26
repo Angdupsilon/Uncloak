@@ -69,7 +69,10 @@ idempotent migration once: `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/004_da
 For a database created before national coverage (no `projects.state` column), run
 `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/006_national.sql -f db/004_queue_timeline.sql`.
 For one created before grid-operator tags (no `site_regions` table), run
-`psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/007_site_regions.sql`.
+`psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/007_site_regions.sql`. For one created before load
+reports (`ercot_queue` still a table), run
+`psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/008_load_reports.sql -f db/004_queue_timeline.sql`, then
+reload `data/seed` for the quotes.
 
 Then set `DATABASE_URL_RO` to the same connection string with user `gridsight_ro` and that password.
 
@@ -103,6 +106,7 @@ python etl/import_il_dceo.py                        # Illinois DCEO data-center 
 python etl/import_mn_deed.py                        # Minnesota DEED qualified data centers -> data/seed_states/mn_deed/
 python etl/import_in_iedc.py                        # Indiana IEDC data-center exemption contracts -> data/seed_states/in_iedc/
 python etl/import_wi_dor.py                         # Wisconsin certified data centers -> data/seed_states/wi_dor/
+python etl/import_load_reports.py                   # ERCOT, Georgia Power, PJM load reports -> data/seed/dc_load_reports.csv
 python etl/run_all.py --dir data/seed --dir data/seed_national --dir data/seed_states/va_deq \
   --dir data/seed_states/il_dceo --dir data/seed_states/mn_deed --dir data/seed_states/in_iedc --dir data/seed_states/wi_dor
 ```
@@ -216,7 +220,8 @@ one event by then.
 
 ## Tiger Data / TimescaleDB features used
 
-- **Hypertables**: `evidence_events`, `project_scores` and `ercot_queue` are hypertables on `ts`.
+- **Hypertables**: `evidence_events`, `project_scores` and `dc_load_reports` are hypertables on `ts`
+  (`ercot_queue` is a view over the ERCOT rows of `dc_load_reports`).
 - **Continuous aggregate**: `weekly_project_state` rolls `project_scores` up by week with
   **`time_bucket('7 days', ts)`** and **`last(value, ts)`**. It is refreshed with
   `refresh_continuous_aggregate` after each backfill.
@@ -299,6 +304,7 @@ the read-only role.
 - `GET /api/summary`: ERCOT queue (latest row on or before `as_of`), `found_gw`, `realistic_gw`, `shadow_gw`, `projects`, `weekly[]`
 - `GET /api/projects?parent=&county=&min_prob=&max_prob=&min_cost=&has_permit=&ids=`
 - `GET /api/projects/[id]/timeline`: project, score history and events up to `as_of`
+- `GET /api/load-reports?region=&as_of=`: the regions with a load report, and one region's figures (ERCOT by default), each with its scope (`data_centers`, `data_centers_and_crypto`, `large_loads_all`), publisher, date and quote. Never summed across publishers
 - `GET /api/queue-timeline`: weekly ERCOT queue (carried forward from the latest report) vs. found and evidence-weighted GW, shadow load, week-over-week change, projects up/new, plus raw ERCOT report points
 - `GET /api/parents`: MW total / evidence-weighted / in verified projects, by parent
 - `GET /api/config`: scoring weights, `$ per MW`, tier thresholds, backfill start

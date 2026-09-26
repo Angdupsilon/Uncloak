@@ -21,7 +21,7 @@ import sync_dimensions
 from common import connect
 
 REQUIRED = ["parents", "entities", "projects", "evidence_events", "project_scores",
-            "ercot_queue", "scoring_config", "sites", "project_sites", "project_status_history",
+            "dc_load_reports", "ercot_queue", "scoring_config", "sites", "project_sites", "project_status_history",
             "entity_parent_history", "capacity_observations", "ercot_project_links",
             "source_refreshes", "grid_regions", "site_regions", "weekly_project_state", "weekly_realistic_demand"]
 
@@ -36,11 +36,11 @@ def schema_check() -> None:
         if missing:
             raise SystemExit(
                 f"Missing database objects: {missing}.\n"
-                "Run db/004_data_quality.sql and db/007_site_regions.sql for an existing database, or db/001_schema.sql + "
+                "Run db/004_data_quality.sql, db/007_site_regions.sql and db/008_load_reports.sql for an existing database, or db/001_schema.sql + "
                 "db/002_timescale.sql + db/003_readonly_role.sql for a new database.")
         cur.execute("SELECT hypertable_name FROM timescaledb_information.hypertables")
         hts = {r[0] for r in cur.fetchall()}
-        for t in ("evidence_events", "project_scores", "ercot_queue"):
+        for t in ("evidence_events", "project_scores", "dc_load_reports"):
             if t not in hts:
                 print(f"  WARN {t} is not a hypertable (did db/002_timescale.sql run?)")
         cur.execute("SELECT to_regclass('queue_timeline')")

@@ -128,13 +128,6 @@ CREATE TABLE project_scores (
   factors      jsonb NOT NULL           -- {"factor_key": true/false, ...}
 );
 
-CREATE TABLE ercot_queue (
-  ts                timestamptz NOT NULL,
-  gw_requested      double precision,
-  gw_approved       double precision,
-  gw_observed_peak  double precision,
-  source_url        text
-);
 
 -- Addition to the spec schema: the scoring configuration used by the most recent
 -- backfill (written by etl/score.py). The web app reads this for the
@@ -151,7 +144,7 @@ CREATE TABLE scoring_config (
 -- Grid-operator tag (lookup only; see db/007_site_regions.sql for the column notes).
 CREATE TABLE grid_regions (
   region_key  text PRIMARY KEY,
-  kind        text NOT NULL CHECK (kind IN ('ba','rto','utility')),
+  kind        text NOT NULL CHECK (kind IN ('ba','rto','zone','utility')),
   name        text NOT NULL,
   eia_id      int,
   source_url  text NOT NULL
@@ -167,6 +160,40 @@ CREATE TABLE site_regions (
   PRIMARY KEY (site_id, region_key)
 );
 CREATE INDEX site_regions_region_idx ON site_regions (region_key);
+
+-- Large-load and data-center load reports by region (see db/008_load_reports.sql for column notes).
+CREATE TABLE dc_load_reports (
+  ts             timestamptz NOT NULL,
+  region_key     text NOT NULL REFERENCES grid_regions,
+  metric         text NOT NULL CHECK (metric IN ('requested','approved','observed_peak','committed','contracted',
+                                                 'forecast','forecast_adjustment')),
+  scope          text NOT NULL CHECK (scope IN ('data_centers','data_centers_and_crypto','large_loads_all')),
+  value_mw       double precision NOT NULL,
+  forecast_year  int,
+  stage          text,
+  dc_share_pct   double precision CHECK (dc_share_pct > 0 AND dc_share_pct <= 100),
+  dc_share_quote text,
+  source_key     text NOT NULL,
+  source_url     text NOT NULL,
+  document       text,
+  quote          text NOT NULL,
+  CHECK ((dc_share_pct IS NULL) = (dc_share_quote IS NULL)),
+  CHECK (dc_share_pct IS NULL OR scope = 'large_loads_all')
+);
+CREATE UNIQUE INDEX dc_load_reports_key
+  ON dc_load_reports (ts, region_key, metric, scope, COALESCE(forecast_year, 0), COALESCE(stage, ''), source_key);
+CREATE INDEX dc_load_reports_region_idx ON dc_load_reports (region_key, metric, ts DESC);
+
+-- Compatibility view: the ERCOT queue in its original shape (GW).
+CREATE VIEW ercot_queue AS
+SELECT ts,
+       MAX(value_mw) FILTER (WHERE metric = 'requested')     / 1000.0 AS gw_requested,
+       MAX(value_mw) FILTER (WHERE metric = 'approved')      / 1000.0 AS gw_approved,
+       MAX(value_mw) FILTER (WHERE metric = 'observed_peak') / 1000.0 AS gw_observed_peak,
+       MIN(source_url)                                                AS source_url
+FROM dc_load_reports
+WHERE region_key = 'ERCO' AND source_key = 'ERCOT' AND scope = 'large_loads_all'
+GROUP BY ts;
 
 -- Helpers for idempotent loading (not required by the spec, safe to keep).
 CREATE UNIQUE INDEX entities_llc_name_key ON entities (llc_name);

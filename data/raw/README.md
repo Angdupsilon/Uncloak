@@ -344,6 +344,68 @@ Mount Pleasant) is a street, not an address.
   business account and year, with no site or address. A business can operate several sites, so rows
   can't become sites without inventing site boundaries.
 
+## Load reports: `data/seed/dc_load_reports.csv`
+
+`etl/import_load_reports.py` builds one table of large-load and data-center load figures by region
+from the three sources below. Every row keeps its publisher, document, as-of date and the quote or
+derivation behind it, and a **scope**:
+
+- `data_centers`: the publisher attributes the figure to data centers.
+- `data_centers_and_crypto`: the publisher's own category combines data centers and crypto mining
+  (Georgia Power from Q1 2026). Always labeled as such, never shown as data centers alone.
+- `large_loads_all`: every large load. `dc_share_pct` is filled only where the same document states the
+  data-center share (ERCOT, 2026-03-26 ~87% and June 2026 ~90%); earlier ERCOT reports have none.
+
+Nothing is summed across publishers or regions. `ercot_queue` is now a view over the ERCOT rows, so the
+queue timeline and `/api/summary` read exactly what they read before.
+
+### ERCOT
+
+The existing `ercot_large_load_queue.csv` rows, one row per stated figure (requested, approved,
+observed peak): 67 rows from 27 reports.
+
+### `ga_psc_large_load/`
+
+Georgia Power's quarterly Large Load Economic Development Reports, Georgia PSC Docket 55378 (and 56002),
+filed 2024-08-16 through 2026-05-15 (`filings.csv` lists each filing, its period end and document link).
+Each filing's public-disclosure XLSX attachment was downloaded on 2026-09-26; project names, cities,
+counties and coordinates are redacted, while segment, project stage, announced load and load ramp are
+public. For Q3 and Q4 2025 the revised attachments (filed 2026-03-04) are used; their Main sheets are
+identical to the originals.
+
+Per quarter, the rows whose Segment is the data-center segment are summed, by stage:
+
+- `requested`: all stages (Technical Review, Request for Service, Contract for Electric Service)
+- `committed`: Contract for Electric Service + Request for Service, Georgia Power's own definition of
+  commitments ("Contracts for Electric Service plus Requests for Service", Q1 2026 report)
+- `contracted`: Contract for Electric Service only
+
+The segment is labeled "Data Center" / "Data Centers" through Q4 2025 and "Data Center/Crypto" in Q1 2026,
+so Q1 2026 is stored as `data_centers_and_crypto` and the UI draws it as its own series. Footnote marks on
+stage names ("Contract for Electric Service1", "**") are dropped. As a check, the Q1 2026 attachment's
+all-segment total (73,130 MW) matches the report's "73,100 MW represent large load economic development
+projects".
+
+### `pjm_2026_load_forecast/`
+
+2026 PJM Load Forecast Report (posted 2026-01-14): the tables workbook, and the PSE&G and Dominion
+adjustment documents, downloaded 2026-09-26 (the report PDF itself is cited, not stored). The report
+(p.5, "Load Adjustments") lists the zones adjusted for "Growth in data center load": AEP, ATSI, APS, BGE,
+COMED, DAYTON, DLCO, JCPL, METED, PECO, PEPCO and PL. Their Table B-9 values (summer peak adjustment
+above embedded, 2026–2046) are stored as `forecast_adjustment`, scope `data_centers`.
+
+DOM (data centers plus voltage optimization) and PS (data centers plus port electrification) are mixed in
+Table B-9, so their data-center figures come from the utilities' own documents instead:
+
+- PS: PSE&G's "Table 1: PSE&G Data Center Peak Demand (MW) by Summer Year" (Total column, 2026–2046).
+- DOM: Dominion's letter to PJM (January 6, 2026). Its requested data-center coincident peak by year is a
+  table image; the values were read from the rendered page, and the 2046 value (16,636 MW) matches the
+  letter's text, "forecasting 16.6 GW of demand by 2046". The letter's text also gives the 2025
+  data-center coincident peak (4 GW) and the contracted capacity as of July 2025 (9.8 GW ESA, 7.1 GW CLOA,
+  30.1 GW ELOA), each stored with its quote.
+
+EKPC's adjustment (a peak-shaving program) is not data-center load and is left out, as is PJM's RTO total.
+
 ## `us_source_catalog.csv`
 
 Candidate public sources for coverage outside Texas, one row per source, with its role

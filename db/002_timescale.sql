@@ -2,7 +2,7 @@
 
 SELECT create_hypertable('evidence_events', 'ts');
 SELECT create_hypertable('project_scores',  'ts');
-SELECT create_hypertable('ercot_queue',     'ts');
+SELECT create_hypertable('dc_load_reports', 'ts');
 
 CREATE INDEX ON evidence_events (project_id, ts DESC);
 CREATE INDEX ON project_scores  (project_id, ts DESC);

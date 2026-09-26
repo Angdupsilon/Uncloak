@@ -29,7 +29,8 @@ export default async function QueueTimelinePage() {
           <h1 className="rw-display-sm mt-3">How much of the Texas grid queue is real?</h1>
           <p className="rw-subtitle mt-5 max-w-3xl">
             ERCOT publishes how much power large users have asked for. We compare it, week by week, with what has been approved, what is actually
-            running, and what shows up in public construction records, then show what that means for when a new project could connect.
+            running, and what shows up in public construction records, then show what that means for when a new project could connect. Other
+            regions&apos; load reports (Georgia Power, PJM zones) are available from the picker and shown as published, each with its scope.
           </p>
           <div className="mt-10">{res.ok ? <QueueTimelineView data={res.data} today={today} /> : <ErrorState />}</div>
         </Container>

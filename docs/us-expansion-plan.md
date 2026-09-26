@@ -14,7 +14,9 @@ from the record.
 > loaded for review and the source/event pairing is state-aware; VA matching waits on the permit PDFs.
 > Illinois DCEO (34 MOUs), Minnesota DEED (42), Indiana IEDC (12 contracts) and Wisconsin DOR (4)
 > incentive registries are loaded; Ohio, Nevada, Arizona and Washington were checked and not loaded
-> (no cumulative site-level list; see data/raw/README.md).
+> (no cumulative site-level list; see data/raw/README.md). Load reports are generalized into
+> `dc_load_reports` (ERCOT, Georgia Power quarterly 2024Q2–2026Q1, PJM 2026 data-center zone adjustments)
+> with a region picker on the dashboard rail and queue page.
 > Still to do: role-based scoring
 > (section 5), data-center load reports (Phase 2) and state records (Phase 3). The EIA NAICS-518 plants were left out: only 3 of 17 match an atlas site within
 > 500 m with operating capacity.
