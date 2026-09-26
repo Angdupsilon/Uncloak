@@ -32,8 +32,8 @@ const LABEL_SCALE = 1.35;
  * nesting one inside a multiply is rejected by the style validator. Instead the
  * output stops are scaled in place and the expression's shape is preserved.
  */
-function scaleTextSize(value: unknown): unknown {
-  if (typeof value === "number") return value * LABEL_SCALE;
+function scaleTextSize<T>(value: T): T {
+  if (typeof value === "number") return (value * LABEL_SCALE) as T;
   if (!Array.isArray(value)) return value;
 
   const out = [...value];
@@ -45,7 +45,7 @@ function scaleTextSize(value: unknown): unknown {
   for (let i = first; i < out.length; i += 2) {
     if (typeof out[i] === "number") out[i] = (out[i] as number) * LABEL_SCALE;
   }
-  return out;
+  return out as T;
 }
 
 function radiusFor(mw: number | null): number {
