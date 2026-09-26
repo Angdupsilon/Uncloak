@@ -52,7 +52,7 @@ body {
    first so it takes over automatically if a viewer has it, or once the team
    drops licensed files into public/fonts and adds an @font-face. Outfit is the
    web fallback, the closest free geometric grotesque in proportion and
-   x-height. Deliberately scoped to the GridSight lockup: every other headline
+   x-height. Deliberately scoped to the Uncloak lockup: every other headline
    stays on the body face. */
 .gs-wordmark {
   font-family: "Neuzeit Grotesk", "NeuzeitGro", "Neuzeit S", var(--font-display), var(--font-sans-ui), sans-serif;
@@ -397,4 +397,176 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 }
 .gs-map .leaflet-tooltip.gs-ring-label::before {
   display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Public research pages: editorial system per web/DESIGN.md (RunwayML-inspired).
+   Scoped to .rw (app/(public)/layout.tsx) so the dashboard is unchanged.
+   Monochrome ink on paper-white, regular-weight display type with tight
+   tracking, hairline dividers, no shadows, black pills for actions.
+   Two deliberate exceptions to "no signal colours": evidence-tier dots are a
+   data encoding, and the amber SAMPLE banner is a data-honesty warning.
+   Inter stands in for abcNormal (DESIGN.md's documented substitute).
+   ───────────────────────────────────────────────────────────────────────── */
+
+.rw {
+  --ink: #030303;
+  --ink-soft: #1a1a1a;
+  --graphite: #404040;
+  --slate: #676f7b;
+  --stone: #939393;
+  --rw-hairline: #e7eaf0;
+  --rw-hairline-soft: #c9ccd1;
+  --scrim: #1a1a1a;
+
+  /* Remap the shared tokens the public components use. */
+  --hairline: var(--rw-hairline);
+  --body: var(--slate);
+  --hairline-mid: var(--graphite);
+  --canvas-soft: var(--rw-hairline);
+  --canvas-softer: #f7f8fa;
+  --shadow-card: none;
+  --shadow-float: 0 12px 32px rgb(3 3 3 / 0.12); /* popovers only (search suggestions) */
+
+  color: var(--ink);
+  font-feature-settings: normal;
+}
+
+.rw-display {
+  font-size: 40px;
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -1.2px;
+}
+@media (min-width: 640px) {
+  .rw-display {
+    font-size: 49px;
+    letter-spacing: -1.4px;
+  }
+}
+.rw-display-sm {
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -1px;
+}
+@media (min-width: 640px) {
+  .rw-display-sm {
+    font-size: 41px;
+  }
+}
+.rw-heading-md {
+  font-size: 30px;
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.9px;
+}
+.rw-heading-sm {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+.rw-subtitle {
+  font-size: 19px;
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--graphite);
+}
+.rw-meta {
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: -0.1px;
+  color: var(--slate);
+}
+
+.rw .ub-eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.35px;
+  line-height: 1.43;
+  color: var(--slate);
+}
+.rw .ub-display-sm {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+}
+
+/* Buttons: one 40px pill in three variants. */
+.rw .ub-pill {
+  height: 40px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  background: #000;
+}
+.rw .ub-pill-subtle {
+  height: 40px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.43;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.rw .ub-pill-subtle:hover {
+  background: var(--rw-hairline);
+}
+.rw-pill-on-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.rw-pill-on-dark:hover {
+  background: var(--rw-hairline);
+}
+
+/* Text links: ink, underlined, never a brand colour. */
+.rw-link {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--rw-hairline-soft);
+  text-underline-offset: 3px;
+}
+.rw-link:hover {
+  text-decoration-color: var(--ink);
+}
+
+/* Source links are teal in the dashboard, ink here. */
+.gs-source-link {
+  color: #0f766e;
+}
+.gs-source-link:hover {
+  color: #134e4a;
+  text-decoration: underline;
+}
+.rw .gs-source-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rw-hairline-soft);
+  text-underline-offset: 3px;
+}
+.rw .gs-source-link:hover {
+  text-decoration-color: var(--ink);
+}
+
+.rw :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.rw summary::marker {
+  color: var(--ink);
 }
