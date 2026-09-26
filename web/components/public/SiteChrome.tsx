@@ -8,6 +8,7 @@ const NAV = [
   { href: "/near", label: "Near me" },
   { href: "/search", label: "Search" },
   { href: "/queue", label: "Queue Timeline" },
+  { href: "/spare-capacity", label: "Spare capacity" },
   { href: "/methodology", label: "Methodology" },
 ];
 

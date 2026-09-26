@@ -295,3 +295,51 @@ export interface NearbyResult {
   /** Closest located site when none fall inside the radius. */
   nearest: NearbySite | null;
 }
+
+// ---------------------------------------------------------------------------
+// Spare-capacity finder
+// ---------------------------------------------------------------------------
+
+export type PlantTechnology = "peaker" | "gas_cc" | "steam" | "solar" | "wind";
+
+/** One existing plant with its grid-connection size and a year of output statistics. */
+export interface Plant {
+  plant_id: string;
+  name: string;
+  owner: string | null;
+  technology: PlantTechnology;
+  fuel: string | null;
+  connection_mw: number;
+  region: string;
+  county: string | null;
+  lat: number | null;
+  lon: number | null;
+  operating_year: number | null;
+  retirement_year: number | null;
+  open_acres: number | null;
+  fiber_within_2mi: boolean | null;
+  water_nearby: boolean | null;
+  output_source: "CAMPD" | "EIA923_MODELED" | "SAMPLE";
+  source_url: string;
+  is_sample: boolean;
+  /** Output statistics over the latest 365 days of hourly data; null without output rows. */
+  hours: number | null;
+  window_start: string | null;
+  window_end: string | null;
+  avg_mw: number | null;
+  /** Connection MW left free in at least 80% / 95% of hours. */
+  spare_p80_mw: number | null;
+  spare_p95_mw: number | null;
+  /** Share of hours the plant ran above half its connection size. */
+  share_over_half: number | null;
+}
+
+export interface PlantDetail {
+  plant: Plant;
+  /** Spare-capacity duration curve: spare_mw is free in at least `coverage` of hours. */
+  duration: { coverage: number; spare_mw: number }[];
+  /** Average output by local hour of day, summer (Jun-Sep) vs the rest of the year. */
+  profile: { hour: number; summer_mw: number | null; rest_mw: number | null }[];
+  /** Highest hourly output on each day of the window (for battery sizing). */
+  daily_max_mw: number[];
+}

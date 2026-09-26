@@ -10,7 +10,7 @@ const SiteMap = dynamic(() => import("./SiteMap"), {
 });
 
 /** A map failure must never take the rest of a profile down with it. */
-class MapBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+export class MapBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
