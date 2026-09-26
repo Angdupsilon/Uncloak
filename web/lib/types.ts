@@ -149,6 +149,27 @@ export interface AskResponse {
   tool_calls: { name: string; args: Record<string, unknown> }[];
 }
 
+export interface QueueWeek {
+  week: string;
+  gw_requested: number | null;
+  gw_approved: number | null;
+  gw_observed_peak: number | null;
+  ercot_ts: string | null;
+  found_gw: number | null;
+  realistic_gw: number | null;
+  shadow_gw: number | null;
+  realistic_gw_delta: number | null;
+  projects: number;
+  projects_up: number;
+  projects_new: number;
+}
+
+export interface QueueTimeline {
+  as_of: string;
+  weeks: QueueWeek[];
+  /** Raw ERCOT queue reports (the dates ERCOT actually published a requested-GW figure). */
+  ercot_reports: { ts: string; gw_requested: number; source_url: string | null }[];
+}
 // ---------------------------------------------------------------------------
 // Public research pages (search, organization/site profiles, nearby)
 // ---------------------------------------------------------------------------

@@ -57,6 +57,7 @@ in the project settings and set the project **Root Directory** to `web`.
 ```bash
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/001_schema.sql -f db/002_timescale.sql
 psql "$DATABASE_URL" -v ro_password="'choose-a-password'" -f db/003_readonly_role.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/004_queue_timeline.sql   # queue timeline view
 ```
 
 For a database created before the canonical-site/data-quality tables were added, run the
@@ -182,6 +183,7 @@ one event by then.
 - **Continuous aggregate**: `weekly_project_state` rolls `project_scores` up by week with
   **`time_bucket('7 days', ts)`** and **`last(value, ts)`**. It is refreshed with
   `refresh_continuous_aggregate` after each backfill.
+- **Queue timeline view** (`db/004_queue_timeline.sql`): an as-of join (`LATERAL ... ORDER BY ts DESC LIMIT 1`) carries each monthly ERCOT report forward onto the weekly aggregate, and `lag()` over `weekly_project_state` counts projects whose index rose each week.
 - **View on the aggregate**: `weekly_realistic_demand` sums evidence-weighted and found GW per
   week. It powers the summary sparkline and the weekly series in `/api/summary`.
 - **As-of queries**: the latest score per project at or before a date (`ORDER BY ts DESC LIMIT 1`
@@ -220,6 +222,7 @@ All endpoints accept `as_of=YYYY-MM-DD` (default today, UTC) and echo it back. A
 - `GET /api/summary`: ERCOT queue (latest row on or before `as_of`), `found_gw`, `realistic_gw`, `shadow_gw`, `projects`, `weekly[]`
 - `GET /api/projects?parent=&county=&min_prob=&max_prob=&min_cost=&has_permit=&ids=`
 - `GET /api/projects/[id]/timeline`: project, score history and events up to `as_of`
+- `GET /api/queue-timeline`: weekly ERCOT queue (carried forward from the latest report) vs. found and evidence-weighted GW, shadow load, week-over-week change, projects up/new, plus raw ERCOT report points
 - `GET /api/parents`: MW total / evidence-weighted / in verified projects, by parent
 - `GET /api/config`: scoring weights, `$ per MW`, tier thresholds, backfill start
 - `POST /api/ask` `{question, as_of}`: `{answer, map_filter, open_timeline, tool_calls}`

@@ -8,6 +8,8 @@ import type {
   ParentRow,
   Project,
   ProjectInfo,
+  QueueTimeline,
+  QueueWeek,
   ScorePoint,
   ScoringConfig,
   Summary,
@@ -236,6 +238,50 @@ export async function getSummary(asOf: string): Promise<Summary> {
       found_gw: hasMw ? w.found_gw : null,
       projects: w.projects,
     })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Queue timeline (db/004_queue_timeline.sql)
+// ---------------------------------------------------------------------------
+
+const num = (v: unknown): number | null => (v == null ? null : Number(v));
+
+export async function getQueueTimeline(asOf: string): Promise<QueueTimeline> {
+  const [weekRows, ercotRows, mw] = await Promise.all([
+    query<Record<string, unknown> & { week: Date; ercot_ts: Date | null }>(
+      `SELECT week, ercot_ts, gw_requested, gw_approved, gw_observed_peak, found_gw, realistic_gw,
+              shadow_gw, realistic_gw_delta, projects, projects_up, projects_new
+       FROM queue_timeline WHERE week <= ${DAY_START} ORDER BY week`,
+      [asOf],
+    ),
+    query<{ ts: Date; gw_requested: number; source_url: string | null }>(
+      `SELECT ts, gw_requested, source_url
+       FROM ercot_queue WHERE ts < ${DAY_END} AND gw_requested IS NOT NULL ORDER BY ts`,
+      [asOf],
+    ),
+    query<{ n: number }>(`SELECT COUNT(*)::int AS n FROM project_scores WHERE mw_est IS NOT NULL`),
+  ]);
+  // Without a $/MW constant, found/realistic GW are 0 rather than unknown; show them as null.
+  const hasMw = (mw[0]?.n ?? 0) > 0;
+  const weeks: QueueWeek[] = weekRows.map((r) => ({
+    week: r.week.toISOString(),
+    ercot_ts: r.ercot_ts ? r.ercot_ts.toISOString() : null,
+    gw_requested: num(r.gw_requested),
+    gw_approved: num(r.gw_approved),
+    gw_observed_peak: num(r.gw_observed_peak),
+    found_gw: hasMw ? num(r.found_gw) : null,
+    realistic_gw: hasMw ? num(r.realistic_gw) : null,
+    shadow_gw: hasMw ? num(r.shadow_gw) : null,
+    realistic_gw_delta: hasMw ? num(r.realistic_gw_delta) : null,
+    projects: Number(r.projects ?? 0),
+    projects_up: Number(r.projects_up ?? 0),
+    projects_new: Number(r.projects_new ?? 0),
+  }));
+  return {
+    as_of: asOf,
+    weeks,
+    ercot_reports: ercotRows.map((e) => ({ ...e, gw_requested: Number(e.gw_requested), ts: e.ts.toISOString() })),
   };
 }
 

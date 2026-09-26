@@ -40,6 +40,9 @@ def schema_check() -> None:
         for t in ("evidence_events", "project_scores", "ercot_queue"):
             if t not in hts:
                 print(f"  WARN {t} is not a hypertable (did db/002_timescale.sql run?)")
+        cur.execute("SELECT to_regclass('queue_timeline')")
+        if cur.fetchone()[0] is None:
+            print("  WARN queue_timeline view missing: run db/004_queue_timeline.sql for the queue timeline chart")
     print("  schema: ok")
 
 
