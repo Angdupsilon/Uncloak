@@ -17,13 +17,17 @@ SELECT time_bucket('7 days', ts) AS week,
 FROM project_scores
 GROUP BY week, project_id;
 
+-- ERCOT is the Texas grid, so the figures compared with its queue count Texas projects with a
+-- public record (atlas-only sites, whose sole evidence is `site_mapped`, are left out).
 CREATE VIEW weekly_realistic_demand AS
-SELECT week,
-       SUM(p * COALESCE(mw,0)) / 1000.0 AS realistic_gw,
-       SUM(COALESCE(mw,0))     / 1000.0 AS found_gw,
-       COUNT(*)                         AS projects
-FROM weekly_project_state
-GROUP BY week;
+SELECT w.week,
+       SUM(w.p * COALESCE(w.mw,0)) / 1000.0 AS realistic_gw,
+       SUM(COALESCE(w.mw,0))       / 1000.0 AS found_gw,
+       COUNT(*)                             AS projects
+FROM weekly_project_state w
+JOIN projects pr ON pr.project_id = w.project_id AND pr.state = 'TX'
+  AND EXISTS (SELECT 1 FROM evidence_events x WHERE x.project_id = w.project_id AND x.event_type <> 'site_mapped')
+GROUP BY w.week;
 
 -- Optional bonus: native compression on evidence_events (see README).
 -- ALTER TABLE evidence_events SET (timescaledb.compress, timescaledb.compress_segmentby = 'project_id');

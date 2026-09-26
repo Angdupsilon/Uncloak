@@ -46,27 +46,33 @@ export const SOURCES = {
     url: "https://www.ercot.com/",
     what: "Statewide totals for large electricity loads asking to connect to the Texas grid.",
   },
+  OSM: {
+    name: "IM3 Open Source Data Center Atlas (PNNL), built from OpenStreetMap",
+    short: "IM3 atlas (OSM)",
+    url: "https://data.msdlive.org/records/65g71-a4731",
+    what: "Mapped data-center buildings and campuses in every state, with the OpenStreetMap operator tag and footprint area. A map layer, not a public record: it places a site and names an operator, and earns no evidence points.",
+  },
 } as const;
 
 export type SourceKey = keyof typeof SOURCES;
 
 export const METRICS = {
   sites: {
-    label: "Sites in Texas records",
+    label: "Sites in our records",
     unit: "sites",
     kind: "documented",
-    source: "Texas Comptroller registry and TDLR construction filings, linked to this organization through registered entities",
-    meaning: "How many distinct data-center sites in our Texas public records are linked to this organization.",
+    source: "Texas Comptroller registry and TDLR construction filings (Texas), and the IM3 data-center atlas operator tag (all states), linked to this organization",
+    meaning: "How many distinct data-center sites in our records are linked to this organization.",
     caveat:
       "Counts only sites we could find in these records and link to the organization. Projects filed under code names, or whose ownership we could not resolve, are not included.",
-    local: "Shows where the organization has a documented physical presence in Texas.",
+    local: "Shows where the organization has a documented or mapped physical presence.",
   },
   counties: {
-    label: "Texas counties",
+    label: "Counties",
     unit: "counties",
     kind: "documented",
     source: "Site addresses and county fields from the Comptroller registry, TDLR filings and the reviewed location list",
-    meaning: "How many different Texas counties the organization's recorded sites are in.",
+    meaning: "How many different counties the organization's recorded sites are in.",
     caveat: "Sites without a published location can't be placed in a county, so the true number may be higher.",
     local: "Shows which local communities host the organization's documented facilities.",
   },
@@ -200,5 +206,7 @@ export const PROGRAM_HELP: Record<string, string> = {
 export const RESOLVED_BY_LABEL: Record<string, string> = {
   COMPTROLLER: "Named on the Texas Comptroller registry record",
   TDLR_TENANT: "Named as tenant on a TDLR construction registration",
+  TDLR_OWNER: "Named as owner on a TDLR construction registration",
+  OSM_OPERATOR: "Named as operator in OpenStreetMap (IM3 data-center atlas), not a registered-entity record",
   MANUAL: "Linked by manual review of a cited source",
 };

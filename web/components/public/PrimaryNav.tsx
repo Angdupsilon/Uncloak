@@ -7,13 +7,13 @@ import { useEffect, useId, useRef, useState } from "react";
 type NavItem = { href: string; label: string; description: string };
 
 const EXPLORE: NavItem[] = [
-  { href: "/org", label: "Organizations", description: "Companies linked to Texas data-center sites" },
+  { href: "/org", label: "Organizations", description: "Companies linked to data-center sites" },
   { href: "/near", label: "Near me", description: "Find recorded sites around a place" },
   { href: "/search", label: "Search", description: "Search places, companies, and sites" },
 ];
 
 const MARKET_INTELLIGENCE: NavItem[] = [
-  { href: "/queue", label: "Queue Timeline", description: "Track requested, approved, and energized ERCOT load" },
+  { href: "/queue", label: "Queue Timeline", description: "Track requested, approved, and energized ERCOT load (Texas)" },
   { href: "/spare-capacity", label: "Spare capacity", description: "Find existing connections with room for a new load" },
 ];
 

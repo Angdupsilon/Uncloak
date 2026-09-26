@@ -13,7 +13,7 @@ import {
 } from "./queries";
 import type { AskResponse } from "./types";
 
-const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage.`;
+const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage. Coverage is national, but ERCOT figures and the evidence-score factors come from Texas records: a site outside Texas scores 0 because those record types do not exist there, not because evidence was checked and failed. Sites whose only record is "site_mapped" come from the IM3 data-center atlas (OpenStreetMap); say so when you cite one.`;
 
 const MAX_ROUNDS = 4;
 const MAX_PROJECTS_TO_MODEL = 40;
@@ -28,8 +28,9 @@ export const TOOL_DECLARATIONS: FunctionDeclaration[] = [
     parametersJsonSchema: {
       type: "object",
       properties: {
-        county: { type: "string", description: "Texas county name, e.g. 'Milam'" },
-        metro: { type: "string", enum: Object.keys(METROS), description: "Metro area bounding box" },
+        state: { type: "string", description: "Two-letter USPS state code, e.g. 'VA'" },
+        county: { type: "string", description: "County name without 'County', e.g. 'Milam' or 'Loudoun'. Combine with state when the name exists in several states." },
+        metro: { type: "string", enum: Object.keys(METROS), description: "Texas metro area bounding box" },
         parent: { type: "string", description: "Parent company name (partial match). Use 'Unresolved' for projects with no known parent." },
         min_cost_usd: { type: "number", description: "Minimum total registered construction cost in USD" },
         max_probability: { type: "number", description: "Maximum evidence score, 0-1" },
@@ -52,7 +53,7 @@ export const TOOL_DECLARATIONS: FunctionDeclaration[] = [
   {
     name: "get_summary",
     description:
-      "Totals as of a date: ERCOT large-load queue (GW requested/approved/observed peak, with date and source), GW found in public records, evidence-weighted realistic GW, phantom load (requested minus ERCOT-approved), shadow load (requested minus found in public records) and project count.",
+      "Texas totals as of a date: ERCOT large-load queue (GW requested/approved/observed peak, with date and source), GW found in Texas public records, evidence-weighted realistic GW, phantom load (requested minus ERCOT-approved), shadow load (requested minus found in public records) and the count of Texas projects with a public record.",
     parametersJsonSchema: { type: "object", properties: { as_of: asOfProp } },
   },
   {
@@ -88,6 +89,7 @@ export async function runTool(call: FunctionCall, dashboardAsOf: string, state: 
       const metro = str(args.metro);
       if (metro && !(metro in METROS)) return { error: `unknown metro ${metro}; use one of ${Object.keys(METROS).join(", ")}` };
       const projects = await getProjects(asOf, {
+        state: str(args.state),
         county: str(args.county),
         metro: metro as Metro | null,
         parent: str(args.parent),
@@ -104,6 +106,7 @@ export async function runTool(call: FunctionCall, dashboardAsOf: string, state: 
         projects: projects.slice(0, MAX_PROJECTS_TO_MODEL).map((p) => ({
           project_id: p.project_id,
           name: p.name,
+          state: p.state,
           county: p.county,
           llc_name: p.llc_name,
           parent: p.parent,
@@ -137,6 +140,7 @@ export async function runTool(call: FunctionCall, dashboardAsOf: string, state: 
         project: {
           project_id: tl.project.project_id,
           name: tl.project.name,
+          state: tl.project.state,
           county: tl.project.county,
           llc_name: tl.project.llc_name,
           parent: tl.project.parent,

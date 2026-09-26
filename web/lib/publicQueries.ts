@@ -7,7 +7,7 @@
 import { cache } from "react";
 import { query } from "./db";
 import { tierFor } from "./constants";
-import { compass, haversineKm, KM_PER_MI } from "./geo";
+import { compass, countyLabel, haversineKm, KM_PER_MI } from "./geo";
 import { slugify, orgHref, siteHref } from "./slug";
 import { getTimeline } from "./queries";
 import type { NearbyResult, OrgEntity, OrgProfile, OrgTrendPoint, SearchHit, Site, SourceStat, Timeline } from "./types";
@@ -45,7 +45,7 @@ const SITES_AS_OF = `
     WHERE x.ts < ${DAY_END}
     GROUP BY x.project_id
   )
-  SELECT p.project_id, p.name, p.county, p.city, p.address, p.lat, p.lon, p.is_sample,
+  SELECT p.project_id, p.name, p.state, p.county, p.city, p.address, p.lat, p.lon, p.is_sample,
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color,
          l.ts AS scored_at, l.score, l.probability, l.mw_est,
@@ -135,8 +135,8 @@ export async function search(raw: string, perKind = 6): Promise<SearchHit[]> {
        LIMIT $4`,
       [like, prefix, word, perKind],
     ),
-    query<{ project_id: number; name: string; city: string | null; county: string | null; parent: string | null; is_sample: boolean }>(
-      `SELECT p.project_id, p.name, p.city, p.county, pa.name AS parent, p.is_sample
+    query<{ project_id: number; name: string; state: string; city: string | null; county: string | null; parent: string | null; is_sample: boolean }>(
+      `SELECT p.project_id, p.name, p.state, p.city, p.county, pa.name AS parent, p.is_sample
        FROM projects p
        LEFT JOIN entities e ON e.entity_id = p.entity_id
        LEFT JOIN parents pa ON pa.parent_id = e.parent_id
@@ -158,46 +158,46 @@ export async function search(raw: string, perKind = 6): Promise<SearchHit[]> {
        LIMIT $3`,
       [like, prefix, perKind],
     ),
-    query<{ city: string; county: string | null; n: number }>(
-      `SELECT city, MIN(county) AS county, COUNT(*) AS n FROM projects
-       WHERE city ILIKE $1 GROUP BY city ORDER BY (city ILIKE $2) DESC, COUNT(*) DESC LIMIT $3`,
+    query<{ city: string; state: string; county: string | null; n: number }>(
+      `SELECT city, state, MIN(county) AS county, COUNT(*) AS n FROM projects
+       WHERE city ILIKE $1 GROUP BY city, state ORDER BY (city ILIKE $2) DESC, COUNT(*) DESC LIMIT $3`,
       [like, prefix, perKind],
     ),
-    query<{ county: string; n: number }>(
-      `SELECT county, COUNT(*) AS n FROM projects
-       WHERE county ILIKE $1 GROUP BY county ORDER BY (county ILIKE $2) DESC, COUNT(*) DESC LIMIT $3`,
+    query<{ county: string; state: string; n: number }>(
+      `SELECT county, state, COUNT(*) AS n FROM projects
+       WHERE county ILIKE $1 GROUP BY county, state ORDER BY (county ILIKE $2) DESC, COUNT(*) DESC LIMIT $3`,
       [like.replace(/\s+county%$/i, "%"), prefix.replace(/\s+county%$/i, "%"), perKind],
     ),
   ]);
 
   const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
-  const where = (city: string | null, county: string | null) =>
-    [city, county && `${county} County`].filter(Boolean).join(", ") || "Location not recorded";
+  const where = (city: string | null, county: string | null, state: string) =>
+    [city, county && countyLabel(county, state), state].filter(Boolean).join(", ");
 
   const hits: SearchHit[] = [
     ...orgs.map((o) => ({
       kind: "org" as const,
       label: o.name,
-      sublabel: `Organization · ${plural(o.sites, "site")} in Texas records`,
+      sublabel: `Organization · ${plural(o.sites, "site")} in our records`,
       href: orgHref(o.name),
       is_sample: o.is_sample,
     })),
     ...cities.map((c) => ({
       kind: "city" as const,
-      label: `${c.city}, TX`,
-      sublabel: `City · ${plural(c.n, "site")} recorded${c.county ? ` · ${c.county} County` : ""}`,
-      href: `/near?q=${encodeURIComponent(`${c.city}, TX`)}`,
+      label: `${c.city}, ${c.state}`,
+      sublabel: `City · ${plural(c.n, "site")} recorded${c.county ? ` · ${countyLabel(c.county, c.state)}` : ""}`,
+      href: `/near?q=${encodeURIComponent(`${c.city}, ${c.state}`)}`,
     })),
     ...counties.map((c) => ({
       kind: "county" as const,
-      label: `${c.county} County, TX`,
+      label: `${countyLabel(c.county, c.state)}, ${c.state}`,
       sublabel: `County · ${plural(c.n, "site")} recorded`,
-      href: `/near?q=${encodeURIComponent(`${c.county} County, TX`)}&county=${encodeURIComponent(c.county)}`,
+      href: `/near?q=${encodeURIComponent(`${countyLabel(c.county, c.state)}, ${c.state}`)}&county=${encodeURIComponent(c.county)}`,
     })),
     ...sites.map((s) => ({
       kind: "site" as const,
       label: s.name,
-      sublabel: `Site · ${where(s.city, s.county)}${s.parent ? ` · ${s.parent}` : ""}`,
+      sublabel: `Site · ${where(s.city, s.county, s.state)}${s.parent ? ` · ${s.parent}` : ""}`,
       href: siteHref(s.project_id),
       is_sample: s.is_sample,
     })),
@@ -207,7 +207,7 @@ export async function search(raw: string, perKind = 6): Promise<SearchHit[]> {
       .map((e) => ({
         kind: "entity" as const,
         label: e.llc_name,
-        sublabel: `Registered entity · ${e.parent ? `linked to ${e.parent}` : "organization not resolved"}${e.n ? ` · ${plural(e.n, "site")}` : ""}`,
+        sublabel: `${e.llc_name.endsWith("(OSM operator)") ? "Operator tag" : "Registered entity"} · ${e.parent ? `linked to ${e.parent}` : "organization not resolved"}${e.n ? ` · ${plural(e.n, "site")}` : ""}`,
         href: e.parent ? orgHref(e.parent) : siteHref(e.project_id!),
         is_sample: e.is_sample,
       })),
@@ -384,11 +384,15 @@ export async function getNearby(
 
 /** Center of a county or city's located sites, for when the external geocoder is unavailable. */
 export async function datasetPlace(term: string): Promise<{ label: string; lat: number; lon: number; county: string | null } | null> {
-  const t = term.trim().replace(/,?\s*(tx|texas)$/i, "").trim();
+  const stateMatch = term.trim().match(/,\s*([A-Za-z]{2})$/);
+  const state = stateMatch ? stateMatch[1].toUpperCase() : null;
+  const t = term.trim().replace(/,\s*[A-Za-z]{2}$/, "").replace(/,?\s*texas$/i, "").trim();
   if (!t) return null;
   const isCounty = /\s+county$/i.test(t);
   const name = t.replace(/\s+county$/i, "").trim();
-  const sites = (await getSites(new Date().toISOString().slice(0, 10))).filter((s) => s.lat != null && s.lon != null);
+  const sites = (await getSites(new Date().toISOString().slice(0, 10))).filter(
+    (s) => s.lat != null && s.lon != null && (!state || s.state === state),
+  );
   const pick = (field: "county" | "city") => sites.filter((s) => s[field]?.toLowerCase() === name.toLowerCase());
   const byCounty = pick("county");
   const byCity = isCounty ? [] : pick("city");
@@ -398,7 +402,9 @@ export async function datasetPlace(term: string): Promise<{ label: string; lat: 
   const lon = list.reduce((a, s) => a + s.lon!, 0) / list.length;
   const asCounty = !byCity.length;
   return {
-    label: asCounty ? `${list[0].county} County, TX (center of recorded sites)` : `${list[0].city}, TX (center of recorded sites)`,
+    label: asCounty
+      ? `${countyLabel(list[0].county!, list[0].state)}, ${list[0].state} (center of recorded sites)`
+      : `${list[0].city}, ${list[0].state} (center of recorded sites)`,
     lat,
     lon,
     county: asCounty ? list[0].county : null,

@@ -130,6 +130,34 @@ ERCOT large-load interconnection figures, read directly from ERCOT's own documen
   hearing decks through 2033. Part of the step from 57 GW (Sep 2024) to 137 GW (Apr 2025) comes
   from that change in scope.
 
+## `im3_datacenter_atlas_2026-03-31.geojson`
+
+PNNL IM3 Open Source Data Center Atlas, `im3_datacenter_centroids.geojson` layer, copied from the
+atlas site's `gh-pages` branch (GitHub `IMMM-SFA/datacenter-atlas`, commit
+`48d45f6eef72778edf374ec52c379550bb21a046`, deployed 2026-03-31). Dataset record:
+https://data.msdlive.org/records/65g71-a4731. Derived from OpenStreetMap; **ODbL 1.0**
+(© OpenStreetMap contributors, attribution to PNNL IM3). Share-alike applies to databases derived
+from it.
+
+- 1,382 mapped data-center features in 45 states, DC and Puerto Rico (none in AK, DE, HI, RI, VT):
+  1,239 buildings, 49 campuses, 94 points. Fields: state, county, OSM `operator` tag (894 set),
+  OSM `name` (1,120 set), footprint area in sq ft (1,288 set), feature type.
+- `etl/import_im3_atlas.py` writes `data/seed_national/`. Operator spelling variants of the same
+  company are merged (`OPERATOR_ALIASES`, e.g. "Amazon Web Services" → Amazon). One operator value
+  that is a private person's name is withheld, as in the TDLR import.
+- The atlas is a map layer, not a public record: it places a site and names an operator. Its
+  `site_mapped` events carry no scoring points.
+
+## `im3_texas_review.csv`
+
+Every Texas atlas feature, with its nearest existing Texas project and distance. Because the atlas
+has no addresses, a Texas feature is held back when it may duplicate a registry project:
+within 250 m of one (1 feature), or run by an operator whose parent already has a Texas project in
+the same county or with no county (13 features). The other 106 load as atlas-only Texas sites.
+To merge a held feature into its project, add a reviewed location or match; to load it as its own
+site, change the rule in the importer. Unlocated Texas registry projects can still duplicate a
+loaded atlas site; this file is where to check.
+
 ## `us_source_catalog.csv`
 
 Candidate public sources for coverage outside Texas, one row per source, with its role

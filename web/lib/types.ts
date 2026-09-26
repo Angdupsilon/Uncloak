@@ -3,6 +3,8 @@ import type { Tier } from "./constants";
 export interface Project {
   project_id: number;
   name: string;
+  /** USPS state code. */
+  state: string;
   county: string | null;
   city: string | null;
   lat: number | null;
@@ -29,6 +31,8 @@ export interface Project {
   mw_est: number | null;
   total_cost: number | null;
   has_permit: boolean;
+  /** True when the project has a public record beyond an atlas mapping (anything but `site_mapped`). */
+  has_records: boolean;
   tier: Tier;
   factors: Record<string, boolean>;
   is_sample: boolean;
@@ -94,6 +98,7 @@ export interface EvidenceEvent {
 export interface ProjectInfo {
   project_id: number;
   name: string;
+  state: string;
   county: string | null;
   city: string | null;
   address: string | null;
@@ -178,6 +183,7 @@ export interface QueueTimeline {
 export interface Site {
   project_id: number;
   name: string;
+  state: string;
   county: string | null;
   city: string | null;
   address: string | null;
@@ -275,7 +281,7 @@ export interface GeocodeResult {
 
 export interface GeocodeFailure {
   ok: false;
-  reason: "not_found" | "outside_texas" | "lookup_failed";
+  reason: "not_found" | "outside_us" | "lookup_failed";
   message: string;
 }
 

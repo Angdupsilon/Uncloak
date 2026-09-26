@@ -30,7 +30,7 @@ export default function NearForm({ q, radius, lat, lon }: { q: string; radius: n
       >
         <div className="min-w-0 flex-1">
           <label htmlFor={`${id}-q`} className="mb-1 block text-[14px] text-black">
-            City, county, ZIP code or street address in Texas
+            City and state, county, ZIP code or street address in the U.S.
           </label>
           <input
             id={`${id}-q`}

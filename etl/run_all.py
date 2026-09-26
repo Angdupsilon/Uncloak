@@ -2,7 +2,9 @@
 
 Usage:
   python etl/run_all.py --dir data/sample
-  python etl/run_all.py --dir data/seed [--tceq-file path] [--skip-geocode] [--reset]
+  python etl/run_all.py --dir data/seed [--dir data/seed_national] [--tceq-file path] [--skip-geocode] [--reset]
+
+Repeat --dir to load several seed directories in order. The first one decides SAMPLE vs real.
 """
 from __future__ import annotations
 
@@ -48,19 +50,19 @@ def schema_check() -> None:
 
 def summary() -> None:
     with connect() as conn, conn.cursor() as cur:
-        cur.execute("SELECT count(*), count(*) FILTER (WHERE is_sample) FROM projects")
-        projects, sample = cur.fetchone()
+        cur.execute("SELECT count(*), count(*) FILTER (WHERE is_sample), count(DISTINCT state) FROM projects")
+        projects, sample, states = cur.fetchone()
         cur.execute("SELECT count(*) FROM evidence_events")
         events = cur.fetchone()[0]
         cur.execute("SELECT week, realistic_gw, found_gw, projects FROM weekly_realistic_demand ORDER BY week DESC LIMIT 1")
         latest = cur.fetchone()
     print("\n=== GridSight summary ===")
-    print(f"projects:        {projects}" + (f" ({sample} SAMPLE)" if sample else ""))
+    print(f"projects:        {projects} in {states} state(s)" + (f" ({sample} SAMPLE)" if sample else ""))
     print(f"evidence events: {events}")
     if latest:
         week, realistic, found, n = latest
         fmt = lambda v: "n/a (MW_COST_PER_MW_USD unset)" if v is None or not config.MW_COST_PER_MW_USD else f"{v:.3f} GW"
-        print(f"latest week:     {week:%Y-%m-%d} ({n} projects scored)")
+        print(f"latest week:     {week:%Y-%m-%d} ({n} Texas record-backed projects compared with ERCOT)")
         print(f"realistic_gw:    {fmt(realistic)}")
         print(f"found_gw:        {fmt(found)}")
     else:
@@ -69,19 +71,22 @@ def summary() -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--dir", required=True, help="data/seed or data/sample")
+    ap.add_argument("--dir", required=True, action="append",
+                    help="data/seed or data/sample; repeat to add more (e.g. --dir data/seed_national)")
     ap.add_argument("--tceq-file", help="optional TCEQ bulk file to load after the seed")
     ap.add_argument("--skip-geocode", action="store_true")
     ap.add_argument("--reset", action="store_true", help="truncate all GridSight tables before loading")
     args = ap.parse_args()
-    directory = Path(args.dir)
+    directories = [Path(d) for d in args.dir]
+    directory = directories[0]
     if load_seed.is_sample_dir(directory):
         config.use_sample_mw_cost(directory)
 
     print("1/6 schema check")
     schema_check()
     print("2/6 load seed")
-    load_seed.main(directory, args.reset)
+    for n, d in enumerate(directories):
+        load_seed.main(d, args.reset and n == 0, purge=n == 0)
     if args.tceq_file:
         print("    load TCEQ")
         load_tceq.main(Path(args.tceq_file))

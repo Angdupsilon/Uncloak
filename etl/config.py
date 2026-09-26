@@ -24,11 +24,15 @@ EVENT_TYPES: dict[str, str] = {
     "certified": "COMPTROLLER",
     "permit_filed": "TCEQ",
     "status_change": "OTHER",
+    # National layer: a data center mapped in the IM3 Open Source Data Center Atlas
+    # (OpenStreetMap). value_num = building footprint in sq ft. No scoring factor uses it.
+    "site_mapped": "OSM",
 }
-SOURCES = {"TDLR", "COMPTROLLER", "TCEQ", "OTHER"}
-RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "TDLR_OWNER", "MANUAL"}
+SOURCES = {"TDLR", "COMPTROLLER", "TCEQ", "OSM", "OTHER"}
+RESOLVED_BY = {"COMPTROLLER", "TDLR_TENANT", "TDLR_OWNER", "OSM_OPERATOR", "MANUAL"}
 
-# Checklist factors (spec section 6). Order is display order.
+# Checklist factors (spec section 6). Order is display order. Every factor comes from a Texas
+# record type (TDLR, Comptroller, TCEQ), so a site outside Texas cannot earn points yet.
 #   min_count: factor is true when the project has >= min_count events of event_type
 #   min_sum:   factor is true when the sum of value_num over event_type >= min_sum
 FACTORS: list[dict] = [

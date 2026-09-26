@@ -6,6 +6,7 @@ import AskGridSight from "@/components/AskGridSight";
 import DateSlider from "@/components/DateSlider";
 import ParentFilter from "@/components/ParentFilter";
 import ProjectPanel from "@/components/ProjectPanel";
+import StateSelect from "@/components/StateSelect";
 import SummaryBar from "@/components/SummaryBar";
 import { useJson } from "@/lib/useJson";
 import type { AskResponse, ParentRow, Project, ScoringConfig, Summary } from "@/lib/types";
@@ -20,11 +21,14 @@ export default function Dashboard({
   today,
   initialParent = null,
   initialSiteId = null,
+  initialState = null,
   embedded = false,
 }: {
   today: string;
   initialParent?: string | null;
   initialSiteId?: number | null;
+  /** USPS code to focus the map on; null shows the whole country. */
+  initialState?: string | null;
   /** Rendered inside a public profile: no page header, no floating Ask launcher, fixed height. */
   embedded?: boolean;
 }) {
@@ -33,14 +37,16 @@ export default function Dashboard({
   const [selectedId, setSelectedId] = useState<number | null>(initialSiteId);
   const [activeParents, setActiveParents] = useState<Set<string>>(() => new Set(initialParent ? [initialParent] : []));
   const [highlight, setHighlight] = useState<number[] | null>(null);
+  const [region, setRegion] = useState<string | null>(initialState);
   const [fitRequest, setFitRequest] = useState(0);
 
   const config = useJson<ScoringConfig>("/api/config");
   const summary = useJson<Summary>(`/api/summary?as_of=${asOf}`);
   const projects = useJson<{ as_of: string; projects: Project[] }>(`/api/projects?as_of=${asOf}`);
-  const parents = useJson<{ parents: ParentRow[] }>(`/api/parents?as_of=${asOf}`);
+  const parents = useJson<{ parents: ParentRow[] }>(`/api/parents?as_of=${asOf}${region ? `&state=${region}` : ""}`);
 
-  const projectList = useMemo(() => projects.data?.projects ?? [], [projects.data]);
+  const allProjects = useMemo(() => projects.data?.projects ?? [], [projects.data]);
+  const projectList = useMemo(() => (region ? allProjects.filter((p) => p.state === region) : allProjects), [allProjects, region]);
   const showingSample = projectList.some((p) => p.is_sample);
 
   const toggleParent = useCallback((name: string) => {
@@ -90,7 +96,7 @@ export default function Dashboard({
           <span className="h-5 w-px bg-[#e2e2e2]" aria-hidden />
           <div className="min-w-0">
             <p className="text-[14px] font-medium leading-4 text-black">Advanced dashboard</p>
-            <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">Texas data-center load · requested vs. verified</p>
+            <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">U.S. data-center records · ERCOT load requested vs. verified</p>
           </div>
         </div>
         <nav aria-label="Dashboard navigation" className="flex shrink-0 items-center gap-1 text-[13px] font-medium">
@@ -117,12 +123,13 @@ export default function Dashboard({
         {/* Summary rail: one reconciliation panel down the left, so the map
             keeps the full column height. */}
         <div className="flex w-[280px] shrink-0 flex-col">
-          <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
+          <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} region={region} />
         </div>
 
         <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)]">
           <ProjectMap
             projects={projectList}
+            region={region}
             selectedId={selectedId}
             onSelect={setSelectedId}
             activeParents={activeParents}
@@ -170,6 +177,16 @@ export default function Dashboard({
           value={asOf}
           loading={summary.loading || projects.loading || parents.loading}
           onChange={setAsOf}
+        />
+        <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
+        <StateSelect
+          projects={allProjects}
+          value={region}
+          onChange={(code) => {
+            setRegion(code);
+            setActiveParents(new Set());
+            setHighlight(null);
+          }}
         />
         <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
         <div className="min-w-0 flex-1">

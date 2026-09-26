@@ -67,6 +67,8 @@ export type Metro = keyof typeof METROS;
 
 export interface ProjectFilters {
   parent?: string | null;
+  /** USPS state code, e.g. "VA". */
+  state?: string | null;
   county?: string | null;
   metro?: Metro | null;
   min_prob?: number | null;
@@ -94,13 +96,14 @@ const PROJECTS_AS_OF = `
   evidence_by_project AS (
     SELECT s.project_id,
            SUM(x.value_num) FILTER (WHERE x.event_type = 'building_registered') AS total_cost,
-           bool_or(x.event_type = 'permit_filed') AS has_permit
+           bool_or(x.event_type = 'permit_filed') AS has_permit,
+           bool_or(x.event_type <> 'site_mapped') AS has_records
     FROM latest_scores s
     LEFT JOIN evidence_events x
       ON x.project_id = s.project_id AND x.ts < s.ts + interval '1 day'
     GROUP BY s.project_id
   )
-  SELECT p.project_id, p.name, COALESCE(si.county,p.county) AS county,
+  SELECT p.project_id, p.name, p.state, COALESCE(si.county,p.county) AS county,
          COALESCE(si.city,p.city) AS city, COALESCE(si.lat,p.lat) AS lat,
          COALESCE(si.lon,p.lon) AS lon, p.is_sample,
          si.site_id, si.name AS site_name, si.location_source_url, si.location_method,
@@ -110,7 +113,8 @@ const PROJECTS_AS_OF = `
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color,
          s.ts AS scored_at, s.score, s.probability, s.mw_est, s.factors,
-         ev.total_cost, COALESCE(ev.has_permit, false) AS has_permit
+         ev.total_cost, COALESCE(ev.has_permit, false) AS has_permit,
+         COALESCE(ev.has_records, false) AS has_records
   FROM projects p
   LEFT JOIN entities e ON e.entity_id = p.entity_id
   LEFT JOIN parents pa ON pa.parent_id = e.parent_id
@@ -151,6 +155,10 @@ export async function getProjects(asOf: string, f: ProjectFilters = {}): Promise
   if (f.parent) {
     if (f.parent.toLowerCase() === UNRESOLVED_PARENT.toLowerCase()) where.push("q.parent IS NULL");
     else where.push(`q.parent ILIKE '%' || ${add(f.parent)} || '%'`);
+  }
+  if (f.state) {
+    if (!/^[A-Za-z]{2}$/.test(f.state)) throw new BadRequest("state must be a 2-letter USPS code");
+    where.push(`q.state = ${add(f.state.toUpperCase())}`);
   }
   if (f.county) where.push(`q.county ILIKE ${add(f.county.replace(/\s+county$/i, "").trim())}`);
   if (f.metro) {
@@ -195,10 +203,13 @@ export async function getSummary(asOf: string): Promise<Summary> {
              WHERE ts < ${DAY_END} AND gw_observed_peak IS NOT NULL ORDER BY ts DESC LIMIT 1) o ON true`,
       [asOf],
     ),
+    // ERCOT is the Texas grid, so the totals compared with it count Texas projects that have a
+    // public record (not atlas-only sites), matching the weekly_realistic_demand view.
     query<{ found_mw: number | null; realistic_mw: number | null; projects: number; projects_with_mw: number }>(
       `SELECT SUM(q.mw_est) AS found_mw, SUM(q.probability * q.mw_est) AS realistic_mw,
               COUNT(*) AS projects, COUNT(q.mw_est) AS projects_with_mw
-       FROM (${PROJECTS_AS_OF}) q`,
+       FROM (${PROJECTS_AS_OF}) q
+       WHERE q.state = 'TX' AND q.has_records`,
       [asOf],
     ),
     // Continuous aggregate (time_bucket + last()) rolled up by the weekly_realistic_demand view.
@@ -291,7 +302,8 @@ export async function getQueueTimeline(asOf: string): Promise<QueueTimeline> {
 // Parents
 // ---------------------------------------------------------------------------
 
-export async function getParents(asOf: string): Promise<ParentRow[]> {
+export async function getParents(asOf: string, state: string | null = null): Promise<ParentRow[]> {
+  if (state && !/^[A-Za-z]{2}$/.test(state)) throw new BadRequest("state must be a 2-letter USPS code");
   return query<ParentRow>(
     `SELECT COALESCE(q.parent, $2) AS name, q.parent_color AS color,
             SUM(q.mw_est) AS mw_total,
@@ -299,9 +311,10 @@ export async function getParents(asOf: string): Promise<ParentRow[]> {
             SUM(q.mw_est) FILTER (WHERE q.probability >= $3) AS mw_verified,
             COUNT(*) AS projects
      FROM (${PROJECTS_AS_OF}) q
+     WHERE $4::text IS NULL OR q.state = $4
      GROUP BY q.parent, q.parent_color
      ORDER BY SUM(q.probability * q.mw_est) DESC NULLS LAST, COUNT(*) DESC, 1`,
-    [asOf, UNRESOLVED_PARENT, TIER_THRESHOLDS.verified],
+    [asOf, UNRESOLVED_PARENT, TIER_THRESHOLDS.verified, state ? state.toUpperCase() : null],
   );
 }
 
@@ -310,7 +323,7 @@ export async function getParents(asOf: string): Promise<ParentRow[]> {
 // ---------------------------------------------------------------------------
 
 const PROJECT_INFO = `
-  SELECT p.project_id, p.name, COALESCE(si.county,p.county) AS county,
+  SELECT p.project_id, p.name, p.state, COALESCE(si.county,p.county) AS county,
          COALESCE(si.city,p.city) AS city, COALESCE(si.address,p.address) AS address,
          COALESCE(si.lat,p.lat) AS lat, COALESCE(si.lon,p.lon) AS lon, p.is_sample,
          si.site_id, si.name AS site_name, si.location_source_url, si.location_method,

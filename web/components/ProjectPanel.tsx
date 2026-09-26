@@ -1,6 +1,7 @@
 "use client";
 import { TIER_COLORS, TIER_LABELS, UNRESOLVED_PARENT } from "@/lib/constants";
 import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
+import { countyLabel, STATE_NAMES } from "@/lib/geo";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
 import TimeMachine from "./TimeMachine";
@@ -93,6 +94,9 @@ export default function ProjectPanel({
   const scored = p.probability != null;
   const events = data.events;
   const satisfied = factors.filter((factor) => !!p.factors?.[factor.key]).length;
+  const osmOperator = p.resolved_by === "OSM_OPERATOR";
+  const entityName = p.llc_name?.replace(/ \(OSM operator\)$/, "") ?? null;
+  const atlasOnly = events.length > 0 && events.every((e) => e.event_type === "site_mapped");
 
   return (
     <div className={`flex h-full flex-col bg-white transition-opacity ${loading ? "opacity-70" : ""}`}>
@@ -113,7 +117,7 @@ export default function ProjectPanel({
                 <path d="M8 14s4.5-3.4 4.5-7.75a4.5 4.5 0 1 0-9 0C3.5 10.6 8 14 8 14Z" />
                 <circle cx="8" cy="6.25" r="1.5" />
               </svg>
-              <span className="truncate">{[p.city, p.county && `${p.county} County`].filter(Boolean).join(", ") || "Location unknown"}</span>
+              <span className="truncate">{[p.city, p.county && countyLabel(p.county, p.state), p.state].filter(Boolean).join(", ")}</span>
             </div>
           </div>
           <button
@@ -135,9 +139,9 @@ export default function ProjectPanel({
             <div className="rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_1px_2px_rgb(15_23_42/0.03)]">
               <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                 <div className="min-w-0">
-                  <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Registered entity</div>
-                  <div className="mt-1 truncate text-sm font-medium text-slate-700" title={p.llc_name ?? "Unknown LLC"}>
-                    {p.llc_name ?? "Unknown LLC"}
+                  <div className="text-[10px] font-medium uppercase tracking-wide text-slate-400">{osmOperator ? "Operator tag" : "Registered entity"}</div>
+                  <div className="mt-1 truncate text-sm font-medium text-slate-700" title={entityName ?? "Unknown LLC"}>
+                    {entityName ?? (atlasOnly ? "No operator mapped" : "Unknown LLC")}
                   </div>
                 </div>
                 <div className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-slate-400">→</div>
@@ -149,7 +153,11 @@ export default function ProjectPanel({
                 </div>
               </div>
               <div className="mt-3 border-t border-slate-100 pt-2.5 text-[11px] text-slate-500">
-                {p.resolved_by ? `Ownership resolved via ${p.resolved_by}` : "Parent company has not been resolved"}
+                {osmOperator
+                  ? "Operator named in OpenStreetMap, not a registered-entity record"
+                  : p.resolved_by
+                    ? `Ownership resolved via ${p.resolved_by}`
+                    : "Parent company has not been resolved"}
               </div>
             </div>
           </section>
@@ -198,6 +206,18 @@ export default function ProjectPanel({
 
           <section>
             <SectionHeading detail={scored ? `${satisfied} of ${factors.length} signals · ${p.score} pts` : "Not scored yet"}>Evidence signals</SectionHeading>
+            {p.state !== "TX" ? (
+              <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-4 text-amber-900">
+                These signals are Texas record types (TDLR, Comptroller, TCEQ). {STATE_NAMES[p.state] ?? p.state} has no
+                equivalent loaded yet, so an unmet signal here means “not published here”, not “checked and missing”.
+              </p>
+            ) : (
+              atlasOnly && (
+                <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[11px] leading-4 text-amber-900">
+                  Mapped from the IM3 data-center atlas only. No Texas public record has been matched to this site yet.
+                </p>
+              )
+            )}
             <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
               {factors.map((factor, index) => {
                 const ok = !!p.factors?.[factor.key];

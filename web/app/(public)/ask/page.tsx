@@ -22,10 +22,10 @@ export default async function AskPage(props: PageProps<"/ask">) {
           <p className="ub-eyebrow">Ask Uncloak</p>
           <h1 className="rw-display-sm mt-3">Answers from the records</h1>
           <p className="mt-3 max-w-2xl text-[17px] leading-7 text-[var(--body)]">
-            Ask about Texas data-center projects, companies, permits, or the ERCOT queue. Answers use only the public-record data behind Uncloak.
+            Ask about data-center projects and companies across the U.S., Texas permits, or the ERCOT queue. Answers use only the public-record data behind Uncloak.
           </p>
           <div className="mt-8 max-w-3xl">
-            <SearchBox size="lg" defaultValue={question} placeholder="Ask a question about Texas data centers…" />
+            <SearchBox size="lg" defaultValue={question} placeholder="Ask a question about U.S. data centers…" />
           </div>
 
           {!result ? (

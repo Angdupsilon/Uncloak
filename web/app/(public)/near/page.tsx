@@ -71,7 +71,7 @@ export default async function NearPage(props: PageProps<"/near">) {
             {res.kind === "ok" ? <>Data-center sites near {res.where.label.split(",").slice(0, 2).join(",")}</> : "Find data-center sites near a place"}
           </h1>
           <p className="rw-subtitle mt-5 max-w-3xl">
-            Enter a Texas city, county, ZIP code or address, or share your location. We list every site in our records within the distance you choose,
+            Enter a U.S. city, county, ZIP code or address, or share your location. We list every site in our records within the distance you choose,
             closest first, and explain what each one is.
           </p>
 
@@ -99,7 +99,7 @@ export default async function NearPage(props: PageProps<"/near">) {
             )}
             {res.kind === "error" && <ErrorState />}
             {res.kind === "unlocated" && (
-              <EmptyState title={res.where.reason === "outside_texas" ? "Outside our coverage area" : "We couldn't find that place"}>{res.where.message}</EmptyState>
+              <EmptyState title={res.where.reason === "outside_us" ? "Outside our coverage area" : "We couldn't find that place"}>{res.where.message}</EmptyState>
             )}
             {res.kind === "ok" && <Found res={res} radius={radius} />}
           </div>
@@ -127,7 +127,7 @@ function Found({ res, radius }: { res: Extract<Loaded, { kind: "ok" }>; radius: 
         </div>
         <p className="rw-meta max-w-md">
           Search point: {where.label}. Located with {METHOD[where.method]}. Distances are straight-line. Only the {data.total_located} sites with a
-          published or reviewed location can be placed.
+          published, reviewed or mapped location can be placed.
         </p>
       </div>
 

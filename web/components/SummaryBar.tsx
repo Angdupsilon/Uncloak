@@ -1,6 +1,7 @@
 "use client";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { fmtDate, fmtGW, fmtMonth, isLink } from "@/lib/format";
+import { STATE_NAMES } from "@/lib/geo";
 import type { Summary } from "@/lib/types";
 
 /** Queue colours. Black is the only conversion colour in the design system, so
@@ -104,7 +105,18 @@ function Row({
   );
 }
 
-export default function SummaryBar({ summary, loading, error }: { summary: Summary | null; loading: boolean; error: string | null }) {
+export default function SummaryBar({
+  summary,
+  loading,
+  error,
+  region = null,
+}: {
+  summary: Summary | null;
+  loading: boolean;
+  error: string | null;
+  /** USPS code of the state in focus on the map, or null for the whole country. */
+  region?: string | null;
+}) {
   if (error && !summary) {
     return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-[#5e5e5e]">Summary unavailable: {error}</div>;
   }
@@ -131,6 +143,20 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
     <div
       className={`ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}
     >
+      {/* ERCOT is the Texas grid; no other grid operator's data-center load report is loaded yet. */}
+      <div className="rounded-lg bg-[#f3f3f3] px-3 py-2 text-[12px] leading-4 text-[#5e5e5e]">
+        {region && region !== "TX" ? (
+          <>
+            <span className="font-medium text-black">Texas figures.</span> No grid-operator data-center report is loaded for{" "}
+            {STATE_NAMES[region] ?? region}, so this panel shows ERCOT and Texas projects.
+          </>
+        ) : (
+          <>
+            <span className="font-medium text-black">Texas · ERCOT.</span> Queue figures and project capacity cover Texas projects with public records.
+          </>
+        )}
+      </div>
+
       {/* 1. The headline: how much requested load is still waiting on ERCOT. */}
       <section>
         <div className="ub-body-md-strong text-[#5e5e5e]">ERCOT approval status</div>
@@ -170,7 +196,7 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
           a gap here is our coverage, not evidence that load is speculative. */}
       <section className="border-t border-[#efefef] pt-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="ub-body-md-strong text-[#5e5e5e]">Projects found in public records</div>
+          <div className="ub-body-md-strong text-[#5e5e5e]">Texas projects found in public records</div>
           {spark.length > 1 && !noMw && (
             <div className="h-7 w-16 shrink-0" aria-label="Weekly evidence-weighted vs found GW">
               <ResponsiveContainer width="100%" height="100%">

@@ -3,11 +3,11 @@
 // for street addresses, OpenStreetMap Nominatim for places and ZIP codes). They locate the
 // visitor's search, not a site, and add no data to Uncloak. If they're unreachable, a
 // city or county that appears in our records falls back to the center of its recorded sites.
-import { inTexasBox, parseLatLon } from "./geo";
+import { inUSBox, parseLatLon } from "./geo";
 import { datasetPlace } from "./publicQueries";
 import type { GeocodeFailure, GeocodeResult } from "./types";
 
-const UA = "Uncloak public research site (Texas data-center records)";
+const UA = "Uncloak public research site (U.S. data-center records)";
 const TIMEOUT_MS = 6000;
 
 // Small in-memory cache: repeated example searches never hit the geocoders twice, and
@@ -19,7 +19,7 @@ type Out = GeocodeResult | GeocodeFailure;
 const notFound = (q: string): GeocodeFailure => ({
   ok: false,
   reason: "not_found",
-  message: `We couldn't find “${q}” in Texas. Try a city, county, ZIP code or full street address.`,
+  message: `We couldn't find “${q}” in the U.S. Try a city and state, a county, a ZIP code or a full street address.`,
 });
 
 async function census(q: string): Promise<Out | null> {
@@ -34,9 +34,6 @@ async function census(q: string): Promise<Out | null> {
   if (!m) return null;
   const lat = Number(m.coordinates?.y);
   const lon = Number(m.coordinates?.x);
-  if (m.addressComponents?.state && m.addressComponents.state !== "TX") {
-    return { ok: false, reason: "outside_texas", message: `${m.matchedAddress} is outside Texas. Uncloak covers Texas public records only.` };
-  }
   return { ok: true, label: m.matchedAddress, lat, lon, method: "census", county: null };
 }
 
@@ -70,17 +67,9 @@ async function nominatim(q: string, placesOnly: boolean): Promise<Out | null> {
   }[];
   const list = placesOnly ? all.filter((x) => x.category === "place" || x.category === "boundary" || PLACE_TYPES.has(x.addresstype ?? "")) : all;
   if (!list.length) return null;
-  const tx = list.find((x) => x.address?.state === "Texas");
-  if (!tx) {
-    const first = list[0];
-    return {
-      ok: false,
-      reason: "outside_texas",
-      message: `The closest match, ${first.display_name}, is outside Texas. Uncloak covers Texas public records only.`,
-    };
-  }
-  const county = /county/i.test(q) ? (tx.address?.county?.replace(/\s+county$/i, "") ?? null) : null;
-  return { ok: true, label: tx.display_name.replace(/, United States$/, ""), lat: Number(tx.lat), lon: Number(tx.lon), method: "osm", county };
+  const top = list[0];
+  const county = /county|parish/i.test(q) ? (top.address?.county?.replace(/\s+(county|parish)$/i, "") ?? null) : null;
+  return { ok: true, label: top.display_name.replace(/, United States$/, ""), lat: Number(top.lat), lon: Number(top.lon), method: "osm", county };
 }
 
 export async function geocode(raw: string): Promise<Out> {
@@ -92,9 +81,9 @@ export async function geocode(raw: string): Promise<Out> {
 
   const ll = parseLatLon(q);
   if (ll) {
-    const out: Out = inTexasBox(ll[0], ll[1])
+    const out: Out = inUSBox(ll[0], ll[1])
       ? { ok: true, label: "Your location", lat: ll[0], lon: ll[1], method: "coordinates", county: null }
-      : { ok: false, reason: "outside_texas", message: "That location is outside Texas. Uncloak covers Texas public records only." };
+      : { ok: false, reason: "outside_us", message: "That location is outside the U.S. Uncloak covers U.S. data-center records only." };
     return out; // never cached: coordinates are the visitor's own location
   }
 
@@ -102,29 +91,23 @@ export async function geocode(raw: string): Promise<Out> {
   let out: Out | null = null;
   let externalFailed = false;
   try {
-    if (looksLikeAddress) {
-      // Census wants a state; add one if the visitor didn't.
-      out = await census(/\b(tx|texas)\b/i.test(q) ? q : `${q}, TX`);
-    }
-    const placesOnly = !looksLikeAddress;
-    if (!out) out = await nominatim(/^\d{5}$/.test(q) || /\b(tx|texas)\b/i.test(q) || looksLikeAddress ? q : `${q}, Texas`, placesOnly);
-    // "Chicago, Texas" finds no place, so ask again without the state to say where it is.
-    if (!out && !/\b(tx|texas)\b/i.test(q) && !/^\d{5}$/.test(q)) out = await nominatim(q, placesOnly);
+    if (looksLikeAddress) out = await census(q);
+    if (!out) out = await nominatim(q, !looksLikeAddress);
   } catch (err) {
     console.warn("[gridsight geocode]", err);
     externalFailed = true;
   }
 
-  if (!out || (out.ok === false && out.reason !== "outside_texas")) {
+  if (!out || (out.ok === false && out.reason !== "outside_us")) {
     const local = await datasetPlace(q);
     if (local) out = { ok: true, ...local, method: "dataset" };
   }
-  if (out?.ok && !inTexasBox(out.lat, out.lon)) {
-    out = { ok: false, reason: "outside_texas", message: `${out.label} is outside Texas. Uncloak covers Texas public records only.` };
+  if (out?.ok && !inUSBox(out.lat, out.lon)) {
+    out = { ok: false, reason: "outside_us", message: `${out.label} is outside the U.S. Uncloak covers U.S. data-center records only.` };
   }
   if (!out) {
     out = externalFailed
-      ? { ok: false, reason: "lookup_failed", message: "The address lookup service didn't respond. Try a Texas city or county name, or try again shortly." }
+      ? { ok: false, reason: "lookup_failed", message: "The address lookup service didn't respond. Try a city or county name with its state (for example “Loudoun County, VA”), or try again shortly." }
       : notFound(q);
   }
   if (!(out.ok === false && out.reason === "lookup_failed")) memo.set(key, out);

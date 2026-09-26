@@ -88,8 +88,15 @@ n = one("select count(*) from evidence_events where ts < '2000-01-01'")
 check("values","no implausibly old evidence (<2000)", n == 0, f"n={n} (earliest {one('select min(ts)::date from evidence_events')})")
 n = one("select count(*) from evidence_events where source_url is null or source_url !~ '^https://'")
 check("values","every event has an https source link", n == 0, f"missing={n}")
-n = one("select count(*) from projects where lat is not null and not (lat between 25.8 and 36.6 and lon between -106.7 and -93.5)")
-check("values","coordinates inside Texas bounding box", n == 0, f"outside={n}")
+n = one("select count(*) from projects where state = 'TX' and lat is not null and not (lat between 25.8 and 36.6 and lon between -106.7 and -93.5)")
+check("values","Texas coordinates inside Texas bounding box", n == 0, f"outside={n}")
+# Continental US, Alaska, Hawaii and Puerto Rico (a per-state box would be stricter).
+n = one("""select count(*) from projects where state <> 'TX' and lat is not null and not (
+          (lat between 24.3 and 49.5 and lon between -125 and -66.8) or (lat between 51 and 71.5 and lon between -180 and -129)
+          or (lat between 18.8 and 22.4 and lon between -160.5 and -154.6) or (lat between 17.8 and 18.6 and lon between -67.4 and -65.2))""")
+check("values","other coordinates inside the U.S.", n == 0, f"outside={n}")
+n = one("select count(*) from projects where state !~ '^[A-Z]{2}$'")
+check("values","every project has a 2-letter state", n == 0, f"bad={n}")
 n = one("select count(*) from projects where (lat is null) <> (lon is null)")
 check("values","lat/lon both set or both null", n == 0)
 check("values","no SAMPLE projects", one("select count(*) from projects where is_sample or name ilike 'SAMPLE%'") == 0)
@@ -164,8 +171,11 @@ latest_score = one("select max(ts) from project_scores")
 check("timescale","aggregate refreshed through latest scores", latest_week is not None and latest_score - latest_week < timedelta(days=7), f"week={latest_week} scores={latest_score}")
 agg = conn.execute("select realistic_gw, found_gw, projects from weekly_realistic_demand where week=%s", (latest_week,)).fetchone()
 raw = conn.execute("""select sum(p*coalesce(mw,0))/1000.0, sum(coalesce(mw,0))/1000.0, count(*) from (
-        select distinct on (project_id) project_id, probability p, mw_est mw from project_scores
-        where ts >= %s and ts < %s + interval '7 days' order by project_id, ts desc) x""", (latest_week, latest_week)).fetchone()
+        select distinct on (s.project_id) s.project_id, s.probability p, s.mw_est mw from project_scores s
+        join projects pr on pr.project_id = s.project_id and pr.state = 'TX'
+        where s.ts >= %s and s.ts < %s + interval '7 days'
+          and exists (select 1 from evidence_events x where x.project_id = s.project_id and x.event_type <> 'site_mapped')
+        order by s.project_id, s.ts desc) x""", (latest_week, latest_week)).fetchone()
 check("timescale","aggregate totals equal raw recomputation (latest week)",
       agg and all(math.isclose(float(a or 0), float(b or 0), rel_tol=1e-9, abs_tol=1e-12) for a, b in zip(agg, raw)), f"agg={agg} raw={raw}")
 
@@ -176,11 +186,15 @@ check("ercot","observed <= approved <= requested where stated", not bad, str(bad
 check("ercot","every row links to an ercot.com document", len(er) > 0 and all((r[4] or "").startswith("https://www.ercot.com/") for r in er), f"rows={len(er)}")
 
 # ---------- seed parity ----------
-seed_ev = pd.read_csv(config.ROOT / "data/seed/evidence_events.csv", dtype=str, keep_default_na=False)
+# data/seed always loads; data/seed_national is counted only when the database holds its rows.
+seed_dirs = ["data/seed"] + (["data/seed_national"] if one("select count(*) from evidence_events where event_type='site_mapped'") else [])
+seed_ev = pd.concat([pd.read_csv(config.ROOT / d / "evidence_events.csv", dtype=str, keep_default_na=False) for d in seed_dirs])
 valid = seed_ev[~seed_ev.apply(lambda r: "<<FILL" in "|".join(r.values), axis=1)]
-check("parity","DB events == loadable seed rows", len(valid) == one("select count(*) from evidence_events"), f"seed={len(valid)} db={one('select count(*) from evidence_events')}")
-seed_pr = pd.read_csv(config.ROOT / "data/seed/projects.csv", dtype=str, keep_default_na=False)
+check("parity","DB events == loadable seed rows", len(valid) == one("select count(*) from evidence_events"), f"seed={len(valid)} db={one('select count(*) from evidence_events')} dirs={seed_dirs}")
+seed_pr = pd.concat([pd.read_csv(config.ROOT / d / "projects.csv", dtype=str, keep_default_na=False) for d in seed_dirs])
 check("parity","DB projects == seed projects with a name", (~seed_pr.name.str.contains('<<FILL')).sum() == one("select count(*) from projects"))
+n = one("select count(*) from evidence_events where event_type='site_mapped' and value_num is not null and value_num <= 0")
+check("values","atlas footprints positive where stated", n == 0, f"bad={n}")
 
 # ---------- report ----------
 w = max(len(r[1]) for r in results)

@@ -53,6 +53,13 @@ export const UI = {
   markerHaloScale: 2.4,
   txCenter: [31.0, -99.3] as [number, number],
   txZoom: 6,
+  usCenter: [39.5, -98.35] as [number, number],
+  usZoom: 4,
+  /** Contiguous-U.S. bounding box, fitted when no state is in focus. */
+  usBounds: [
+    [24.4, -124.8],
+    [49.4, -66.9],
+  ] as [[number, number], [number, number]],
   /** Texas bounding box, fitted on mount so framing adapts to the panel size
    *  instead of depending on a fixed zoom that only looks right at one width. */
   txBounds: [

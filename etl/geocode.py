@@ -22,6 +22,20 @@ import httpx
 
 from common import connect
 
+# Nominatim wants a state name; the Census batch geocoder takes the USPS code.
+STATE_NAMES = {
+    "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California", "CO": "Colorado",
+    "CT": "Connecticut", "DE": "Delaware", "DC": "District of Columbia", "FL": "Florida", "GA": "Georgia",
+    "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas",
+    "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland", "MA": "Massachusetts",
+    "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri", "MT": "Montana",
+    "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico",
+    "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma",
+    "OR": "Oregon", "PA": "Pennsylvania", "PR": "Puerto Rico", "RI": "Rhode Island", "SC": "South Carolina",
+    "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont", "VA": "Virginia",
+    "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming",
+}
+
 CENSUS_URL = "https://geocoding.geo.census.gov/geocoder/locations/addressbatch"
 BENCHMARK = "Public_AR_Current"
 BATCH_LIMIT = 10_000  # Census batch limit per request
@@ -34,8 +48,8 @@ def census(todo: list[tuple]) -> dict[int, tuple[float, float]]:
     for start in range(0, len(todo), BATCH_LIMIT):
         buf = io.StringIO()
         w = csv.writer(buf)
-        for pid, address, city, _county in todo[start:start + BATCH_LIMIT]:
-            w.writerow([pid, address, city or "", "TX", ""])
+        for pid, address, city, _county, state in todo[start:start + BATCH_LIMIT]:
+            w.writerow([pid, address, city or "", state, ""])
         try:
             resp = httpx.post(CENSUS_URL, data={"benchmark": BENCHMARK},
                               files={"addressFile": ("addresses.csv", buf.getvalue(), "text/csv")}, timeout=120)
@@ -53,11 +67,11 @@ def census(todo: list[tuple]) -> dict[int, tuple[float, float]]:
 def nominatim(todo: list[tuple]) -> dict[int, tuple[float, float]]:
     found: dict[int, tuple[float, float]] = {}
     with httpx.Client(headers={"User-Agent": NOMINATIM_UA}, timeout=30) as client:
-        for pid, address, city, county in todo:
+        for pid, address, city, county, state in todo:
             number = re.match(r"\s*(\d+)\b", address or "")
             if not number:
                 continue  # no house number to verify against, so skip
-            params = {"street": address, "city": city or "", "state": "Texas", "country": "USA",
+            params = {"street": address, "city": city or "", "state": STATE_NAMES.get(state, state), "country": "USA",
                       "format": "jsonv2", "addressdetails": 1, "limit": 1}
             if county:
                 params["county"] = f"{county} County"
@@ -79,7 +93,7 @@ def nominatim(todo: list[tuple]) -> dict[int, tuple[float, float]]:
 
 def main(use_osm: bool = True) -> int:
     with connect() as conn, conn.cursor() as cur:
-        cur.execute("""SELECT project_id, address, city, county FROM projects
+        cur.execute("""SELECT project_id, address, city, county, state FROM projects
                        WHERE (lat IS NULL OR lon IS NULL) AND address IS NOT NULL""")
         todo = cur.fetchall()
         if not todo:
@@ -91,7 +105,7 @@ def main(use_osm: bool = True) -> int:
             found.update(nominatim([t for t in todo if t[0] not in found]))
         for pid, (lat, lon) in found.items():
             cur.execute("UPDATE projects SET lat = %s, lon = %s WHERE project_id = %s", (lat, lon, pid))
-        for pid, address, city, _ in todo:
+        for pid, address, city, *_ in todo:
             if pid not in found:
                 print(f"  geocode: no address-level match for project {pid}: {address}, {city or ''}")
         print(f"  geocode: updated {len(found)} of {len(todo)} projects "

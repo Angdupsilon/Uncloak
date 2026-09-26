@@ -43,6 +43,7 @@ const EVENT_NOUN: Record<string, [string, string]> = {
   certified: ["Comptroller certification", "Comptroller certifications"],
   permit_filed: ["TCEQ permit filed", "TCEQ permits filed"],
   status_change: ["status change", "status changes"],
+  site_mapped: ["atlas mapping", "atlas mappings"],
 };
 
 /** One-line description of a single event, e.g. "Tenant named: OpenAI". */
@@ -63,6 +64,10 @@ export function describeEvent(e: EvidenceEvent): string {
       return "Inspection done";
     case "status_change":
       return `Status${p.status ? `: ${String(p.status)}` : " changed"}`;
+    case "site_mapped":
+      return `Mapped in the IM3 data-center atlas (OpenStreetMap)${
+        e.value_num != null ? ` · ${Math.round(e.value_num).toLocaleString()} sq ft footprint` : ""
+      }`;
     default:
       return e.event_type;
   }

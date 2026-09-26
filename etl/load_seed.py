@@ -5,7 +5,10 @@ Names are resolved to IDs. Unknown event_type/source values fail loudly.
 Cells containing <<FILL>> are treated as missing; rows missing a required
 field are skipped with a warning so a partially filled seed still loads.
 
-Usage: python etl/load_seed.py --dir data/seed|data/sample [--reset]
+A projects.csv `state` column (USPS code) is optional; rows without one are Texas, because the
+Texas seeds predate the column.
+
+Usage: python etl/load_seed.py --dir data/seed|data/sample [--dir data/seed_national] [--reset]
 """
 from __future__ import annotations
 
@@ -21,6 +24,7 @@ import config
 from common import clean, connect, is_fill, parse_payload, to_float
 
 ORIGIN = "seed_csv"  # payload marker so reloading replaces only rows this script inserted
+DEFAULT_STATE = "TX"
 
 
 def read_csv(directory: Path, name: str) -> pd.DataFrame:
@@ -126,14 +130,17 @@ def load_projects(cur, df: pd.DataFrame, sample: bool) -> tuple[int, set[str]]:
         filled = [c for c in ("county", "city", "address", "lat", "lon", "llc_name") if is_fill(row.get(c))]
         if filled:
             warn(f"projects.csv {name!r}: {', '.join(filled)} still <<FILL>> (loaded as null)")
+        state = (clean(row.get("state")) or DEFAULT_STATE).upper()
+        if len(state) != 2 or not state.isalpha():
+            raise SystemExit(f"projects.csv row {i + 2}: state must be a 2-letter USPS code, got {state!r}")
         cur.execute(
-            """INSERT INTO projects (name, county, city, address, lat, lon, entity_id, is_sample)
-               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-               ON CONFLICT (name) DO UPDATE SET county = EXCLUDED.county, city = EXCLUDED.city,
+            """INSERT INTO projects (name, state, county, city, address, lat, lon, entity_id, is_sample)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+               ON CONFLICT (name) DO UPDATE SET state = EXCLUDED.state, county = EXCLUDED.county, city = EXCLUDED.city,
                  address = EXCLUDED.address,
                  lat = COALESCE(EXCLUDED.lat, projects.lat), lon = COALESCE(EXCLUDED.lon, projects.lon),
                  entity_id = EXCLUDED.entity_id, is_sample = EXCLUDED.is_sample""",
-            (name, clean(row.get("county")), clean(row.get("city")), clean(row.get("address")),
+            (name, state, clean(row.get("county")), clean(row.get("city")), clean(row.get("address")),
              to_float(row.get("lat")), to_float(row.get("lon")), entity_id,
              sample or name.upper().startswith("SAMPLE")),
         )
@@ -219,7 +226,7 @@ def load_ercot(cur, df: pd.DataFrame) -> int:
     return n
 
 
-def main(directory: Path, reset: bool = False) -> None:
+def main(directory: Path, reset: bool = False, purge: bool = True) -> None:
     directory = Path(directory)
     if not directory.is_dir():
         raise SystemExit(f"{directory} is not a directory")
@@ -228,7 +235,7 @@ def main(directory: Path, reset: bool = False) -> None:
     with connect() as conn, conn.cursor() as cur:
         if reset:
             reset_all(cur)
-        elif not sample:
+        elif not sample and purge:
             purge_sample(cur)
         print(f"  parents:  {load_parents(cur, read_csv(directory, 'parents.csv'))}")
         print(f"  entities: {load_entities(cur, read_csv(directory, 'entities.csv'))}")
@@ -240,8 +247,10 @@ def main(directory: Path, reset: bool = False) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--dir", required=True, help="data/seed or data/sample")
+    ap.add_argument("--dir", required=True, action="append",
+                    help="data/seed or data/sample; repeat to add more (e.g. --dir data/seed_national)")
     ap.add_argument("--reset", action="store_true", help="truncate all GridSight tables first")
     args = ap.parse_args()
-    main(Path(args.dir), args.reset)
+    for n, d in enumerate(args.dir):
+        main(Path(d), args.reset and n == 0, purge=n == 0)
     sys.exit(0)

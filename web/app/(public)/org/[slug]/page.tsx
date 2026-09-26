@@ -13,6 +13,7 @@ import { getOrgIndex, getOrgProfile, resolveOrgSlug } from "@/lib/publicQueries"
 import { todayUtc } from "@/lib/queries";
 import { fmtDate, fmtMW, fmtUSD } from "@/lib/format";
 import { RESOLVED_BY_LABEL, SOURCES, type SourceKey } from "@/lib/metrics";
+import { countyLabel, STATE_NAMES } from "@/lib/geo";
 import { siteHref } from "@/lib/slug";
 import type { OrgProfile, Site } from "@/lib/types";
 
@@ -20,8 +21,8 @@ export async function generateMetadata(props: PageProps<"/org/[slug]">): Promise
   const { slug } = await props.params;
   const org = await resolveOrgSlug(slug).catch(() => null);
   return {
-    title: org ? `${org.name}: Texas data-center sites · Uncloak` : "Organization · Uncloak",
-    description: org ? `Public records linking ${org.name} to data-center sites in Texas, with sources.` : undefined,
+    title: org ? `${org.name}: data-center sites · Uncloak` : "Organization · Uncloak",
+    description: org ? `Public records and mapped sites linking ${org.name} to U.S. data-center sites, with sources.` : undefined,
   };
 }
 
@@ -72,9 +73,17 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
   const entitiesWithSites = p.entities.filter((e) => e.sites.length);
   const sourceKeys = p.sources.map((x) => x.source).filter((k): k is SourceKey => k in SOURCES);
 
-  const counties = new Map<string, number>();
-  for (const x of s) if (x.county) counties.set(x.county, (counties.get(x.county) ?? 0) + 1);
-  const countyList = [...counties.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  // Keyed by county and state: the same county name exists in many states.
+  const counties = new Map<string, { county: string; state: string; n: number }>();
+  for (const x of s) {
+    if (!x.county) continue;
+    const key = `${x.county}|${x.state}`;
+    const cur = counties.get(key) ?? { county: x.county, state: x.state, n: 0 };
+    cur.n += 1;
+    counties.set(key, cur);
+  }
+  const countyList = [...counties.values()].sort((a, b) => b.n - a.n || a.county.localeCompare(b.county));
+  const states = new Set(s.map((x) => x.state));
   const noCounty = s.filter((x) => !x.county).length;
 
   const earliest = [...s].filter((x) => x.first_evidence).sort((a, b) => Date.parse(a.first_evidence!) - Date.parse(b.first_evidence!))[0];
@@ -97,7 +106,7 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
             <>No site in the current records is linked to {p.name}.</>
           ) : (
             <>
-              Linked to {plural(n, "data-center site")} in Texas public records
+              Linked to {plural(n, "data-center site")} in {states.size === 1 && states.has("TX") ? "Texas public records" : "our records"}
               {certified.length === n ? ", all registered for state data-center tax exemptions." : "."}
             </>
           )}
@@ -112,7 +121,7 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
             <StatBand>
               <BigStat
                 metric="sites"
-                label="Sites in Texas"
+                label={states.size === 1 ? `Sites in ${STATE_NAMES[[...states][0]] ?? [...states][0]}` : `Sites in ${states.size} states`}
                 value={n.toLocaleString()}
                 note={p.comparison.rank_sites ? `#${p.comparison.rank_sites} of ${p.comparison.orgs_ranked} organizations` : undefined}
                 period={asOfLabel}
@@ -140,7 +149,7 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
               />
               <BigStat
                 metric="counties"
-                label="Texas counties"
+                label="Counties"
                 value={countyList.length ? countyList.length.toLocaleString() : null}
                 note={noCounty ? `${plural(noCounty, "site")} without a published location` : "Every site has a location"}
                 period={asOfLabel}
@@ -174,13 +183,13 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
                 <p>These are the counties where records place {p.name}&apos;s facilities. Pick one to see every recorded site nearby.</p>
                 {countyList.length > 0 && (
                   <ul className="flex flex-wrap gap-2" aria-label="Counties with sites">
-                    {countyList.map(([c, k]) => (
-                      <li key={c}>
+                    {countyList.map(({ county: c, state: st, n: k }) => (
+                      <li key={`${c}|${st}`}>
                         <Link
-                          href={`/near?q=${encodeURIComponent(`${c} County, TX`)}&county=${encodeURIComponent(c)}`}
+                          href={`/near?q=${encodeURIComponent(`${countyLabel(c, st)}, ${st}`)}&county=${encodeURIComponent(c)}`}
                           className="inline-block whitespace-nowrap rounded-full bg-white px-3 py-1 text-[13px] font-medium text-black ring-1 ring-inset ring-[#c9ccd1] hover:ring-black"
                         >
-                          {c} County · {k}
+                          {countyLabel(c, st)}, {st} · {k}
                         </Link>
                       </li>
                     ))}
@@ -244,7 +253,7 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
                   label: `Sites (${n})`,
                   content: (
                     <div className="space-y-3">
-                      <SitesTable sites={s} caption={`${p.name} sites in Texas records`} />
+                      <SitesTable sites={s} caption={`${p.name} sites in our records`} />
                       <p className="rw-meta">Each site is counted once, so totals never double count.</p>
                     </div>
                   ),

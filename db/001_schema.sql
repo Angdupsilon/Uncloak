@@ -10,13 +10,14 @@ CREATE TABLE entities (
   entity_id   serial PRIMARY KEY,
   llc_name    text NOT NULL,
   parent_id   int REFERENCES parents,
-  resolved_by text,                     -- 'COMPTROLLER' | 'TDLR_TENANT' | 'MANUAL'
+  resolved_by text,                     -- 'COMPTROLLER' | 'TDLR_TENANT' | 'TDLR_OWNER' | 'OSM_OPERATOR' | 'MANUAL'
   source_url  text
 );
 
 CREATE TABLE projects (
   project_id  serial PRIMARY KEY,
   name        text NOT NULL,
+  state       char(2) NOT NULL DEFAULT 'TX', -- USPS code; Texas seeds predate the column
   county      text,
   city        text,
   address     text,
@@ -32,6 +33,7 @@ CREATE TABLE sites (
   site_id              serial PRIMARY KEY,
   site_key             text NOT NULL UNIQUE,
   name                 text NOT NULL,
+  state                char(2),
   county               text,
   city                 text,
   address              text,
@@ -108,7 +110,7 @@ CREATE TABLE source_refreshes (
 CREATE TABLE evidence_events (
   ts          timestamptz NOT NULL,     -- real-world date of the evidence
   project_id  int NOT NULL REFERENCES projects,
-  source      text NOT NULL,            -- 'TDLR' | 'COMPTROLLER' | 'TCEQ' | 'OTHER'
+  source      text NOT NULL,            -- 'TDLR' | 'COMPTROLLER' | 'TCEQ' | 'OSM' | 'OTHER'
   event_type  text NOT NULL,            -- see spec 4.3
   value_num   double precision,         -- e.g., construction cost USD, sq ft
   payload     jsonb,                    -- raw fields (record id, tenant name, etc.)
@@ -147,6 +149,7 @@ CREATE TABLE scoring_config (
 -- Helpers for idempotent loading (not required by the spec, safe to keep).
 CREATE UNIQUE INDEX entities_llc_name_key ON entities (llc_name);
 CREATE UNIQUE INDEX projects_name_key     ON projects (name);
+CREATE INDEX projects_state_idx           ON projects (state);
 CREATE INDEX project_sites_site_idx       ON project_sites (site_id);
 CREATE INDEX project_status_latest_idx    ON project_status_history (project_id, observed_at DESC);
 CREATE INDEX entity_parent_latest_idx     ON entity_parent_history (entity_id, observed_at DESC);

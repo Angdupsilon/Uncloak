@@ -8,6 +8,8 @@
 --   realistic_gw_delta  change in evidence-weighted GW vs. the previous week
 --   projects_up         projects whose evidence index rose vs. the previous week
 --   projects_new        projects with their first evidence that week
+-- ERCOT is the Texas grid: found/realistic GW and the project moves count Texas projects with a
+-- public record (atlas-only sites, whose sole evidence is `site_mapped`, are left out).
 
 CREATE OR REPLACE VIEW queue_timeline AS
 WITH moves AS (
@@ -15,9 +17,11 @@ WITH moves AS (
          COUNT(*) FILTER (WHERE prev_p IS NOT NULL AND p > prev_p) AS projects_up,
          COUNT(*) FILTER (WHERE prev_p IS NULL)                    AS projects_new
   FROM (
-    SELECT week, project_id, p,
-           lag(p) OVER (PARTITION BY project_id ORDER BY week) AS prev_p
-    FROM weekly_project_state
+    SELECT w.week, w.project_id, w.p,
+           lag(w.p) OVER (PARTITION BY w.project_id ORDER BY w.week) AS prev_p
+    FROM weekly_project_state w
+    JOIN projects pr ON pr.project_id = w.project_id AND pr.state = 'TX'
+     AND EXISTS (SELECT 1 FROM evidence_events x WHERE x.project_id = w.project_id AND x.event_type <> 'site_mapped')
   ) s
   GROUP BY week
 )

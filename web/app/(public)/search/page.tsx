@@ -54,7 +54,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
                 {real.length === 0 && (
                   <div className="mb-10">
                     <EmptyState title={`No organizations, sites or entities match “${q}”`}>
-                      The records only cover Texas data-center sites. Check the spelling, try a shorter name, or search the place instead. Many sites are
+                      The records cover data-center sites in Texas public records and the IM3 data-center atlas. Check the spelling, try a shorter name, or search the place instead. Many sites are
                       filed under LLC names, so a company can appear under a different name.
                     </EmptyState>
                   </div>

@@ -54,8 +54,8 @@ export default async function Methodology() {
           <p className="ub-eyebrow">Methodology</p>
           <h1 className="rw-display-sm mt-3">How Uncloak works, and what it can&apos;t tell you</h1>
           <p className="rw-subtitle mt-5 max-w-3xl">
-            Uncloak assembles Texas public records about data-center sites, links them to the organizations behind them, and shows what each record
-            documents. This page explains every step and its limits.
+            Uncloak assembles public records about data-center sites (deepest in Texas) and mapped data-center sites across the U.S., links them to
+            the organizations behind them, and shows what each record documents. This page explains every step and its limits.
           </p>
 
           <div className="mt-14 grid gap-12 lg:grid-cols-[220px_1fr]">
@@ -224,7 +224,17 @@ export default async function Methodology() {
 
               <Section id="limits" title="Coverage limits">
                 <ul className="list-disc space-y-2 pl-6">
-                  <li>Texas only. Company headquarters, and facilities outside Texas, aren&apos;t in this dataset.</li>
+                  <li>
+                    Public records are Texas only (Comptroller, TDLR, TCEQ, ERCOT). Outside Texas, sites come from the IM3 Open Source Data Center Atlas,
+                    which maps data-center buildings from OpenStreetMap. Those sites have a location, footprint and operator tag but no public record yet,
+                    so they score 0 on the evidence index. That means the record types don&apos;t exist there yet, not that evidence was checked and
+                    found missing. Company headquarters aren&apos;t in this dataset.
+                  </li>
+                  <li>
+                    The atlas covers well-mapped buildings, not every data center, and has no sites in Alaska, Delaware, Hawaii, Rhode Island or Vermont.
+                    In Texas, 14 atlas sites that may duplicate an existing registry project are held back for review.
+                  </li>
+                  <li>ERCOT figures, found capacity and the queue timeline cover Texas projects with public records only.</li>
                   <li>
                     The TDLR data comes from a keyword search for &ldquo;data center&rdquo;. Code-named projects whose filings don&apos;t use those words can be
                     missing.

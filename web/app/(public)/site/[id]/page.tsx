@@ -22,7 +22,7 @@ import { getSiteProfile, type SiteProfile } from "@/lib/publicQueries";
 import { getConfig, todayUtc } from "@/lib/queries";
 import { describeEvent, fmtDate, fmtMW, fmtUSD } from "@/lib/format";
 import { TIER_LABELS } from "@/lib/constants";
-import { fmtDistance } from "@/lib/geo";
+import { countyLabel, fmtDistance } from "@/lib/geo";
 import { PROGRAM_HELP, RESOLVED_BY_LABEL, SOURCES, type SourceKey } from "@/lib/metrics";
 import { orgHref, siteHref } from "@/lib/slug";
 import type { FactorConfig } from "@/lib/types";
@@ -76,16 +76,23 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
   const scores = p.timeline?.scores ?? [];
   const siteFactors = (p.timeline?.project.factors ?? {}) as Record<string, boolean>;
   const located = s.lat != null && s.lon != null;
-  const place = [s.city, s.county && `${s.county} County`].filter(Boolean).join(", ");
+  const place = [s.city, s.county && countyLabel(s.county, s.state), s.state].filter(Boolean).join(", ");
   const asOfLabel = `As of ${fmtDate(asOf)}`;
   const cert = p.certification as Record<string, string | null> | null;
   const sourceKeys = s.sources.filter((k): k is SourceKey => k in SOURCES);
   const within10 = p.nearby.filter((x) => x.distance_km <= 16.09);
+  const atlasOnly = s.sources.length > 0 && s.sources.every((x) => x === "OSM");
+  // TDLR construction records exist only in Texas: elsewhere a blank is "not published here".
+  const notHere = `No construction-record source loaded for ${s.state}`;
+  const operatorTag = s.resolved_by === "OSM_OPERATOR";
+  const entityName = s.llc_name?.replace(/ \(OSM operator\)$/, "") ?? null;
   const locationBasis = !located
     ? "Location unavailable: no address or reviewed location is published for this site in our records."
     : s.sources.includes("TDLR") && s.address
       ? "Address from the site's TDLR construction registration."
-      : "Location from a reviewed public-record compilation (see Methodology).";
+      : atlasOnly
+        ? "Mapped building or campus centroid from the IM3 data-center atlas (OpenStreetMap), not a public-record address."
+        : "Location from a reviewed public-record compilation (see Methodology).";
   const dashboardHref = `/dashboard?site=${s.project_id}${s.parent ? `&parent=${encodeURIComponent(s.parent)}` : ""}`;
 
   return (
@@ -102,7 +109,9 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
         <div className="max-w-3xl">
           <div className="flex flex-wrap items-center gap-2">
             <span className="ub-eyebrow">Facility</span>
-            <span className="rounded-full bg-[var(--canvas-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--hairline-mid)]">From public records, not a headquarters</span>
+            <span className="rounded-full bg-[var(--canvas-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--hairline-mid)]">
+              {atlasOnly ? "Mapped site, not a headquarters" : "From public records, not a headquarters"}
+            </span>
             {s.is_sample && <SampleBadge />}
           </div>
           <h1 className="rw-display-sm mt-3 text-black">{s.name}</h1>
@@ -115,10 +124,25 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
                 <Link href={orgHref(s.parent)} className="rw-link">
                   {s.parent}
                 </Link>{" "}
-                through the registered entity <span className="font-medium text-black">{s.llc_name}</span>.{" "}
+                {operatorTag ? (
+                  <>
+                    through the operator named on the mapped site in OpenStreetMap, <span className="font-medium text-black">{entityName}</span>.{" "}
+                  </>
+                ) : (
+                  <>
+                    through the registered entity <span className="font-medium text-black">{s.llc_name}</span>.{" "}
+                  </>
+                )}
               </>
+            ) : atlasOnly ? (
+              <>No operator is named on the mapped site. </>
             ) : (
               <>Its registered entity{s.llc_name ? ` (${s.llc_name})` : ""} hasn&apos;t been linked to a larger organization. </>
+            )}
+            {atlasOnly && (
+              <>
+                Its only record is a mapping in the IM3 data-center atlas{s.state === "TX" ? "; no Texas public record has been matched to it yet" : ""}.{" "}
+              </>
             )}
             {s.certified_at && (
               <>
@@ -148,7 +172,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             metric="registered_cost"
             label="Construction cost on file"
             value={s.total_cost != null ? fmtUSD(s.total_cost) : null}
-            note={s.total_cost != null ? plural(s.tdlr_registrations, "TDLR registration") : "No cost registered"}
+            note={s.total_cost != null ? plural(s.tdlr_registrations, "TDLR registration") : s.state === "TX" ? "No cost registered" : notHere}
             period="Registrations filed to date"
             sources={<SourceLink url={SOURCES.TDLR.url} label="TDLR TABS" />}
           />
@@ -156,7 +180,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             metric="square_footage"
             label="Floor area"
             value={s.sqft != null ? `${Math.round(s.sqft / 1000).toLocaleString()}k sq ft` : null}
-            note={s.sqft != null ? `${Math.round(s.sqft).toLocaleString()} square feet` : "Not published"}
+            note={s.sqft != null ? `${Math.round(s.sqft).toLocaleString()} square feet` : s.state === "TX" ? "Not published" : notHere}
             period="Registrations filed to date"
             sources={<SourceLink url={SOURCES.TDLR.url} label="TDLR TABS" />}
           />
@@ -176,7 +200,11 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
             metric="evidence"
             label="Evidence strength"
             value={s.tier ? TIER_LABELS[s.tier] : null}
-            note={s.score != null ? `${s.score} of 100 checklist points` : "Not scored yet"}
+            note={
+              s.score != null
+                ? `${s.score} of 100 checklist points${s.state === "TX" ? "" : " · checklist uses Texas record types"}`
+                : "Not scored yet"
+            }
             period={s.scored_at ? `Scored ${fmtDate(s.scored_at)}` : asOfLabel}
             sources={
               <Link href="/methodology#scoring" className="rw-link">

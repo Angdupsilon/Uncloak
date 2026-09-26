@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Circle, CircleMarker, MapContainer, Tooltip, useMap, ZoomControl } from "react-leaflet";
 import { latLngBounds } from "leaflet";
 import { useRouter } from "next/navigation";
-import { TexasSpotlight, VectorBasemap } from "@/components/ProjectMap";
+import { StateSpotlight, VectorBasemap } from "@/components/ProjectMap";
 import { TIER_COLORS_MAP, UI } from "@/lib/constants";
 import type { Tier } from "@/lib/constants";
 
@@ -42,7 +42,7 @@ function Fit({ points, center, radiusKm }: Pick<SiteMapProps, "points" | "center
       const dLon = radiusKm / (111 * Math.cos((center.lat * Math.PI) / 180));
       pts.push([center.lat + dLat, center.lon + dLon], [center.lat - dLat, center.lon - dLon]);
     }
-    if (!pts.length) map.fitBounds(UI.txBounds);
+    if (!pts.length) map.fitBounds(UI.usBounds);
     else if (pts.length === 1) map.setView(pts[0], 11);
     else map.fitBounds(latLngBounds(pts), { padding: [28, 28], maxZoom: 12 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,9 +74,9 @@ export default function SiteMap({ points, center, radiusKm, selectedId, onSelect
   const [gl] = useState(hasWebGL2);
   return (
     <div role="region" aria-label={label} className="gs-map relative h-full w-full overflow-hidden rounded-lg bg-[#aad3df]">
-      <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" zoomControl={false} scrollWheelZoom={false}>
+      <MapContainer center={UI.usCenter} zoom={UI.usZoom} className="h-full w-full" zoomControl={false} scrollWheelZoom={false}>
         {gl && <VectorBasemap />}
-        <TexasSpotlight />
+        <StateSpotlight />
         <ZoomControl position="topright" />
         <Fit points={points} center={center} radiusKm={radiusKm} />
         <FlyToSelected points={points} selectedId={selectedId} />

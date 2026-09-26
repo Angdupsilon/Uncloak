@@ -8,6 +8,7 @@ capacity observations and optional ERCOT links are then loaded with their proven
 from __future__ import annotations
 
 import csv
+import json
 import re
 from collections import defaultdict
 from datetime import date
@@ -24,7 +25,10 @@ SOURCE_FILES = {
     "COMPTROLLER": ("comptroller_data_centers_*.csv", "https://comptroller.texas.gov/taxes/data-centers/data-center-lists.php"),
     "TDLR": ("tdlr_data_centers_*.csv", "https://www.tdlr.texas.gov/TABS/Search"),
     "ERCOT": ("ercot_large_load_queue.csv", "https://www.ercot.com/gridinfo/resource"),
+    "OSM": ("im3_datacenter_atlas_*.geojson", "https://data.msdlive.org/records/65g71-a4731"),
 }
+# Location precision for atlas features, by the atlas's own feature type.
+ATLAS_PRECISION = {"building": "building", "campus": "campus", "point": "point"}
 
 
 def dated_file(pattern: str) -> Path | None:
@@ -121,11 +125,14 @@ def main(directory: Path) -> None:
     crosswalk = location_crosswalk()
     today = date.today()
     with connect() as conn, conn.cursor() as cur:
-        cur.execute("""SELECT p.project_id,p.name,p.county,p.city,p.address,p.lat,p.lon,p.entity_id,
+        cur.execute("""SELECT p.project_id,p.name,p.state,p.county,p.city,p.address,p.lat,p.lon,p.entity_id,
                               e.parent_id,e.resolved_by,e.source_url
                        FROM projects p LEFT JOIN entities e USING(entity_id) ORDER BY p.project_id""")
-        projects = [dict(zip(("project_id","name","county","city","address","lat","lon","entity_id",
+        projects = [dict(zip(("project_id","name","state","county","city","address","lat","lon","entity_id",
                              "parent_id","resolved_by","entity_source_url"), row)) for row in cur.fetchall()]
+        cur.execute("""SELECT DISTINCT ON (project_id) project_id, source_url, payload->>'atlas_type'
+                       FROM evidence_events WHERE event_type='site_mapped' ORDER BY project_id, ts DESC""")
+        mapped = {pid: (url, kind) for pid, url, kind in cur.fetchall()}
         project_ids = {p["name"]: p["project_id"] for p in projects}
 
         groups: dict[str, list[dict]] = defaultdict(list)
@@ -143,6 +150,12 @@ def main(directory: Path) -> None:
                 precision = "campus" if "offset" in loc.get("basis", "").lower() or len(members) > 1 else "address"
                 confidence = 1.0 if loc["status"].lower() == "verified" else 0.8
                 source_url, basis = loc["source_url"], loc["basis"]
+            elif located and anchor["project_id"] in mapped:
+                source_url, kind = mapped[anchor["project_id"]]
+                method, confidence = "osm_atlas", 0.7
+                precision = ATLAS_PRECISION.get(kind or "", "point")
+                basis = ("Mapped data-center footprint (centroid) from the IM3 Open Source Data Center Atlas, "
+                         "built from OpenStreetMap; not a public-record address")
             elif located:
                 cur.execute("""SELECT source_url FROM evidence_events WHERE project_id=%s AND source='TDLR'
                                AND source_url IS NOT NULL ORDER BY ts DESC LIMIT 1""", (anchor["project_id"],))
@@ -152,10 +165,10 @@ def main(directory: Path) -> None:
             else:
                 method = precision = source_url = basis = None; confidence = None
             name = members[0]["name"] if len(members) == 1 else re.sub(r"\s+(?:I{1,3}|IV|V|VI{0,3}|IX|X)$", "", members[0]["name"])
-            cur.execute("""INSERT INTO sites (site_key,name,county,city,address,lat,lon,location_source_url,
+            cur.execute("""INSERT INTO sites (site_key,name,state,county,city,address,lat,lon,location_source_url,
                          location_method,location_precision,location_confidence,location_basis,reviewed_at)
-                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING site_id""",
-                        (key, name, anchor["county"], anchor["city"], anchor["address"], anchor["lat"], anchor["lon"],
+                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING site_id""",
+                        (key, name, anchor["state"], anchor["county"], anchor["city"], anchor["address"], anchor["lat"], anchor["lon"],
                          source_url, method, precision, confidence, basis, today if loc else None))
             site_id = cur.fetchone()[0]
             for p in members:
@@ -189,8 +202,11 @@ def main(directory: Path) -> None:
         for source, (pattern, url) in SOURCE_FILES.items():
             path = dated_file(pattern)
             if path:
-                with path.open(newline="", encoding="utf-8") as handle:
-                    count = sum(1 for _ in csv.DictReader(handle))
+                if path.suffix == ".geojson":
+                    count = len(json.loads(path.read_text(encoding="utf-8"))["features"])
+                else:
+                    with path.open(newline="", encoding="utf-8") as handle:
+                        count = sum(1 for _ in csv.DictReader(handle))
                 cur.execute("INSERT INTO source_refreshes VALUES (%s,%s,%s,%s,%s)",
                             (source, snapshot_date(path), count, url, str(path.relative_to(config.ROOT))))
         cur.execute("SELECT count(*), min(source_url) FROM evidence_events WHERE source='TCEQ'")
