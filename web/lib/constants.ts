@@ -42,6 +42,8 @@ export const UNRESOLVED_PARENT = "Unresolved";
 export const UI = {
   playStepMs: 300,
   dimmedOpacity: 0.15,
+  /** Keep markers translucent so stacked projects form a visibly darker area. */
+  markerFillOpacity: 0.68,
   markerMinRadiusPx: 5,
   markerRadiusPerSqrtMw: 1.1,
   markerMaxRadiusPx: 40,
