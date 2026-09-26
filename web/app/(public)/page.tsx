@@ -50,7 +50,7 @@ export default async function Home() {
                 Who is building data centers in Texas, and where?
               </h1>
               <p className="mt-6 max-w-2xl text-[18px] leading-[1.5] text-white/85 sm:text-[21px]">
-                Search a company, a place or a ZIP code. Every number links to its public record.
+                Search a company, a place or a ZIP code — or ask a question. Every answer and number comes from the public record.
               </p>
               <div className="mt-8">
                 <div className="max-w-2xl">

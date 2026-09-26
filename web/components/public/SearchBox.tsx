@@ -25,6 +25,22 @@ const KIND_STYLE: Record<SearchKind, string> = {
   place: "bg-[#e7eaf0] text-[#404040]",
 };
 
+/**
+ * Keep named places, companies, and addresses in the record finder. Everything
+ * that reads like an analysis request is handed to Ask Uncloak instead.
+ */
+export function isAnalyticalQuery(value: string): boolean {
+  const query = value.trim();
+  if (!query) return false;
+  const words = query.replace(/[?!]+$/, "").trim().split(/\s+/).filter(Boolean);
+
+  return (
+    (/\?$/.test(query) && words.length > 1) ||
+    /^(?:who|what|when|where|why|how|which|show|find|compare|list|is|are|does|do|can|could|should|tell me|give me|explain)\b/i.test(query) ||
+    /\b(?:largest|smallest|most|least|growth|growing|built|building|projects?|permits?|queue|ercot|evidence score|evidence scores|phantom load|shadow load)\b/i.test(query)
+  );
+}
+
 export function KindChip({ kind }: { kind: SearchKind }) {
   return (
     <span className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${KIND_STYLE[kind]}`}>
@@ -36,7 +52,7 @@ export function KindChip({ kind }: { kind: SearchKind }) {
 export default function SearchBox({
   size = "lg",
   defaultValue = "",
-  placeholder = "Search a company, entity, site, city, county, ZIP or address",
+  placeholder = "Search a company, place or address — or ask a question",
 }: {
   size?: "lg" | "sm";
   defaultValue?: string;
@@ -54,33 +70,43 @@ export default function SearchBox({
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const term = q.trim();
-  const ready = term.length >= 2;
-  const loading = ready && res.term !== term;
+  // A trailing question mark is common for a company lookup ("Google?"). It
+  // should not prevent the record search from recognizing the company name.
+  const lookupTerm = term.replace(/[?!]+$/, "").trim();
+  const ready = lookupTerm.length >= 2;
+  const loading = ready && res.term !== lookupTerm;
   const hits = ready && !loading ? res.hits : [];
   const error = ready && !loading ? res.error : null;
+  // A direct result is stronger evidence of lookup intent than wording alone:
+  // "Google?" should still open Google's record, not an analyst answer.
+  const hasRecordMatch = hits.some((hit) => hit.kind !== "place" && hit.kind !== "zip");
+  const askGemini = isAnalyticalQuery(term) && !hasRecordMatch;
+  // A generic "near this text" suggestion is useful for lookups, but misleading
+  // for prose questions. Hide it while offering the analyst handoff instead.
+  const suggestionHits = askGemini ? [] : hits;
 
   // Debounced fetch; stale requests are aborted. State is only set from async callbacks.
   useEffect(() => {
-    if (term.length < 2) return;
+    if (lookupTerm.length < 2) return;
     const ac = new AbortController();
     const t = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(term)}`, { signal: ac.signal })
+      fetch(`/api/search?q=${encodeURIComponent(lookupTerm)}`, { signal: ac.signal })
         .then(async (r) => {
           const body = await r.json().catch(() => ({}));
           if (!r.ok) throw new Error(body.error ?? r.statusText);
-          setRes({ term, hits: body.hits ?? [], error: null });
+          setRes({ term: lookupTerm, hits: body.hits ?? [], error: null });
           setActive(-1);
         })
         .catch((e: Error) => {
           if (e.name === "AbortError") return;
-          setRes({ term, hits: [], error: "Search is unavailable right now." });
+          setRes({ term: lookupTerm, hits: [], error: "Search is unavailable right now." });
         });
     }, 160);
     return () => {
       clearTimeout(t);
       ac.abort();
     };
-  }, [term]);
+  }, [lookupTerm]);
 
   // Close when focus or a click leaves the widget.
   useEffect(() => {
@@ -97,10 +123,10 @@ export default function SearchBox({
   };
 
   const submit = () => {
-    if (active >= 0 && hits[active]) return go(hits[active]);
+    if (active >= 0 && suggestionHits[active]) return go(suggestionHits[active]);
     if (term) {
       setOpen(false);
-      router.push(`/search?q=${encodeURIComponent(term)}`);
+      router.push(`${askGemini ? "/ask" : "/search"}?q=${encodeURIComponent(askGemini ? term : lookupTerm)}`);
     }
   };
 
@@ -108,19 +134,19 @@ export default function SearchBox({
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setOpen(true);
-      setActive((a) => (hits.length ? (a + 1) % hits.length : -1));
+      setActive((a) => (suggestionHits.length ? (a + 1) % suggestionHits.length : -1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setOpen(true);
-      setActive((a) => (hits.length ? (a <= 0 ? hits.length - 1 : a - 1) : -1));
+      setActive((a) => (suggestionHits.length ? (a <= 0 ? suggestionHits.length - 1 : a - 1) : -1));
     } else if (e.key === "Escape") {
       if (open) setOpen(false);
       else setQ("");
       setActive(-1);
-    } else if (e.key === "Home" && open && hits.length) {
+    } else if (e.key === "Home" && open && suggestionHits.length) {
       setActive(0);
-    } else if (e.key === "End" && open && hits.length) {
-      setActive(hits.length - 1);
+    } else if (e.key === "End" && open && suggestionHits.length) {
+      setActive(suggestionHits.length - 1);
     }
   };
 
@@ -146,7 +172,7 @@ export default function SearchBox({
           <path d="m13.5 13.5 4 4" strokeLinecap="round" />
         </svg>
         <label htmlFor={`${id}-input`} className="sr-only">
-          Search organizations, sites, entities and places
+          Search organizations, sites, entities and places, or ask a question about Texas data centers
         </label>
         <input
           ref={inputRef}
@@ -177,7 +203,7 @@ export default function SearchBox({
       </form>
 
       <div aria-live="polite" className="sr-only">
-        {showList && !loading ? (error ?? `${hits.length} result${hits.length === 1 ? "" : "s"} available`) : ""}
+        {showList && !loading ? (error ?? `${askGemini ? 1 : suggestionHits.length} result${askGemini || suggestionHits.length === 1 ? "" : "s"} available`) : ""}
       </div>
 
       <ul
@@ -188,10 +214,25 @@ export default function SearchBox({
         className="absolute left-0 right-0 top-full z-[2000] mt-2 max-h-[min(70vh,480px)] overflow-y-auto rounded-lg border border-[var(--hairline)] bg-white py-2 text-left shadow-[var(--shadow-float)]"
       >
         {error && <li className="px-4 py-3 text-[14px] text-red-700">{error}</li>}
-        {!error && !loading && hits.length === 0 && (
+        {!error && !loading && askGemini && (
+          <li
+            role="option"
+            aria-selected={active === 0}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={submit}
+            className={`flex cursor-pointer items-start gap-3 px-4 py-3 ${active === 0 ? "bg-[var(--canvas-soft)]" : ""}`}
+          >
+            <span className="inline-flex shrink-0 items-center rounded-full bg-black px-2 py-0.5 text-[11px] font-semibold text-white">Ask</span>
+            <span className="min-w-0">
+              <span className="block text-[15px] font-medium text-black">Ask Uncloak</span>
+              <span className="block text-[13px] text-slate-600">Analyze this question from the Texas data-center records</span>
+            </span>
+          </li>
+        )}
+        {!error && !loading && suggestionHits.length === 0 && !askGemini && (
           <li className="px-4 py-3 text-[14px] text-slate-600">No matches yet. Keep typing, or press Enter to search.</li>
         )}
-        {hits.map((h, i) => (
+        {suggestionHits.map((h, i) => (
           <li
             key={`${h.kind}-${h.href}-${i}`}
             id={`${id}-opt-${i}`}
