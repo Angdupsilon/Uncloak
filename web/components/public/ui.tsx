@@ -21,14 +21,28 @@ const KIND_STYLE: Record<MetricKind, string> = {
   context: "bg-[var(--canvas-soft)] text-[var(--hairline-mid)] ring-transparent",
 };
 
-/** Says what kind of number this is: documented, Uncloak estimate, or context. */
-export function KindBadge({ kind }: { kind: MetricKind }) {
+/**
+ * Says what kind of number this is: documented, Uncloak estimate, or context.
+ * `stacked` moves a trailing parenthetical ("(modeled)") onto a second line, for narrow columns.
+ */
+export function KindBadge({ kind, stacked = false }: { kind: MetricKind; stacked?: boolean }) {
+  const label = KIND_LABEL[kind];
+  const split = stacked ? label.indexOf(" (") : -1;
   return (
     <span
       title={KIND_HELP[kind]}
-      className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium tracking-[0.2px] ring-1 ring-inset ${KIND_STYLE[kind]}`}
+      className={`inline-flex shrink-0 items-center whitespace-nowrap px-2 py-0.5 text-[11px] font-medium tracking-[0.2px] ring-1 ring-inset ${
+        split < 0 ? "rounded-full" : "flex-col rounded-xl text-center leading-[14px]"
+      } ${KIND_STYLE[kind]}`}
     >
-      {KIND_LABEL[kind]}
+      {split < 0 ? (
+        label
+      ) : (
+        <>
+          <span>{label.slice(0, split)}</span>
+          <span>{label.slice(split + 1)}</span>
+        </>
+      )}
     </span>
   );
 }

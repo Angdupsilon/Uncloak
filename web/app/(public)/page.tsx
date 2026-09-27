@@ -127,12 +127,12 @@ export default async function Home() {
 
                 <section aria-labelledby="read-h">
                   <SectionTitle id="read-h">How to read this site</SectionTitle>
-                  {/* One shared grid so the badge column fits the widest badge ("Uncloak estimate (modeled)"). */}
-                  <ul className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-4">
+                  {/* One shared grid so the badge column always fits the widest badge. */}
+                  <ul className="grid grid-cols-[minmax(128px,max-content)_1fr] gap-x-4 gap-y-4">
                     {(["documented", "derived", "modeled", "context"] as MetricKind[]).map((k) => (
                       <li key={k} className="col-span-2 grid grid-cols-subgrid">
                         <div className="pt-0.5">
-                          <KindBadge kind={k} />
+                          <KindBadge kind={k} stacked />
                         </div>
                         <p className="text-[14px] leading-6 text-[var(--hairline-mid)]">
                           <span className="sr-only">{KIND_LABEL[k]}: </span>
