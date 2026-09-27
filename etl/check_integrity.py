@@ -33,15 +33,17 @@ def check(area, name, ok, detail=""):
 expected_tables = {"parents","entities","projects","evidence_events","project_scores","dc_load_reports","scoring_config",
                    "sites","project_sites","project_status_history","entity_parent_history",
                    "capacity_observations","ercot_project_links","source_refreshes","grid_regions","site_regions","estimates","estimate_methods"}
+# The spare-capacity page (db/005_spare_capacity.sql) is optional: its objects are expected when present.
+SPARE_TABLES, SPARE_HYPERTABLES, SPARE_CAGGS = {"power_plants", "plant_output"}, {"plant_output"}, {"plant_output_daily"}
 tables = {r[0] for r in q("select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'")}
 check("schema","GridSight tables present", expected_tables <= tables, f"missing={sorted(expected_tables-tables)}")
-check("schema","no unexpected tables", tables <= expected_tables, f"extra={sorted(tables-expected_tables)}")
+check("schema","no unexpected tables", tables <= expected_tables | SPARE_TABLES, f"extra={sorted(tables-expected_tables-SPARE_TABLES)}")
 cols = {r[0] for r in q("select column_name from information_schema.columns where table_name='projects'")}
 check("schema","projects has GridSight columns", {"project_id","entity_id","is_sample","lat","lon"} <= cols, str(sorted(cols)))
 hts = {r[0] for r in q("select hypertable_name from timescaledb_information.hypertables")}
-check("timescale","hypertables", hts == {"evidence_events","project_scores","dc_load_reports"}, str(sorted(hts)))
+check("timescale","hypertables", hts - SPARE_HYPERTABLES == {"evidence_events","project_scores","dc_load_reports"}, str(sorted(hts)))
 cagg = q("select view_name, materialized_only from timescaledb_information.continuous_aggregates")
-check("timescale","continuous aggregate weekly_project_state", [c[0] for c in cagg] == ["weekly_project_state"], str(cagg))
+check("timescale","continuous aggregate weekly_project_state", [c[0] for c in cagg if c[0] not in SPARE_CAGGS] == ["weekly_project_state"], str(cagg))
 check("timescale","view weekly_realistic_demand", one("select count(*) from information_schema.views where table_name='weekly_realistic_demand'") == 1)
 idx = {r[0] for r in q("select indexname from pg_indexes where schemaname='public'")}
 check("schema","unique name indexes", {"entities_llc_name_key","projects_name_key"} <= idx)
