@@ -9,6 +9,8 @@ import { query } from "./db";
 import { tierFor } from "./constants";
 import { compass, countyLabel, haversineKm, KM_PER_MI } from "./geo";
 import { slugify, orgHref, siteHref } from "./slug";
+import { lookupTerm } from "./searchTerm";
+import { matchOrgs } from "./orgMatch";
 import { getTimeline } from "./queries";
 import type { NearbyResult, OrgEntity, OrgProfile, OrgTrendPoint, SearchHit, Site, SourceStat, Timeline } from "./types";
 
@@ -117,23 +119,20 @@ export async function getOrgIndex(asOf: string) {
 const likeEscape = (s: string) => s.replace(/[%_\\]/g, (c) => `\\${c}`);
 
 export async function search(raw: string, perKind = 6): Promise<SearchHit[]> {
-  const term = raw.trim().slice(0, 120);
+  const term = lookupTerm(raw).slice(0, 120);
   if (term.length < 2) return [];
   const like = `%${likeEscape(term)}%`;
   const prefix = `${likeEscape(term)}%`;
   const word = `% ${likeEscape(term)}%`;
 
-  const [orgs, sites, entities, cities, counties] = await Promise.all([
+  const [allOrgs, sites, entities, cities, counties] = await Promise.all([
+    // Every organization: matching aliases, legal forms and misspellings happens in memory.
     query<{ name: string; sites: number; is_sample: boolean }>(
       `SELECT pa.name, COUNT(p.project_id) AS sites, COALESCE(bool_or(p.is_sample), false) AS is_sample
        FROM parents pa
        LEFT JOIN entities e ON e.parent_id = pa.parent_id
        LEFT JOIN projects p ON p.entity_id = e.entity_id
-       WHERE pa.name ILIKE $1
-       GROUP BY pa.name
-       ORDER BY (pa.name ILIKE $2) DESC, (pa.name ILIKE $3) DESC, COUNT(p.project_id) DESC, pa.name
-       LIMIT $4`,
-      [like, prefix, word, perKind],
+       GROUP BY pa.name`,
     ),
     query<{ project_id: number; name: string; state: string; city: string | null; county: string | null; parent: string | null; is_sample: boolean }>(
       `SELECT p.project_id, p.name, p.state, p.city, p.county, pa.name AS parent, p.is_sample
@@ -174,11 +173,15 @@ export async function search(raw: string, perKind = 6): Promise<SearchHit[]> {
   const where = (city: string | null, county: string | null, state: string) =>
     [city, county && countyLabel(county, state), state].filter(Boolean).join(", ");
 
+  const orgs = matchOrgs(term, allOrgs, perKind);
+
   const hits: SearchHit[] = [
-    ...orgs.map((o) => ({
+    ...orgs.map(({ org: o, via, alias }) => ({
       kind: "org" as const,
       label: o.name,
-      sublabel: `Organization · ${plural(o.sites, "site")} in our records`,
+      sublabel: `Organization · ${plural(o.sites, "site")} in our records${
+        via === "alias" ? ` · also known as ${alias}` : via === "spelling" ? ` · closest spelling to “${term}”` : ""
+      }`,
       href: orgHref(o.name),
       is_sample: o.is_sample,
     })),
