@@ -10,7 +10,7 @@ import { SourceLink } from "@/components/public/Source";
 import { getOrgIndex, getSites } from "@/lib/publicQueries";
 import { getSummary, todayUtc } from "@/lib/queries";
 import { fmtDate, fmtGW } from "@/lib/format";
-import { KIND_HELP, KIND_LABEL, type MetricKind } from "@/lib/metrics";
+import { KIND_HELP, KIND_LABEL, REFERENCE_SOURCES, SOURCES, type MetricKind } from "@/lib/metrics";
 
 const EXAMPLES = [
   { label: "Google", href: "/org/google", kind: "Organization" },
@@ -88,7 +88,7 @@ export default async function Home() {
                   label="data-center sites on record"
                   detail={`${data.sites.filter((s) => s.lat != null).length} with a known location · ${new Set(data.sites.map((s) => s.state)).size} states and territories`}
                   kind="documented"
-                  source={<Link href="/methodology#sources" className="rw-link">Texas public records and the IM3 data-center atlas</Link>}
+                  source={<Link href="/methodology#sources" className="rw-link">State public records and the IM3 data-center atlas</Link>}
                 />
                 <Glance
                   value={data.orgs.filter((o) => o.sites > 0).length.toLocaleString()}
@@ -192,7 +192,8 @@ type Orgs = Awaited<ReturnType<typeof getOrgIndex>>;
 type Summary = Awaited<ReturnType<typeof getSummary>>;
 
 function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
-  const top = orgs.filter((o) => o.sites > 0).slice(0, 4);
+  // Six rows fit once the card is wide (and so tall) enough; the last two are hidden below that.
+  const top = orgs.filter((o) => o.sites > 0).slice(0, 6);
   const maxSites = Math.max(...top.map((o) => o.sites), 1);
   // Weekly count of sites with public records (continuous aggregate), for the time-machine card.
   const weekly = summary.weekly.map((w) => w.projects);
@@ -206,14 +207,14 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       href: "/org/google",
       cta: "Try Google",
       visual: (
-        <div className="flex h-full flex-col justify-end gap-2.5 p-5">
-          {top.map((o) => (
-            <div key={o.slug} className="flex items-center gap-3 text-[12px] text-white/80">
-              <span className="w-20 truncate">{o.name}</span>
+        <div className="flex h-full flex-col justify-center gap-2.5 p-5 @md:gap-4 @md:p-8">
+          {top.map((o, i) => (
+            <div key={o.slug} className={`items-center gap-3 text-[12px] text-white/80 @md:text-[14px] ${i < 4 ? "flex" : "hidden @md:flex"}`}>
+              <span className="w-20 truncate @md:w-28">{o.name}</span>
               <span className="h-2 flex-1 rounded-full bg-white/10">
                 <span className="block h-2 rounded-full bg-white" style={{ width: `${(o.sites / maxSites) * 100}%` }} />
               </span>
-              <span className="w-6 text-right tabular-nums">{o.sites}</span>
+              <span className="w-8 text-right tabular-nums">{o.sites}</span>
             </div>
           ))}
         </div>
@@ -251,12 +252,12 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       href: "/dashboard",
       cta: "Open the time machine",
       visual: (
-        <div className="flex h-full flex-col justify-end p-5">
-          <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-24 w-full" aria-hidden>
+        <div className="flex h-full flex-col p-5 pt-8 @md:p-8 @md:pt-12">
+          <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="min-h-0 w-full flex-1" aria-hidden>
             {spark && <polyline points={`0,40 ${spark} 100,40`} fill="rgba(255,255,255,0.08)" stroke="none" />}
             {spark && <polyline points={spark} fill="none" stroke="#fff" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />}
           </svg>
-          <div className="mt-2 flex justify-between text-[11px] text-white/50">
+          <div className="mt-2 flex justify-between text-[11px] text-white/50 @md:text-[12px]">
             <span>2024</span>
             <span>Sites with records, weekly</span>
             <span>Today</span>
@@ -270,14 +271,19 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       href: "/methodology",
       cta: "How it works",
       visual: (
-        <div className="flex h-full flex-col justify-center gap-2 p-5">
-          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports", "Illinois DCEO data-center MOUs", "Minnesota DEED qualified data centers", "Indiana IEDC data-center contracts", "Wisconsin certified data centers", "IM3 data-center atlas (OpenStreetMap)"].map((t) => (
-            <div key={t} className="flex items-center gap-2.5 rounded-md bg-white/[0.07] px-3 py-2 text-[12px] text-white/85">
-              <span aria-hidden className="grid h-4 w-4 place-items-center rounded-full bg-white text-[9px] font-bold text-black">
-                ✓
-              </span>
-              {t}
-            </div>
+        // Short names from the methodology source list, so a new source shows up here too. They wrap to the card's width.
+        <div className="flex h-full flex-wrap content-center items-center justify-center gap-1 p-3 @xs:gap-1.5 @xs:p-4 @sm:gap-2 @md:p-8">
+          {[...Object.values(SOURCES), REFERENCE_SOURCES.GA_PSC, REFERENCE_SOURCES.PJM].map((src) => (
+            <span
+              key={src.short}
+              className="flex items-center gap-1.5 rounded-full bg-white/[0.07] px-2 py-0.5 text-[11px] text-white/85 @xs:py-1 @xs:pl-1.5 @xs:pr-2.5 @sm:text-[12px] @lg:py-1.5 @lg:text-[13px]"
+            >
+              <svg aria-hidden viewBox="0 0 16 16" className="hidden h-3.5 w-3.5 shrink-0 @xs:block">
+                <circle cx="8" cy="8" r="8" fill="#fff" />
+                <path d="M4.5 8.3 7 10.7l4.5-5" fill="none" stroke="#000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {src.short}
+            </span>
           ))}
         </div>
       ),
@@ -294,7 +300,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
         {cards.map((c) => (
           <li key={c.title}>
             <Link href={c.href} className="group block">
-              <div className="aspect-[16/10] overflow-hidden rounded-lg bg-[#111] transition-transform duration-300 group-hover:scale-[1.01]">{c.visual}</div>
+              <div className="@container aspect-[16/10] overflow-hidden rounded-lg bg-[#111] transition-transform duration-300 group-hover:scale-[1.01]">{c.visual}</div>
               <h3 className="mt-4 text-[20px] leading-tight tracking-[-0.4px] text-black">{c.title}</h3>
               <p className="mt-2 text-[15px] leading-6 text-[var(--graphite)]">{c.text}</p>
               <span className="mt-3 inline-block text-[14px] font-semibold text-black underline decoration-[#c9ccd1] underline-offset-4 group-hover:decoration-black">

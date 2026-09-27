@@ -36,7 +36,7 @@ const STATE_ROLES: Record<string, Partial<Record<EvidenceRole, RoleSource>>> = {
   MN: { incentive_registry: { source: "Minnesota DEED", status: "loaded" } },
   IN: { incentive_registry: { source: "Indiana IEDC", status: "loaded" } },
   WI: { incentive_registry: { source: "Wisconsin DOR", status: "loaded" } },
-  VA: { air_permit: { source: "Virginia DEQ", status: "pending" } },
+  VA: { air_permit: { source: "Virginia DEQ", status: "loaded" } },
 };
 
 export type FactorCoverage = { status: "loaded" | "pending" | "not_published"; source: string | null };

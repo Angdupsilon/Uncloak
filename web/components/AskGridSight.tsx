@@ -4,7 +4,7 @@ import type { AskResponse } from "@/lib/types";
 import GrokVoice from "@/components/GrokVoice";
 
 const EXAMPLES = [
-  "Which projects around Dallas look least certain?",
+  "Which sites in Loudoun County, Virginia look least certain?",
   "Show projects worth more than $1 billion that don't have environmental permits.",
   "Who is behind Alamo Mission LLC?",
   "How much of ERCOT's queue can we actually find?",
@@ -105,7 +105,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about projects, parents, ERCOT…"
+          placeholder="Ask about sites, companies, grid queues…"
           className="flex-1 rounded-xl border border-[#e2e2e2] px-3 py-2 text-sm outline-none transition-colors placeholder:text-[#afafaf] focus:border-teal-600"
         />
         <button disabled={busy || !input.trim()} className="ub-pill !px-5 disabled:opacity-35">

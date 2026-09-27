@@ -87,12 +87,58 @@ export const SOURCES = {
 
 export type SourceKey = keyof typeof SOURCES;
 
+/** Grid, lookup and benchmark data. Not site records: they give context, place a site, or feed a derived value. */
+export const REFERENCE_SOURCES = {
+  GA_PSC: {
+    name: "Georgia Power Large Load Economic Development Reports (Georgia PSC filings)",
+    short: "Georgia PSC",
+    url: "https://psc.ga.gov/search/facts-document/?documentId=226607",
+    what: "Georgia Power's quarterly large-load pipeline filed with the Georgia Public Service Commission. Its data-center category also includes crypto, and it is shown that way.",
+  },
+  PJM: {
+    name: "PJM 2026 Load Forecast Report and utility forecast adjustments",
+    short: "PJM",
+    url: "https://www.pjm.com/-/media/DotCom/planning/res-adeq/load-forecast/2026-load-report-tables.xlsx",
+    what: "Forecast peak and the data-center adjustments utilities submitted for each PJM zone (Table B-9), plus the Dominion and PSE&G documentation letters.",
+  },
+  EIA_861: {
+    name: "EIA Form 861 service territories (via Catalyst Cooperative's PUDL)",
+    short: "EIA-861",
+    url: "https://www.eia.gov/electricity/data/eia861/",
+    what: "Which balancing authorities serve each county, with 2010 Census county boundaries. Used for the grid operator tag on each site.",
+  },
+  EIA_860M: {
+    name: "EIA-860M monthly generator inventory",
+    short: "EIA-860M",
+    url: "https://www.eia.gov/electricity/data/eia860m/",
+    what: "Operating generators and their nameplate capacity. Used as each plant's connection size on the spare-capacity page.",
+  },
+  EPA_CAMPD: {
+    name: "EPA Clean Air Markets Program Data (CAMPD), hourly unit output",
+    short: "EPA CAMPD",
+    url: "https://campd.epa.gov/data/bulk-data-files",
+    what: "Hourly gross load for fossil generating units. Used to measure how much of each plant's connection sits idle.",
+  },
+  CUSHMAN: {
+    name: "Cushman & Wakefield 2026 Data Center Development Cost Guide",
+    short: "Cushman & Wakefield",
+    url: "https://ir.cushmanwakefield.com/news/press-release-details/2026/Cushman--Wakefield-Releases-2026-Data-Center-Development-Cost-Guide-Citing-21-Rise-in-Per-MW-Construction-Costs/default.aspx",
+    what: "The all-in cost per MW of building a data center (U.S. and Canada average). Used to turn a registered construction cost into estimated MW.",
+  },
+  GEOCODERS: {
+    name: "U.S. Census Geocoder and OpenStreetMap Nominatim",
+    short: "Geocoders",
+    url: "https://geocoding.geo.census.gov/geocoder/",
+    what: "Turn record addresses (Virginia DEQ permits, state registries) and your searches into coordinates. They place a point and add no data of their own.",
+  },
+} as const;
+
 export const METRICS = {
   sites: {
     label: "Sites in our records",
     unit: "sites",
     kind: "documented",
-    source: "Texas Comptroller registry and TDLR construction filings (Texas), and the IM3 data-center atlas operator tag (all states), linked to this organization",
+    source: "Texas Comptroller registry and TDLR construction filings (Texas), state incentive registries (Illinois, Minnesota, Indiana, Wisconsin), and the IM3 data-center atlas operator tag (all states), linked to this organization",
     meaning: "How many distinct data-center sites in our records are linked to this organization.",
     caveat:
       "Counts only sites we could find in these records and link to the organization. Projects filed under code names, or whose ownership we could not resolve, are not included.",
@@ -102,7 +148,7 @@ export const METRICS = {
     label: "Counties",
     unit: "counties",
     kind: "documented",
-    source: "Site addresses and county fields from the Comptroller registry, TDLR filings and the reviewed location list",
+    source: "Site coordinates and county fields from the Comptroller registry, TDLR filings, state incentive registries, the IM3 atlas and the reviewed location list",
     meaning: "How many different counties the organization's recorded sites are in.",
     caveat: "Sites without a published location can't be placed in a county, so the true number may be higher.",
     local: "Shows which local communities host the organization's documented facilities.",
@@ -111,7 +157,7 @@ export const METRICS = {
     label: "Registered entities",
     unit: "entities",
     kind: "documented",
-    source: "Texas Comptroller registry (owner, occupant and operator names)",
+    source: "Texas Comptroller registry (owner, occupant and operator names) and the company named in state incentive registries",
     meaning:
       "Legal entities (often LLCs with unrelated-sounding names) that appear on the public records and that we linked to this organization.",
     caveat: "A link means the organization is named as owner, occupant, operator or tenant on the record. It does not describe the full corporate structure.",
@@ -168,11 +214,12 @@ export const METRICS = {
     label: "State data-center certification",
     unit: "date",
     kind: "documented",
-    source: "Texas Comptroller registry: 'Effective Date'",
+    source:
+      "Texas Comptroller registry ('Effective Date'), Wisconsin DOR certification date, Indiana IEDC contract date, Illinois DCEO MOU year, Minnesota DEED list date",
     meaning:
-      "The date the site was registered in a Texas data-center sales-tax exemption program (Qualifying Data Center or Qualifying Large Data Center Project).",
+      "When the site entered a state data-center sales-tax exemption program, such as Texas's Qualifying Data Center program. Each state publishes a different date: Illinois gives only the MOU year and Minnesota only the date of its list.",
     caveat: "Registration shows eligibility for the exemption program. It does not show the size of any tax benefit, which is not published here.",
-    local: "The exemption program is a state tax policy decision about these sites. The registry itself doesn't report local tax effects.",
+    local: "The exemption program is a state tax policy decision about these sites. The registries themselves don't report local tax effects.",
   },
   ercot_requested: {
     label: "Large loads requesting grid connection (statewide)",
@@ -186,7 +233,7 @@ export const METRICS = {
     label: "Grid connection size",
     unit: "megawatts (MW)",
     kind: "documented",
-    source: "EIA-860 / EIA-860M generator inventory (nameplate capacity)",
+    source: "EIA-860M monthly generator inventory (nameplate capacity of the plant's operating fossil generators)",
     meaning: "The most power an existing plant may send onto the grid. A new battery, solar farm or load that shares the connection must stay within it.",
     caveat: "Nameplate capacity stands in for the interconnection limit, which utilities and ERCOT don't publish per plant. The real limit can be lower.",
   },
@@ -194,7 +241,7 @@ export const METRICS = {
     label: "Connection free in 80% of hours",
     unit: "megawatts (MW)",
     kind: "derived",
-    source: "Hourly output: EPA CAMPD gross load for fossil units, modeled output for solar and wind, over the latest 365 days",
+    source: "Hourly output: EPA CAMPD gross load for the plant's fossil units over the latest 365 days (solar and wind plants aren't listed yet)",
     meaning: "How much of the connection sat unused in at least 80% of the year's hours. A battery can use this room and wait out the other hours.",
     caveat: "Past output doesn't guarantee future room. Any shared project must throttle when the plant runs, and the owner must agree to share.",
   },
@@ -202,7 +249,7 @@ export const METRICS = {
     label: "Connection free in 95% of hours",
     unit: "megawatts (MW)",
     kind: "derived",
-    source: "Hourly output: EPA CAMPD gross load for fossil units, modeled output for solar and wind, over the latest 365 days",
+    source: "Hourly output: EPA CAMPD gross load for the plant's fossil units over the latest 365 days (solar and wind plants aren't listed yet)",
     meaning: "The steadier figure: room that was free almost all the time. A load that runs around the clock, such as a data center, would screen on this.",
     caveat: "The remaining 5% of hours still need a plan, such as curtailment or on-site storage.",
   },
@@ -210,7 +257,7 @@ export const METRICS = {
     label: "Hours above half output",
     unit: "share of hours",
     kind: "derived",
-    source: "Hourly output: EPA CAMPD gross load for fossil units, modeled output for solar and wind, over the latest 365 days",
+    source: "Hourly output: EPA CAMPD gross load for the plant's fossil units over the latest 365 days (solar and wind plants aren't listed yet)",
     meaning: "How often the plant ran at more than half its connection size. Low values mean the connection is mostly idle.",
     caveat: "Counts hours, not energy. A plant can be rarely busy yet run flat out on the hottest afternoons.",
   },

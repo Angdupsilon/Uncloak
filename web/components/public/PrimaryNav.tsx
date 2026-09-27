@@ -13,7 +13,7 @@ const EXPLORE: NavItem[] = [
 ];
 
 const MARKET_INTELLIGENCE: NavItem[] = [
-  { href: "/queue", label: "Queue Timeline", description: "Track requested, approved, and energized ERCOT load (Texas)" },
+  { href: "/queue", label: "Queue Timeline", description: "ERCOT's large-load queue, plus Georgia Power and PJM load reports" },
   { href: "/spare-capacity", label: "Spare capacity", description: "Find existing connections with room for a new load" },
 ];
 
