@@ -1,4 +1,4 @@
-# Uncloak web/app/icon.svg
+# Uncloak [web/app/icon.svg]
 
 Uncloak is an independent research tool for U.S. data-center records. Texas has the deepest
 coverage (state public records: Comptroller, TDLR, TCEQ, ERCOT); every other state starts from
