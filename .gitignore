@@ -10,3 +10,6 @@ __pycache__/
 data/raw/cache/
 # Virginia DEQ permit PDFs (99 MB): verified by hash in manifest.csv, not stored in git
 data/raw/va_deq_permits_2026-09-26/*.pdf
+
+# graphify knowledge-graph output
+graphify-out/
