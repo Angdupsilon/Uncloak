@@ -633,6 +633,12 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+.rw .rw-search input:focus-visible {
+  outline: none;
+}
+.dashboard-search-input:focus-visible {
+  outline: none;
+}
 .rw summary::marker {
   color: var(--ink);
 }

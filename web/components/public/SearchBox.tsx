@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import type { SearchHit, SearchKind } from "@/lib/types";
+import GrokVoice from "@/components/GrokVoice";
 
 const KIND_LABEL: Record<SearchKind, string> = {
   org: "Organization",
@@ -52,7 +53,7 @@ export function KindChip({ kind }: { kind: SearchKind }) {
 export default function SearchBox({
   size = "lg",
   defaultValue = "",
-  placeholder = "Search a company, place or address, or ask a question",
+  placeholder = "Search a company or place, or ask a question",
 }: {
   size?: "lg" | "sm";
   defaultValue?: string;
@@ -130,6 +131,14 @@ export default function SearchBox({
     }
   };
 
+  const submitVoice = (value: string) => {
+    const query = value.trim();
+    if (!query) return;
+    setQ(query);
+    setOpen(false);
+    router.push(`${isAnalyticalQuery(query) ? "/ask" : "/search"}?q=${encodeURIComponent(query.replace(/[?!]+$/, "").trim())}`);
+  };
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -157,13 +166,15 @@ export default function SearchBox({
   return (
     <div ref={wrapRef} className="relative w-full">
       <form
+        action="/search"
+        method="get"
         role="search"
         aria-label="Search Uncloak"
         onSubmit={(e) => {
           e.preventDefault();
           submit();
         }}
-        className={`flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-white shadow-[var(--shadow-card)] focus-within:border-black focus-within:ring-2 focus-within:ring-black/10 ${
+        className={`rw-search flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-white shadow-[var(--shadow-card)] focus-within:border-slate-400 ${
           lg ? "py-2 pl-5 pr-2" : "py-1 pl-4 pr-1"
         }`}
       >
@@ -177,6 +188,7 @@ export default function SearchBox({
         <input
           ref={inputRef}
           id={`${id}-input`}
+          name="q"
           type="text"
           role="combobox"
           aria-expanded={showList}
@@ -194,9 +206,10 @@ export default function SearchBox({
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          className={`min-w-0 flex-1 bg-transparent text-black outline-none placeholder:text-slate-400 ${lg ? "py-2 text-[17px]" : "py-1.5 text-[14px]"}`}
+          className={`mr-3 min-w-0 flex-1 bg-transparent text-black outline-none placeholder:text-slate-400 ${lg ? "py-2 text-[17px]" : "py-1.5 text-[14px]"}`}
         />
         {loading && <span aria-hidden className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-black" />}
+        <GrokVoice onPartialTranscript={(value) => { setQ(value); setOpen(false); }} onTranscript={submitVoice} className={lg ? "" : "!h-8 !w-8"} />
         <button type="submit" className={lg ? "ub-pill" : "ub-pill !px-4 !py-2 !text-[14px]"}>
           Search
         </button>

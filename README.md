@@ -46,6 +46,7 @@ cp .env.example .env    # then fill in the values
 | `DATABASE_URL_RO` | web | Same host, `gridsight_ro` role (read-only, 3 s statement timeout) |
 | `GEMINI_API_KEY` | web | Ask Uncloak. Without it, the question-answering experience explains that it is not configured |
 | `GEMINI_MODEL` | web | Gemini model id |
+| `XAI_API_KEY` | web | Grok Voice; kept server-side and exchanged for a short-lived browser token |
 | `MW_COST_PER_MW_USD` | ETL | Optional override. The default in `etl/config.py` is $17.6M/MW from the Cushman & Wakefield 2026 Data Center Development Cost Guide (US & Canada all-in average) |
 | `BACKFILL_START` | ETL | First date of the weekly score backfill. Default `2024-01-01` |
 
