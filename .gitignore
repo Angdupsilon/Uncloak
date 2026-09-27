@@ -8,3 +8,6 @@ __pycache__/
 
 # Source downloads and API responses (etl/pull_power_plants.py)
 data/raw/cache/
+
+# graphify knowledge-graph output
+graphify-out/
