@@ -10,13 +10,14 @@ CREATE TABLE entities (
   entity_id   serial PRIMARY KEY,
   llc_name    text NOT NULL,
   parent_id   int REFERENCES parents,
-  resolved_by text,                     -- 'COMPTROLLER' | 'TDLR_TENANT' | 'MANUAL'
+  resolved_by text,                     -- 'COMPTROLLER' | 'TDLR_TENANT' | 'TDLR_OWNER' | 'OSM_OPERATOR' | 'MANUAL'
   source_url  text
 );
 
 CREATE TABLE projects (
   project_id  serial PRIMARY KEY,
   name        text NOT NULL,
+  state       char(2) NOT NULL DEFAULT 'TX', -- USPS code; Texas seeds predate the column
   county      text,
   city        text,
   address     text,
@@ -32,6 +33,7 @@ CREATE TABLE sites (
   site_id              serial PRIMARY KEY,
   site_key             text NOT NULL UNIQUE,
   name                 text NOT NULL,
+  state                char(2),
   county               text,
   city                 text,
   address              text,
@@ -42,7 +44,9 @@ CREATE TABLE sites (
   location_precision   text,
   location_confidence  double precision CHECK (location_confidence BETWEEN 0 AND 1),
   location_basis       text,
-  reviewed_at          date
+  reviewed_at          date,
+  county_fips          char(5),                -- 2010-vintage Census FIPS (as EIA-861 uses)
+  county_method        text                    -- spatial_join | record_county
 );
 
 CREATE TABLE project_sites (
@@ -108,7 +112,7 @@ CREATE TABLE source_refreshes (
 CREATE TABLE evidence_events (
   ts          timestamptz NOT NULL,     -- real-world date of the evidence
   project_id  int NOT NULL REFERENCES projects,
-  source      text NOT NULL,            -- 'TDLR' | 'COMPTROLLER' | 'TCEQ' | 'OTHER'
+  source      text NOT NULL,            -- 'TDLR' | 'COMPTROLLER' | 'TCEQ' | 'OSM' | 'OTHER'
   event_type  text NOT NULL,            -- see spec 4.3
   value_num   double precision,         -- e.g., construction cost USD, sq ft
   payload     jsonb,                    -- raw fields (record id, tenant name, etc.)
@@ -124,13 +128,6 @@ CREATE TABLE project_scores (
   factors      jsonb NOT NULL           -- {"factor_key": true/false, ...}
 );
 
-CREATE TABLE ercot_queue (
-  ts                timestamptz NOT NULL,
-  gw_requested      double precision,
-  gw_approved       double precision,
-  gw_observed_peak  double precision,
-  source_url        text
-);
 
 -- Addition to the spec schema: the scoring configuration used by the most recent
 -- backfill (written by etl/score.py). The web app reads this for the
@@ -144,9 +141,99 @@ CREATE TABLE scoring_config (
   computed_at         timestamptz NOT NULL DEFAULT now()
 );
 
+-- Grid-operator tag (lookup only; see db/007_site_regions.sql for the column notes).
+CREATE TABLE grid_regions (
+  region_key  text PRIMARY KEY,
+  kind        text NOT NULL CHECK (kind IN ('ba','rto','zone','utility')),
+  name        text NOT NULL,
+  eia_id      int,
+  source_url  text NOT NULL
+);
+
+CREATE TABLE site_regions (
+  site_id      int  NOT NULL REFERENCES sites ON DELETE CASCADE,
+  region_key   text NOT NULL REFERENCES grid_regions,
+  method       text NOT NULL,
+  confidence   double precision NOT NULL CHECK (confidence > 0 AND confidence <= 1),
+  county_fips  char(5) NOT NULL,
+  source_url   text NOT NULL,
+  PRIMARY KEY (site_id, region_key)
+);
+CREATE INDEX site_regions_region_idx ON site_regions (region_key);
+
+-- Large-load and data-center load reports by region (see db/008_load_reports.sql for column notes).
+CREATE TABLE dc_load_reports (
+  ts             timestamptz NOT NULL,
+  region_key     text NOT NULL REFERENCES grid_regions,
+  metric         text NOT NULL CHECK (metric IN ('requested','approved','observed_peak','committed','contracted',
+                                                 'forecast','forecast_adjustment')),
+  scope          text NOT NULL CHECK (scope IN ('data_centers','data_centers_and_crypto','large_loads_all')),
+  value_mw       double precision NOT NULL,
+  forecast_year  int,
+  stage          text,
+  dc_share_pct   double precision CHECK (dc_share_pct > 0 AND dc_share_pct <= 100),
+  dc_share_quote text,
+  source_key     text NOT NULL,
+  source_url     text NOT NULL,
+  document       text,
+  quote          text NOT NULL,
+  CHECK ((dc_share_pct IS NULL) = (dc_share_quote IS NULL)),
+  CHECK (dc_share_pct IS NULL OR scope = 'large_loads_all')
+);
+CREATE UNIQUE INDEX dc_load_reports_key
+  ON dc_load_reports (ts, region_key, metric, scope, COALESCE(forecast_year, 0), COALESCE(stage, ''), source_key);
+CREATE INDEX dc_load_reports_region_idx ON dc_load_reports (region_key, metric, ts DESC);
+
+-- Compatibility view: the ERCOT queue in its original shape (GW).
+CREATE VIEW ercot_queue AS
+SELECT ts,
+       MAX(value_mw) FILTER (WHERE metric = 'requested')     / 1000.0 AS gw_requested,
+       MAX(value_mw) FILTER (WHERE metric = 'approved')      / 1000.0 AS gw_approved,
+       MAX(value_mw) FILTER (WHERE metric = 'observed_peak') / 1000.0 AS gw_observed_peak,
+       MIN(source_url)                                                AS source_url
+FROM dc_load_reports
+WHERE region_key = 'ERCO' AND source_key = 'ERCOT' AND scope = 'large_loads_all'
+GROUP BY ts;
+
+-- Modeled estimates (see db/009_estimates.sql).
+-- One row per model version: its parameters, training rows and backtest (validation) results.
+CREATE TABLE estimate_methods (
+  method          text NOT NULL,
+  method_version  text NOT NULL,
+  fitted_at       timestamptz NOT NULL,
+  description     text NOT NULL,
+  params          jsonb NOT NULL,   -- e.g. the 10th/50th/90th percentiles of MW per sq ft
+  validation      jsonb NOT NULL,   -- e.g. leave-one-out median absolute % error, interval coverage
+  training        jsonb NOT NULL,   -- the training rows (project name, inputs, target)
+  PRIMARY KEY (method, method_version)
+);
+
+-- A range (low / mid / high) per subject, never a single number, with the inputs that produced it.
+CREATE TABLE estimates (
+  estimate_id     serial PRIMARY KEY,
+  subject_kind    text NOT NULL CHECK (subject_kind IN ('project','site','state','region')),
+  project_id      int REFERENCES projects ON DELETE CASCADE,   -- set for subject_kind = 'project'
+  metric          text NOT NULL,                               -- it_mw
+  as_of           date NOT NULL,
+  low             double precision NOT NULL,
+  mid             double precision NOT NULL,
+  high            double precision NOT NULL,
+  unit            text NOT NULL,
+  method          text NOT NULL,
+  method_version  text NOT NULL,
+  inputs          jsonb NOT NULL,
+  notes           text,
+  CHECK (low <= mid AND mid <= high),
+  CHECK (subject_kind <> 'project' OR project_id IS NOT NULL),
+  FOREIGN KEY (method, method_version) REFERENCES estimate_methods ON DELETE CASCADE,
+  UNIQUE (subject_kind, project_id, metric, method, method_version, as_of)
+);
+CREATE INDEX estimates_project_idx ON estimates (project_id);
+
 -- Helpers for idempotent loading (not required by the spec, safe to keep).
 CREATE UNIQUE INDEX entities_llc_name_key ON entities (llc_name);
 CREATE UNIQUE INDEX projects_name_key     ON projects (name);
+CREATE INDEX projects_state_idx           ON projects (state);
 CREATE INDEX project_sites_site_idx       ON project_sites (site_id);
 CREATE INDEX project_status_latest_idx    ON project_status_history (project_id, observed_at DESC);
 CREATE INDEX entity_parent_latest_idx     ON entity_parent_history (entity_id, observed_at DESC);

@@ -1,11 +1,15 @@
 """Load data/seed/*.csv (or data/sample/*.csv) into the database.
 
-Order: parents -> entities -> projects -> evidence_events -> ercot_queue.
+Order: parents -> entities -> projects -> evidence_events -> load reports (dc_load_reports.csv, and
+the older ercot_queue.csv format, which loads as ERCOT large-load rows).
 Names are resolved to IDs. Unknown event_type/source values fail loudly.
 Cells containing <<FILL>> are treated as missing; rows missing a required
 field are skipped with a warning so a partially filled seed still loads.
 
-Usage: python etl/load_seed.py --dir data/seed|data/sample [--reset]
+A projects.csv `state` column (USPS code) is optional; rows without one are Texas, because the
+Texas seeds predate the column.
+
+Usage: python etl/load_seed.py --dir data/seed|data/sample [--dir data/seed_national] [--reset]
 """
 from __future__ import annotations
 
@@ -21,6 +25,16 @@ import config
 from common import clean, connect, is_fill, parse_payload, to_float
 
 ORIGIN = "seed_csv"  # payload marker so reloading replaces only rows this script inserted
+# data/seed and data/seed_national keep the original marker; any other directory (the state
+# importers' data/seed_states/<source>/) gets its own, so loading it never removes another
+# directory's events on the same project.
+SHARED_ORIGIN_DIRS = {"seed", "seed_national", "sample"}
+
+
+def origin_for(directory: Path) -> str:
+    name = directory.resolve().name
+    return ORIGIN if name in SHARED_ORIGIN_DIRS else f"{ORIGIN}:{name}"
+DEFAULT_STATE = "TX"
 
 
 def read_csv(directory: Path, name: str) -> pd.DataFrame:
@@ -41,7 +55,7 @@ def is_sample_dir(directory: Path) -> bool:
 
 def reset_all(cur) -> None:
     print("Resetting all GridSight tables")
-    cur.execute("TRUNCATE project_scores, evidence_events, ercot_queue")
+    cur.execute("TRUNCATE project_scores, evidence_events, dc_load_reports")
     cur.execute("TRUNCATE projects, entities, parents RESTART IDENTITY CASCADE")
 
 
@@ -56,7 +70,7 @@ def purge_sample(cur) -> None:
                 "AND NOT EXISTS (SELECT 1 FROM projects p WHERE p.entity_id = e.entity_id)")
     cur.execute("DELETE FROM parents pa WHERE name LIKE 'SAMPLE %%' "
                 "AND NOT EXISTS (SELECT 1 FROM entities e WHERE e.parent_id = pa.parent_id)")
-    cur.execute("DELETE FROM ercot_queue WHERE source_url = 'SAMPLE'")
+    cur.execute("DELETE FROM dc_load_reports WHERE source_url = 'SAMPLE'")
     if ids:
         print(f"  purged {len(ids)} SAMPLE projects (loading non-sample data)")
 
@@ -126,14 +140,17 @@ def load_projects(cur, df: pd.DataFrame, sample: bool) -> tuple[int, set[str]]:
         filled = [c for c in ("county", "city", "address", "lat", "lon", "llc_name") if is_fill(row.get(c))]
         if filled:
             warn(f"projects.csv {name!r}: {', '.join(filled)} still <<FILL>> (loaded as null)")
+        state = (clean(row.get("state")) or DEFAULT_STATE).upper()
+        if len(state) != 2 or not state.isalpha():
+            raise SystemExit(f"projects.csv row {i + 2}: state must be a 2-letter USPS code, got {state!r}")
         cur.execute(
-            """INSERT INTO projects (name, county, city, address, lat, lon, entity_id, is_sample)
-               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-               ON CONFLICT (name) DO UPDATE SET county = EXCLUDED.county, city = EXCLUDED.city,
+            """INSERT INTO projects (name, state, county, city, address, lat, lon, entity_id, is_sample)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+               ON CONFLICT (name) DO UPDATE SET state = EXCLUDED.state, county = EXCLUDED.county, city = EXCLUDED.city,
                  address = EXCLUDED.address,
                  lat = COALESCE(EXCLUDED.lat, projects.lat), lon = COALESCE(EXCLUDED.lon, projects.lon),
                  entity_id = EXCLUDED.entity_id, is_sample = EXCLUDED.is_sample""",
-            (name, clean(row.get("county")), clean(row.get("city")), clean(row.get("address")),
+            (name, state, clean(row.get("county")), clean(row.get("city")), clean(row.get("address")),
              to_float(row.get("lat")), to_float(row.get("lon")), entity_id,
              sample or name.upper().startswith("SAMPLE")),
         )
@@ -141,7 +158,7 @@ def load_projects(cur, df: pd.DataFrame, sample: bool) -> tuple[int, set[str]]:
     return n, skipped
 
 
-def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
+def load_events(cur, df: pd.DataFrame, skipped_projects: set[str], origin: str = ORIGIN) -> int:
     if df.empty:
         return 0
     # Validate every row before touching the table.
@@ -154,8 +171,10 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
         rows = ", ".join(f"row {i + 2}={v!r}" for i, v in bad["source"].items())
         raise SystemExit(f"evidence_events.csv: unknown source ({rows}). Allowed: {sorted(config.SOURCES)}")
 
-    cur.execute("SELECT name, project_id FROM projects")
-    ids = dict(cur.fetchall())
+    cur.execute("SELECT name, project_id, state FROM projects")
+    fetched = cur.fetchall()
+    ids = {n: pid for n, pid, _ in fetched}
+    states = {n: st for n, _, st in fetched}
     rows, touched = [], set()
     for i, row in df.iterrows():
         pname = row["project_name"].strip()
@@ -170,8 +189,9 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
             warn(f"{where}: ts missing or <<FILL>>, skipped")
             continue
         etype, source = row["event_type"].strip(), row["source"].strip()
-        if config.EVENT_TYPES[etype] != source:
-            warn(f"{where}: event_type {etype} usually comes from {config.EVENT_TYPES[etype]}, got {source}")
+        if not config.source_allowed(etype, source, states[pname]):
+            raise SystemExit(f"{where}: {source} does not publish {etype} records for {states[pname]} "
+                             f"(allowed: {config.EVENT_SOURCES[etype]})")
         if is_fill(row.get("value_num")):
             warn(f"{where}: value_num is <<FILL>>, skipped")
             continue
@@ -179,7 +199,7 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
             payload = parse_payload(row.get("payload_json"))
         except (json.JSONDecodeError, ValueError) as e:
             raise SystemExit(f"{where}: bad payload_json: {e}")
-        payload["_origin"] = ORIGIN
+        payload["_origin"] = origin
         ts = pd.Timestamp(ts_raw)
         ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
         rows.append((ts.to_pydatetime(), ids[pname], source, etype, to_float(row.get("value_num")),
@@ -190,36 +210,75 @@ def load_events(cur, df: pd.DataFrame, skipped_projects: set[str]) -> int:
     all_projects = [ids[p.strip()] for p in df["project_name"] if p.strip() in ids]
     if all_projects:
         cur.execute("DELETE FROM evidence_events WHERE project_id = ANY(%s) AND payload->>'_origin' = %s",
-                    (list(set(all_projects)), ORIGIN))
+                    (list(set(all_projects)), origin))
     with cur.copy("COPY evidence_events (ts, project_id, source, event_type, value_num, payload, source_url) FROM STDIN") as cp:
         for r in rows:
             cp.write_row(r)
     return len(rows)
 
 
+ERCOT_REGION = ("ERCO", "ba", "Electric Reliability Council of Texas, Inc.")
+LOAD_METRICS = {"requested", "approved", "observed_peak", "committed", "contracted", "forecast", "forecast_adjustment"}
+LOAD_SCOPES = {"data_centers", "data_centers_and_crypto", "large_loads_all"}
+
+
+def upsert_region(cur, key: str, kind: str, name: str, url: str) -> None:
+    cur.execute("""INSERT INTO grid_regions (region_key, kind, name, source_url) VALUES (%s, %s, %s, %s)
+                   ON CONFLICT (region_key) DO NOTHING""", (key, kind, name, url))
+
+
 def load_ercot(cur, df: pd.DataFrame) -> int:
+    """The older ercot_queue.csv format (GW columns), kept for data/sample."""
     n = 0
     for i, row in df.iterrows():
         ts_raw = clean(row.get("ts"))
         if not ts_raw:
             warn(f"ercot_queue.csv row {i + 2}: ts missing or <<FILL>>, skipped")
             continue
-        vals = {c: row.get(c) for c in ("gw_requested", "gw_approved", "gw_observed_peak")}
+        vals = {"requested": row.get("gw_requested"), "approved": row.get("gw_approved"), "observed_peak": row.get("gw_observed_peak")}
         if any(is_fill(v) for v in vals.values()):
             warn(f"ercot_queue.csv row {i + 2}: contains <<FILL>> values, skipped")
             continue
         ts = pd.Timestamp(ts_raw)
         ts = (ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")).to_pydatetime()
-        cur.execute("DELETE FROM ercot_queue WHERE ts = %s", (ts,))
-        cur.execute(
-            "INSERT INTO ercot_queue (ts, gw_requested, gw_approved, gw_observed_peak, source_url) VALUES (%s, %s, %s, %s, %s)",
-            (ts, *(to_float(v) for v in vals.values()), clean(row.get("source_url"))),
-        )
+        url = clean(row.get("source_url")) or "SAMPLE"
+        upsert_region(cur, *ERCOT_REGION, url)
+        cur.execute("DELETE FROM dc_load_reports WHERE ts = %s AND region_key = 'ERCO' AND source_key = 'ERCOT'", (ts,))
+        for metric, gw in vals.items():
+            if to_float(gw) is not None:
+                cur.execute("""INSERT INTO dc_load_reports (ts, region_key, metric, scope, value_mw, source_key, source_url, quote)
+                               VALUES (%s, 'ERCO', %s, 'large_loads_all', %s, 'ERCOT', %s, %s)""",
+                            (ts, metric, round(to_float(gw) * 1000, 6), url, "ercot_queue.csv (GW)"))
         n += 1
     return n
 
 
-def main(directory: Path, reset: bool = False) -> None:
+def load_reports(cur, df: pd.DataFrame) -> int:
+    """dc_load_reports.csv (written by etl/import_load_reports.py). Rows of each source in the file replace
+    that source's rows."""
+    if df.empty:
+        return 0
+    bad = df[~df["metric"].isin(LOAD_METRICS) | ~df["scope"].isin(LOAD_SCOPES)]
+    if not bad.empty:
+        raise SystemExit(f"dc_load_reports.csv: unknown metric/scope in rows {[i + 2 for i in bad.index]}")
+    for source in sorted(set(df["source_key"])):
+        cur.execute("DELETE FROM dc_load_reports WHERE source_key = %s", (source,))
+    n = 0
+    for _, row in df.iterrows():
+        upsert_region(cur, row["region_key"], row["region_kind"], row["region_name"], row["source_url"])
+        ts = pd.Timestamp(row["ts"]).tz_localize("UTC").to_pydatetime()
+        cur.execute("""INSERT INTO dc_load_reports (ts, region_key, metric, scope, value_mw, forecast_year, stage, dc_share_pct,
+                         dc_share_quote, source_key, source_url, document, quote)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (ts, row["region_key"], row["metric"], row["scope"], to_float(row["value_mw"]),
+                     int(row["forecast_year"]) if clean(row.get("forecast_year")) else None, clean(row.get("stage")),
+                     to_float(row.get("dc_share_pct")), clean(row.get("dc_share_quote")), row["source_key"], row["source_url"],
+                     clean(row.get("document")), row["quote"]))
+        n += 1
+    return n
+
+
+def main(directory: Path, reset: bool = False, purge: bool = True) -> None:
     directory = Path(directory)
     if not directory.is_dir():
         raise SystemExit(f"{directory} is not a directory")
@@ -228,20 +287,23 @@ def main(directory: Path, reset: bool = False) -> None:
     with connect() as conn, conn.cursor() as cur:
         if reset:
             reset_all(cur)
-        elif not sample:
+        elif not sample and purge:
             purge_sample(cur)
         print(f"  parents:  {load_parents(cur, read_csv(directory, 'parents.csv'))}")
         print(f"  entities: {load_entities(cur, read_csv(directory, 'entities.csv'))}")
         n, skipped = load_projects(cur, read_csv(directory, 'projects.csv'), sample)
         print(f"  projects: {n}")
-        print(f"  events:   {load_events(cur, read_csv(directory, 'evidence_events.csv'), skipped)}")
+        print(f"  events:   {load_events(cur, read_csv(directory, 'evidence_events.csv'), skipped, origin_for(directory))}")
         print(f"  ercot:    {load_ercot(cur, read_csv(directory, 'ercot_queue.csv'))}")
+        print(f"  load reports: {load_reports(cur, read_csv(directory, 'dc_load_reports.csv'))}")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--dir", required=True, help="data/seed or data/sample")
+    ap.add_argument("--dir", required=True, action="append",
+                    help="data/seed or data/sample; repeat to add more (e.g. --dir data/seed_national)")
     ap.add_argument("--reset", action="store_true", help="truncate all GridSight tables first")
     args = ap.parse_args()
-    main(Path(args.dir), args.reset)
+    for n, d in enumerate(args.dir):
+        main(Path(d), args.reset and n == 0, purge=n == 0)
     sys.exit(0)

@@ -80,7 +80,7 @@ export default function SitesTable({ sites, showOrg = false, caption }: { sites:
                 {s.is_sample && <span className="ml-2 text-[11px] font-semibold uppercase text-amber-700">Sample</span>}
               </th>
               <td className="px-4 py-3 text-[var(--hairline-mid)]">
-                {[s.city, s.county && `${s.county} Co.`].filter(Boolean).join(", ") || <Unavailable why="No location published in these records" />}
+                {[s.city, s.county && `${s.county} Co.`, s.state].filter(Boolean).join(", ") || <Unavailable why="No location published in these records" />}
               </td>
               {showOrg && (
                 <td className="px-4 py-3">

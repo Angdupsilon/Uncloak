@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ answer: "Sorry, I couldn't read that request.", map_filter: null, open_timeline: null, tool_calls: [] }, { status: 400 });
   }
   if (!question) {
-    return Response.json({ answer: "Ask me a question about Texas data-center projects.", map_filter: null, open_timeline: null, tool_calls: [] });
+    return Response.json({ answer: "Ask me a question about U.S. data-center projects.", map_filter: null, open_timeline: null, tool_calls: [] });
   }
   return Response.json({ as_of, ...(await askGridSight(question, as_of)) });
 }

@@ -4,7 +4,8 @@ import { getParents, parseAsOf } from "@/lib/queries";
 
 export async function GET(req: NextRequest) {
   return jsonHandler(async () => {
-    const as_of = parseAsOf(req.nextUrl.searchParams.get("as_of"));
-    return { as_of, parents: await getParents(as_of) };
+    const sp = req.nextUrl.searchParams;
+    const as_of = parseAsOf(sp.get("as_of"));
+    return { as_of, parents: await getParents(as_of, sp.get("state"), sp.get("records") === "1") };
   });
 }

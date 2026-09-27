@@ -1,0 +1,9 @@
+quarter,period_end,filing_document_id,filed_date,filing_url,attachment_file,note
+2024Q2,2024-06-30,219697,2024-08-16,https://psc.ga.gov/search/facts-document/?documentId=219697,2024Q2_attachment.xlsx,
+2024Q3,2024-09-30,220461,2024-11-18,https://psc.ga.gov/search/facts-document/?documentId=220461,2024Q3_attachment.xlsx,
+2024Q4,2024-12-31,221545,2025-02-21,https://psc.ga.gov/search/facts-document/?documentId=221545,2024Q4_attachment.xlsx,
+2025Q1,2025-03-31,222764,2025-05-22,https://psc.ga.gov/search/facts-document/?documentId=222764,2025Q1_attachment.xlsx,
+2025Q2,2025-06-30,223705,2025-08-15,https://psc.ga.gov/search/facts-document/?documentId=223705,2025Q2_attachment.xlsx,
+2025Q3,2025-09-30,225690,2026-03-04,https://psc.ga.gov/search/facts-document/?documentId=225690,2025Q3_attachment_revised.xlsx,revised filing (original 224615 filed 2025-11-21; Main sheet unchanged)
+2025Q4,2025-12-31,225690,2026-03-04,https://psc.ga.gov/search/facts-document/?documentId=225690,2025Q4_attachment_revised.xlsx,revised filing (original 225384 filed 2026-02-11; Main sheet unchanged)
+2026Q1,2026-03-31,226607,2026-05-15,https://psc.ga.gov/search/facts-document/?documentId=226607,2026Q1_attachment.xlsx,

@@ -30,10 +30,10 @@ export default async function OrgIndex() {
       <main id="main">
         <Container className="py-12">
           <p className="ub-eyebrow">Organizations</p>
-          <h1 className="rw-display-sm mt-3">Who is behind Texas data-center sites</h1>
+          <h1 className="rw-display-sm mt-3">Who is behind U.S. data-center sites</h1>
           <p className="rw-subtitle mt-5 max-w-3xl">
-            Companies that Texas public records link to at least one data-center site, through the entities named as owner, occupant, operator or
-            tenant. Ranked by number of sites, not by size or investment.
+            Companies linked to at least one data-center site: in Texas through the entities named as owner, occupant, operator or tenant on public
+            records, elsewhere through the operator named on the mapped site. Ranked by number of sites, not by size or investment.
           </p>
           <div className="mt-12">
             {!data.ok ? (

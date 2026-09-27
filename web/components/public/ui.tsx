@@ -17,6 +17,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 const KIND_STYLE: Record<MetricKind, string> = {
   documented: "bg-black text-white ring-black",
   derived: "border border-dashed border-black bg-white text-black ring-transparent",
+  modeled: "border border-dotted border-black bg-white text-black ring-transparent",
   context: "bg-[var(--canvas-soft)] text-[var(--hairline-mid)] ring-transparent",
 };
 

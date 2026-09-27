@@ -1,7 +1,11 @@
 "use client";
+import { useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { fmtDate, fmtGW, fmtMonth, isLink } from "@/lib/format";
-import type { Summary } from "@/lib/types";
+import { STATE_NAMES } from "@/lib/geo";
+import { useJson } from "@/lib/useJson";
+import type { LoadReports, Summary } from "@/lib/types";
+import RegionReports, { RegionSelect } from "./RegionReports";
 
 /** Queue colours. Black is the only conversion colour in the design system, so
  *  "real" load is ink and phantom load is the empty canvas it sits on. */
@@ -104,7 +108,19 @@ function Row({
   );
 }
 
-export default function SummaryBar({ summary, error }: { summary: Summary | null; error: string | null }) {
+export default function SummaryBar({
+  summary,
+  error,
+  region = null,
+}: {
+  summary: Summary | null;
+  error: string | null;
+  /** USPS code of the state in focus on the map, or null for the whole country. */
+  region?: string | null;
+}) {
+  // ERCOT keeps the reconciliation with Texas records; any other region shows its load report as published.
+  const [reportRegion, setReportRegion] = useState("ERCO");
+  const reports = useJson<LoadReports>(summary ? `/api/load-reports?region=${reportRegion}&as_of=${summary.as_of}` : null);
   if (error && !summary) {
     return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-[#5e5e5e]">Summary unavailable: {error}</div>;
   }
@@ -133,6 +149,29 @@ export default function SummaryBar({ summary, error }: { summary: Summary | null
     // playback tick: rapidly toggling opacity made both the copy and waffle
     // appear to blink even though there was usable content on screen.
     <div className="ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4">
+      <RegionSelect regions={reports.data?.regions ?? []} value={reportRegion} onChange={setReportRegion} />
+      {reportRegion !== "ERCO" ? (
+        reports.data && reports.data.region === reportRegion ? (
+          <RegionReports data={reports.data} compact />
+        ) : (
+          <p className="text-[12px] text-[#5e5e5e]">{reports.error ? `Load report unavailable: ${reports.error}` : "Loading…"}</p>
+        )
+      ) : (
+      <>
+      {/* ERCOT is the Texas grid: its queue is compared with Texas projects that have a public record. */}
+      <div className="rounded-lg bg-[#f3f3f3] px-3 py-2 text-[12px] leading-4 text-[#5e5e5e]">
+        {region && region !== "TX" ? (
+          <>
+            <span className="font-medium text-black">Texas figures.</span> The ERCOT comparison covers Texas projects. Pick another load report above
+            for {STATE_NAMES[region] ?? region}&apos;s grid; those are shown as published.
+          </>
+        ) : (
+          <>
+            <span className="font-medium text-black">Texas · ERCOT.</span> Queue figures and project capacity cover Texas projects with public records.
+          </>
+        )}
+      </div>
+
       {/* 1. The headline: how much requested load is still waiting on ERCOT. */}
       <section>
         <div className="ub-body-md-strong text-[#5e5e5e]">ERCOT approval status</div>
@@ -172,7 +211,7 @@ export default function SummaryBar({ summary, error }: { summary: Summary | null
           a gap here is our coverage, not evidence that load is speculative. */}
       <section className="border-t border-[#efefef] pt-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="ub-body-md-strong text-[#5e5e5e]">Projects found in public records</div>
+          <div className="ub-body-md-strong text-[#5e5e5e]">Texas projects found in public records</div>
           {spark.length > 1 && !noMw && (
             <div className="h-7 w-16 shrink-0" aria-label="Weekly evidence-weighted vs found GW">
               <ResponsiveContainer width="100%" height="100%">
@@ -244,6 +283,8 @@ export default function SummaryBar({ summary, error }: { summary: Summary | null
         )}
         Records {fmtDate(s.as_of)} (TDLR, Comptroller, TCEQ)
       </footer>
+      </>
+      )}
     </div>
   );
 }

@@ -16,7 +16,7 @@ const EXAMPLES = [
   { label: "Google", href: "/org/google", kind: "Organization" },
   { label: "Anthropic", href: "/org/anthropic", kind: "Organization" },
   { label: "Abilene", href: "/near?q=Abilene%2C%20TX", kind: "City" },
-  { label: "Hutto", href: "/near?q=Hutto%2C%20TX", kind: "City" },
+  { label: "Loudoun County, VA", href: "/near?q=Loudoun%20County%2C%20VA&county=Loudoun", kind: "County" },
   { label: "Ellis County", href: "/near?q=Ellis%20County%2C%20TX&county=Ellis", kind: "County" },
   { label: "78725", href: "/near?q=78725", kind: "ZIP code" },
 ];
@@ -46,12 +46,13 @@ export default async function Home() {
           <div className="relative flex min-h-[560px] flex-col justify-end rounded-2xl text-white sm:min-h-[min(calc(100svh-5.5rem),860px)]">
             <HeroVisual points={data.ok ? data.sites.filter((x) => x.lat != null && x.lon != null).map((x) => ({ lat: x.lat!, lon: x.lon!, mw: x.mw_est })) : []} />
             <div className="relative px-6 pb-10 pt-24 sm:px-12 sm:pb-14 lg:px-16 lg:pb-16">
-              <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-white/60">Texas data-center public records</p>
+              <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-white/60">U.S. data-center records</p>
               <h1 className="mt-4 max-w-4xl text-[40px] font-medium leading-[1.05] tracking-[-1.2px] text-white sm:text-[64px] sm:tracking-[-1.8px]">
-                Who is building data centers in Texas, and where?
+                Who is building data centers in the U.S., and where?
               </h1>
               <p className="mt-6 max-w-2xl text-[18px] leading-[1.5] text-white/85 sm:text-[21px]">
-                Search a company, a place or a ZIP code, or ask a question. Every answer and number comes from the public record.
+                Search a company, a place or a ZIP code, or ask a question. Every answer and number comes from the public record. Texas has
+                the deepest public records; other states start from mapped sites.
               </p>
               <div className="mt-8">
                 <div className="max-w-2xl">
@@ -74,7 +75,7 @@ export default async function Home() {
               </div>
               {data.ok && (
                 <p className="mt-10 text-[12px] text-white/50 sm:absolute sm:bottom-6 sm:right-8 sm:mt-0 sm:text-right">
-                  Each point is one of the {data.sites.filter((x) => x.lat != null).length} recorded sites with a published or reviewed location.
+                  Each point is one of the {data.sites.filter((x) => x.lat != null).length} recorded sites with a published, reviewed or mapped location.
                 </p>
               )}
             </div>
@@ -91,9 +92,9 @@ export default async function Home() {
                 <Glance
                   value={data.sites.length.toLocaleString()}
                   label="data-center sites on record"
-                  detail={`${data.sites.filter((s) => s.lat != null).length} with a known location`}
+                  detail={`${data.sites.filter((s) => s.lat != null).length} with a known location · ${new Set(data.sites.map((s) => s.state)).size} states and territories`}
                   kind="documented"
-                  source={<Link href="/methodology#sources" className="rw-link">Comptroller registry and TDLR filings</Link>}
+                  source={<Link href="/methodology#sources" className="rw-link">Texas public records and the IM3 data-center atlas</Link>}
                 />
                 <Glance
                   value={data.orgs.filter((o) => o.sites > 0).length.toLocaleString()}
@@ -127,7 +128,7 @@ export default async function Home() {
                 <section aria-labelledby="read-h">
                   <SectionTitle id="read-h">How to read this site</SectionTitle>
                   <ul className="space-y-4">
-                    {(["documented", "derived", "context"] as MetricKind[]).map((k) => (
+                    {(["documented", "derived", "modeled", "context"] as MetricKind[]).map((k) => (
                       <li key={k} className="flex gap-3">
                         <div className="w-[128px] shrink-0 pt-0.5">
                           <KindBadge kind={k} />
@@ -206,7 +207,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
   const cards = [
     {
       title: "Look up any company",
-      text: "See every Texas site tied to a company, even behind unfamiliar LLC names.",
+      text: "See every site tied to a company, even behind unfamiliar LLC names.",
       href: "/org/google",
       cta: "Try Google",
       visual: (
@@ -275,7 +276,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       cta: "How it works",
       visual: (
         <div className="flex h-full flex-col justify-center gap-2 p-5">
-          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports"].map((t) => (
+          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports", "Illinois DCEO data-center MOUs", "Minnesota DEED qualified data centers", "Indiana IEDC data-center contracts", "Wisconsin certified data centers", "IM3 data-center atlas (OpenStreetMap)"].map((t) => (
             <div key={t} className="flex items-center gap-2.5 rounded-md bg-white/[0.07] px-3 py-2 text-[12px] text-white/85">
               <span aria-hidden className="grid h-4 w-4 place-items-center rounded-full bg-white text-[9px] font-bold text-black">
                 ✓

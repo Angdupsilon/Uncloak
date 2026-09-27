@@ -1,0 +1,1369 @@
+name,state,county,city,address,lat,lon,llc_name
+"AngelTrax Data Center · Houston, AL",AL,Houston,,,31.231904,-85.455849,AngelTrax Mobile Video Surveillance Solutions (OSM operator)
+"Google · Jackson, AL #1",AL,Jackson,,,34.913676,-85.745935,Google (OSM operator)
+"Google · Jackson, AL #2",AL,Jackson,,,34.913692,-85.747428,Google (OSM operator)
+"Sungard Systems International · Jefferson, AL",AL,Jefferson,,,33.404716,-86.911457,
+"George C. Wallace Alabama Supercomputer Center · Madison, AL",AL,Madison,,,34.736541,-86.673099,Alabama Supercomputer Authority (OSM operator)
+"SimpleHelix · Madison, AL",AL,Madison,,,34.745431,-86.691883,
+"Meta Huntsville Data center · Madison, AL #1",AL,Madison,,,34.840432,-86.628841,Meta (OSM operator)
+"Meta Huntsville Data center · Madison, AL #2",AL,Madison,,,34.843182,-86.628866,Meta (OSM operator)
+"Meta Huntsville Data center · Madison, AL #3",AL,Madison,,,34.847334,-86.626919,Meta (OSM operator)
+"TierPoint Little Rock · Pulaski, AR",AR,Pulaski,,,34.756236,-92.444724,
+"Searcy Information Technologies · White, AR",AR,White,,,35.249216,-91.740906,City of Searcy (OSM operator)
+"DirecTV data center · Cochise, AZ",AZ,Cochise,,,31.972675,-110.304752,DirecTV (OSM operator)
+"CyrusOne PHX8 · Maricopa, AZ",AZ,Maricopa,,,33.266344,-111.88329,
+"CyrusOne PHX7 · Maricopa, AZ",AZ,Maricopa,,,33.266358,-111.881909,
+"CyrusOne PHX6 · Maricopa, AZ",AZ,Maricopa,,,33.267576,-111.882532,CyrusOne (OSM operator)
+"CyrusOne PHX4 · Maricopa, AZ #1",AZ,Maricopa,,,33.268766,-111.882516,CyrusOne (OSM operator)
+"CyrusOne PHX5 · Maricopa, AZ",AZ,Maricopa,,,33.269741,-111.881587,CyrusOne (OSM operator)
+"CyrusOne PHX1 · Maricopa, AZ",AZ,Maricopa,,,33.270855,-111.881912,CyrusOne (OSM operator)
+"CyrusOne PHX4 · Maricopa, AZ #2",AZ,Maricopa,,,33.271937,-111.883282,
+"CyrusOne PHX3 · Maricopa, AZ",AZ,Maricopa,,,33.271968,-111.881627,
+"Digital Realty Phoenix PHX15 · Maricopa, AZ",AZ,Maricopa,,,33.274974,-111.886626,Digital Realty (OSM operator)
+"H5 Phoenix · Maricopa, AZ",AZ,Maricopa,,,33.276911,-111.885909,H5 (OSM operator)
+"Emailage · Maricopa, AZ",AZ,Maricopa,,,33.302965,-111.840539,
+"L3Harris Technologies Inc · Maricopa, AZ",AZ,Maricopa,,,33.305358,-111.671704,
+"AZ Labs · Maricopa, AZ",AZ,Maricopa,,,33.306272,-111.6717,
+"All About Serving Process Server · Maricopa, AZ",AZ,Maricopa,,,33.319916,-111.809686,
+"StrongMind · Maricopa, AZ",AZ,Maricopa,,,33.342616,-111.840974,
+"EdgeCore · Maricopa, AZ",AZ,Maricopa,,,33.344131,-111.619553,
+"Digital Realty Data Center · Maricopa, AZ",AZ,Maricopa,,,33.344648,-111.899227,Digital Realty (OSM operator)
+"Unnamed data center · Maricopa, AZ #1",AZ,Maricopa,,,33.346323,-111.628917,
+"Apple Data Center · Maricopa, AZ",AZ,Maricopa,,,33.347019,-111.604056,Apple Inc. (OSM operator)
+"Unnamed data center · Maricopa, AZ #2",AZ,Maricopa,,,33.347021,-111.604139,
+"Unnamed data center · Maricopa, AZ #3",AZ,Maricopa,,,33.347169,-111.625968,
+"Unnamed data center · Maricopa, AZ #4",AZ,Maricopa,,,33.347187,-111.632463,
+"EdgeConneX PHX02 Data Center · Maricopa, AZ",AZ,Maricopa,,,33.352011,-111.64753,EdgeConneX (OSM operator)
+"Unnamed data center · Maricopa, AZ #5",AZ,Maricopa,,,33.35323,-111.67809,
+"NTT PH1 Datacenter · Maricopa, AZ",AZ,Maricopa,,,33.353821,-111.612343,NTT (OSM operator)
+"Comarch · Maricopa, AZ",AZ,Maricopa,,,33.356679,-111.635236,
+"GoDaddy - Gilbert · Maricopa, AZ",AZ,Maricopa,,,33.361914,-111.839309,
+"Alliance Technology · Maricopa, AZ",AZ,Maricopa,,,33.379986,-111.728405,
+"OptimumHQ · Maricopa, AZ",AZ,Maricopa,,,33.380415,-111.752668,
+"The Chatfield Group · Maricopa, AZ",AZ,Maricopa,,,33.380601,-111.752889,
+"Omnis Network · Maricopa, AZ",AZ,Maricopa,,,33.39441,-111.952491,
+"EdgeConneX Data Center · Maricopa, AZ",AZ,Maricopa,,,33.395586,-111.970076,EdgeConneX (OSM operator)
+"Cogent Data Center · Maricopa, AZ",AZ,Maricopa,,,33.400255,-112.0479,"Cogent Communications, Inc. (OSM operator)"
+"Alembic Computer Services, Inc. · Maricopa, AZ",AZ,Maricopa,,,33.405131,-111.977335,
+"PHX-10 · Maricopa, AZ",AZ,Maricopa,,,33.407946,-112.36483,Microsoft (OSM operator)
+"PHX-11 · Maricopa, AZ",AZ,Maricopa,,,33.409031,-112.364803,Microsoft (OSM operator)
+"J-Curve Technologies · Maricopa, AZ",AZ,Maricopa,,,33.413186,-111.971154,
+"PhoenixNAP · Maricopa, AZ",AZ,Maricopa,,,33.416051,-112.009426,
+"Stream Data Centers PHX-1 · Maricopa, AZ",AZ,Maricopa,,,33.419491,-112.359988,
+"Iron Mountain Records Storage · Maricopa, AZ",AZ,Maricopa,,,33.42038,-112.041326,
+"Centersquare: Phoenix - (PHX1 - Mesa) · Maricopa, AZ",AZ,Maricopa,,,33.421284,-111.858994,Centersquare (OSM operator)
+"Data Storage Centers · Maricopa, AZ",AZ,Maricopa,,,33.421693,-112.034303,
+"Unnamed data center · Maricopa, AZ #6",AZ,Maricopa,,,33.439468,-112.377058,
+"Microsoft · Maricopa, AZ",AZ,Maricopa,,,33.44634,-112.37392,Microsoft (OSM operator)
+"Iron Mountain AZP-2 · Maricopa, AZ",AZ,Maricopa,,,33.452141,-111.977305,Iron Mountain (OSM operator)
+"Iron Mountain AZP-1 · Maricopa, AZ",AZ,Maricopa,,,33.454488,-111.976455,Iron Mountain (OSM operator)
+"QTS · Maricopa, AZ #1",AZ,Maricopa,,,33.460806,-111.997122,Quality Technology Services (OSM operator)
+"QTS · Maricopa, AZ #2",AZ,Maricopa,,,33.464747,-111.997534,Quality Technology Services (OSM operator)
+"Myndshift Technologies · Maricopa, AZ",AZ,Maricopa,,,33.475421,-111.719165,
+"Lumen · Maricopa, AZ",AZ,Maricopa,,,33.494336,-112.070786,Lumen Technologies (OSM operator)
+"DataPro USA Web Development · Maricopa, AZ",AZ,Maricopa,,,33.611662,-111.913983,
+"Profit Finder Pro Software · Maricopa, AZ",AZ,Maricopa,,,33.627248,-111.902048,
+"VaultLogix · Maricopa, AZ",AZ,Maricopa,,,33.627367,-111.901703,
+"K-Motion Interactive · Maricopa, AZ",AZ,Maricopa,,,33.634484,-111.884346,
+"Iron Mountain Data Centers AZS-1 · Maricopa, AZ",AZ,Maricopa,,,33.644666,-111.896098,
+"Aligned Energy Data Center · Maricopa, AZ",AZ,Maricopa,,,33.659041,-112.111168,
+"Accelera Data Systems · Maricopa, AZ",AZ,Maricopa,,,33.664745,-112.111714,
+"Flexential Phoenix - Deer Valley · Maricopa, AZ",AZ,Maricopa,,,33.684674,-112.098357,Flexential (OSM operator)
+"DirecTV data center · Pima, AZ",AZ,Pima,,,32.092706,-110.787424,DirecTV (OSM operator)
+"Hurricane Electric Fremont 2 · Alameda, CA",CA,Alameda,,,37.471827,-121.920311,Hurricane Electric (OSM operator)
+"XO Fremont · Alameda, CA",CA,Alameda,,,37.475337,-121.922113,XO (OSM operator)
+"Hurricane Electric Fremont 1 · Alameda, CA",CA,Alameda,,,37.489865,-121.931017,Hurricane Electric (OSM operator)
+"QES Computers · Alameda, CA",CA,Alameda,,,37.699475,-121.903799,
+"Open Computing Facility · Alameda, CA",CA,Alameda,,,37.869852,-122.259823,
+"e360 · Contra Costa, CA",CA,Contra Costa,,,37.971081,-122.043738,
+"DRT LAX12 · Los Angeles, CA",CA,Los Angeles,,,33.915649,-118.38463,Digital Realty (OSM operator)
+"Centurylink data center · Los Angeles, CA #1",CA,Los Angeles,,,33.917729,-118.386313,Centurylink (OSM operator)
+"Serverfarm - LAX1 · Los Angeles, CA",CA,Los Angeles,,,33.921742,-118.386436,Serverfarm LLC. (OSM operator)
+"DRT LAX10 · Los Angeles, CA",CA,Los Angeles,,,34.047326,-118.257514,
+"One Wilshire · Los Angeles, CA",CA,Los Angeles,,,34.047892,-118.255546,
+"USPO Terminal Annex · Los Angeles, CA",CA,Los Angeles,,,34.058102,-118.235393,United States Postal Service (OSM operator)
+"Centurylink data center · Los Angeles, CA #2",CA,Los Angeles,,,34.199869,-118.343789,Centurylink (OSM operator)
+"AT&T · Los Angeles, CA",CA,Los Angeles,,,34.579984,-118.114024,
+"Kaiser Data Center · Napa, CA",CA,Napa,,,38.254085,-122.273098,
+"TPx Colocation Datacenter · Orange, CA",CA,Orange,,,33.707506,-117.844104,TPx Communications (OSM operator)
+"Lumen Technologies · Orange, CA",CA,Orange,,,33.716778,-117.805801,
+"IT · Riverside, CA",CA,Riverside,,,33.91029,-117.503021,
+"Edgeconnex Data Center · Sacramento, CA",CA,Sacramento,,,38.592297,-121.277437,EdgeConneX (OSM operator)
+"RagingWire CA3 · Sacramento, CA",CA,Sacramento,,,38.644239,-121.498763,NTT (OSM operator)
+"QTS Sacramento · Sacramento, CA",CA,Sacramento,,,38.646349,-121.486223,Quality Technology Services (OSM operator)
+"RagingWire CA2 · Sacramento, CA",CA,Sacramento,,,38.6504,-121.491946,NTT (OSM operator)
+"RagingWire CA1 · Sacramento, CA",CA,Sacramento,,,38.650432,-121.489186,NTT (OSM operator)
+"AT&T Center · San Diego, CA",CA,San Diego,,,32.747575,-117.158948,American Telephone & Telegraph (OSM operator)
+"SDSU Computer Room · San Diego, CA",CA,San Diego,,,32.775025,-117.070888,
+"LightEdge SAN1 · San Diego, CA",CA,San Diego,,,32.827866,-117.129934,
+"EdgeConneX San Diego · San Diego, CA",CA,San Diego,,,32.842309,-117.169345,EdgeConneX (OSM operator)
+"Unnamed data center · San Diego, CA",CA,San Diego,,,33.1536,-117.238846,
+"Digital Realty San Francisco SFO10 · San Francisco, CA",CA,San Francisco,,,37.723602,-122.397936,Digital Realty (OSM operator)
+"Ntirety data center · San Francisco, CA",CA,San Francisco,,,37.779653,-122.394001,Ntirety (OSM operator)
+"365 Main Street Data Center · San Francisco, CA",CA,San Francisco,,,37.788731,-122.390469,Digital Realty (OSM operator)
+"360 Spear Street Data Center · San Francisco, CA",CA,San Francisco,,,37.788992,-122.390137,Digital Realty (OSM operator)
+"Digital West Data Center · San Luis Obispo, CA",CA,San Luis Obispo,,,35.255316,-120.641513,
+"Equinix SV10 · Santa Clara, CA",CA,Santa Clara,,,37.241199,-121.784763,Equinix (OSM operator)
+"Equinix SV1 · Santa Clara, CA",CA,Santa Clara,,,37.241587,-121.78332,Equinix (OSM operator)
+"Equinix SV5 · Santa Clara, CA",CA,Santa Clara,,,37.24204,-121.781839,Equinix (OSM operator)
+"Equinix SV11 · Santa Clara, CA",CA,Santa Clara,,,37.242605,-121.783999,Equinix (OSM operator)
+"Forescout Technologies, Inc. · Santa Clara, CA",CA,Santa Clara,,,37.322868,-121.947418,
+"Unnamed data center · Santa Clara, CA #1",CA,Santa Clara,,,37.333638,-121.887975,
+"San Jose Colocation Center · Santa Clara, CA",CA,Santa Clara,,,37.334118,-121.891646,CoreSite (OSM operator)
+"Unnamed data center · Santa Clara, CA #2",CA,Santa Clara,,,37.36114,-121.942306,
+"Digital Realty Silicon Valley SC1 · Santa Clara, CA",CA,Santa Clara,,,37.361687,-121.943911,Digital Realty (OSM operator)
+"STACK SVY02 · Santa Clara, CA",CA,Santa Clara,,,37.361932,-121.953744,Stack Infrastructure (OSM operator)
+"Microsoft · Santa Clara, CA",CA,Santa Clara,,,37.362066,-121.946436,Microsoft (OSM operator)
+"Vantage Santa Clara CA2 · Santa Clara, CA",CA,Santa Clara,,,37.364032,-121.946845,Vantage Data Centers (OSM operator)
+"SV Colo · Santa Clara, CA",CA,Santa Clara,,,37.36431,-121.958799,SV Colo (OSM operator)
+"Cologix Santa Clara SV1 Data Center · Santa Clara, CA",CA,Santa Clara,,,37.365333,-121.9617,Cologix (OSM operator)
+"Prime Santa Clara · Santa Clara, CA #1",CA,Santa Clara,,,37.366662,-121.962865,Prime (OSM operator)
+"NTT Silicon Valley SV1 Data Center · Santa Clara, CA",CA,Santa Clara,,,37.369053,-121.955338,NTT (OSM operator)
+"Csquare SFO1 · Santa Clara, CA #1",CA,Santa Clara,,,37.370438,-121.96983,Csquare (OSM operator)
+"Unnamed data center · Santa Clara, CA #3",CA,Santa Clara,,,37.370643,-121.974507,
+"Digital Realty Silicon Valley SJC37 · Santa Clara, CA",CA,Santa Clara,,,37.370936,-121.947216,Digital Realty (OSM operator)
+"Csquare SFO1 · Santa Clara, CA #2",CA,Santa Clara,,,37.371519,-121.969697,Csquare (OSM operator)
+"Vantage data center · Santa Clara, CA #1",CA,Santa Clara,,,37.371779,-121.972505,Vantage (OSM operator)
+"Csquare SFO3 · Santa Clara, CA",CA,Santa Clara,,,37.372104,-121.986031,Csquare (OSM operator)
+"Silicon Valley SJC31 · Santa Clara, CA",CA,Santa Clara,,,37.37225,-121.948329,Digital Realty (OSM operator)
+"Digital Realty Silicon Valley SJC34 · Santa Clara, CA",CA,Santa Clara,,,37.372388,-121.973619,Digital Realty (OSM operator)
+"Vantage data center · Santa Clara, CA #2",CA,Santa Clara,,,37.373386,-121.972693,Vantage (OSM operator)
+"Lumen Sunnyvale 1 · Santa Clara, CA",CA,Santa Clara,,,37.373439,-121.987813,Lumen Technologies (OSM operator)
+"Digital Realty Silicon Valley SJC16 · Santa Clara, CA",CA,Santa Clara,,,37.374929,-121.955986,Digital Realty (OSM operator)
+"Equinix SV14 · Santa Clara, CA",CA,Santa Clara,,,37.374962,-121.988509,Equinix (OSM operator)
+"Digital Realty Silicon Valley SJC15 · Santa Clara, CA",CA,Santa Clara,,,37.374997,-121.954077,Digital Realty (OSM operator)
+"Prime Santa Clara · Santa Clara, CA #2",CA,Santa Clara,,,37.375017,-121.95325,Prime (OSM operator)
+"Digital Realty Silicon Valley SJC29 · Santa Clara, CA",CA,Santa Clara,,,37.375023,-121.958096,Digital Realty (OSM operator)
+"Prime SANTA CLARA DATA CENTER · Santa Clara, CA",CA,Santa Clara,,,37.375026,-121.954881,Prime (OSM operator)
+"CoreSite SV3 · Santa Clara, CA",CA,Santa Clara,,,37.375142,-121.971709,CoreSite (OSM operator)
+"CoreSite SV5 · Santa Clara, CA",CA,Santa Clara,,,37.375196,-121.97069,CoreSite (OSM operator)
+"Equinix SV15 · Santa Clara, CA",CA,Santa Clara,,,37.375495,-121.988406,Equinix (OSM operator)
+"CoreSite SV9 · Santa Clara, CA",CA,Santa Clara,,,37.375559,-121.96961,CoreSite (OSM operator)
+"Csquare SFO4 · Santa Clara, CA #1",CA,Santa Clara,,,37.375755,-121.956269,Csquare (OSM operator)
+"Csquare SFO4 · Santa Clara, CA #2",CA,Santa Clara,,,37.375777,-121.955193,Csquare (OSM operator)
+"Digital Realty Silicon Valley SJC10 · Santa Clara, CA",CA,Santa Clara,,,37.375823,-121.953335,Digital Realty (OSM operator)
+"CoreSite SV7 · Santa Clara, CA",CA,Santa Clara,,,37.376079,-121.973057,CoreSite (OSM operator)
+"Equinix SV16 · Santa Clara, CA",CA,Santa Clara,,,37.376118,-121.988688,Equinix (OSM operator)
+"CoreSite SV4 · Santa Clara, CA",CA,Santa Clara,,,37.376263,-121.970684,CoreSite (OSM operator)
+"CoreSite SV6 · Santa Clara, CA",CA,Santa Clara,,,37.376302,-121.972084,CoreSite (OSM operator)
+"Digital Realty Silicon Valley SJC11 · Santa Clara, CA",CA,Santa Clara,,,37.376341,-121.948531,Digital Realty (OSM operator)
+"Equinix SV17 · Santa Clara, CA",CA,Santa Clara,,,37.376529,-121.988584,Equinix (OSM operator)
+"Colovore · Santa Clara, CA",CA,Santa Clara,,,37.376729,-121.953149,
+"Lumen Santa Clara · Santa Clara, CA",CA,Santa Clara,,,37.377005,-121.952082,Lumen Technologies (OSM operator)
+"CoreSite SV8 · Santa Clara, CA",CA,Santa Clara,,,37.377383,-121.97184,CoreSite (OSM operator)
+"Lumen · Santa Clara, CA",CA,Santa Clara,,,37.377585,-121.950682,Lumen Technologies (OSM operator)
+"Layer42 Santa Clara · Santa Clara, CA",CA,Santa Clara,,,37.37804,-121.954151,Layer42 (OSM operator)
+"Digital Realty Silicon Valley SJC30 · Santa Clara, CA",CA,Santa Clara,,,37.378289,-121.958105,Digital Realty (OSM operator)
+"Equinix Santa Clara SV2 · Santa Clara, CA",CA,Santa Clara,,,37.378434,-121.954992,Equinix (OSM operator)
+"OpenColo · Santa Clara, CA",CA,Santa Clara,,,37.378816,-121.955937,
+"Unnamed data center · Santa Clara, CA #4",CA,Santa Clara,,,37.379779,-121.94991,
+"EdgeCore Silicon Valley · Santa Clara, CA",CA,Santa Clara,,,37.383718,-121.965388,
+"Equinix San Jose SV3 · Santa Clara, CA",CA,Santa Clara,,,37.38827,-121.888429,Equinix (OSM operator)
+"Evocative Santa Clara SJC11 · Santa Clara, CA",CA,Santa Clara,,,37.38954,-121.961946,
+"Amazon · Santa Clara, CA",CA,Santa Clara,,,37.389933,-121.96599,Amazon Web Services (OSM operator)
+"QTS Santa Clara 2 · Santa Clara, CA",CA,Santa Clara,,,37.392722,-121.978397,Quality Technology Services (OSM operator)
+"QTS Santa Clara 1 · Santa Clara, CA",CA,Santa Clara,,,37.393984,-121.97831,Quality Technology Services (OSM operator)
+"Csquare SFO2 · Santa Clara, CA #1",CA,Santa Clara,,,37.397579,-121.980869,Csquare (OSM operator)
+"Csquare SFO2 · Santa Clara, CA #2",CA,Santa Clara,,,37.398618,-121.981112,Csquare (OSM operator)
+"Equinix SV6 · Santa Clara, CA",CA,Santa Clara,,,37.399602,-122.014563,Equinix (OSM operator)
+"Stack Infrastructure · Santa Clara, CA #1",CA,Santa Clara,,,37.402213,-121.892384,Stack Infrastructure (OSM operator)
+"Stack Infrastructure · Santa Clara, CA #2",CA,Santa Clara,,,37.402559,-121.893382,Stack Infrastructure (OSM operator)
+"STACK Infrastructure · Santa Clara, CA #1",CA,Santa Clara,,,37.402634,-121.891057,"Stack Infrastructure, Incorporated (OSM operator)"
+"STACK Infrastructure · Santa Clara, CA #2",CA,Santa Clara,,,37.402745,-121.891051,"Stack Infrastructure, Incorporated (OSM operator)"
+"NTT Limited data center · Santa Clara, CA",CA,Santa Clara,,,37.403904,-121.889297,NTT Limited (OSM operator)
+"CoreSite SV2 · Santa Clara, CA",CA,Santa Clara,,,37.405683,-121.916241,"CoreSite Real Estate 1656 McCarthy, L.P. (OSM operator)"
+"DataBank Santa Clara SFO1 · Santa Clara, CA",CA,Santa Clara,,,37.407299,-121.965956,DataBank (OSM operator)
+"Equinix SV4 · Santa Clara, CA",CA,Santa Clara,,,37.414564,-122.01458,Equinix (OSM operator)
+"Dell 350 Holger Way · Santa Clara, CA",CA,Santa Clara,,,37.418407,-121.943085,
+"Northwest Data Center and Communications Hub · Santa Clara, CA",CA,Santa Clara,,,37.433437,-122.180739,
+"Equinix SV8 · Santa Clara, CA",CA,Santa Clara,,,37.445895,-122.160782,Equinix (OSM operator)
+"PG&E Datacenter · Solano, CA",CA,Solano,,,38.246259,-122.06721,
+"Modesto Junior College West Data Center · Stanislaus, CA",CA,Stanislaus,,,37.665147,-121.040037,Yosemite Community College District (OSM operator)
+"Google - Thornton · Adams, CO",CO,Adams,,,39.922419,-104.983245,Google (OSM operator)
+"Xfinity/Comcast Data Center · Arapahoe, CO",CO,Arapahoe,,,39.588307,-104.832435,
+"Verizon · Arapahoe, CO",CO,Arapahoe,,,39.589248,-104.877933,Verizon (OSM operator)
+"Unnamed data center · Arapahoe, CO #1",CO,Arapahoe,,,39.590131,-104.846963,
+"zColo by Zayo · Arapahoe, CO",CO,Arapahoe,,,39.591352,-104.847039,
+"Flexential - Denver - Centennial Data Center · Arapahoe, CO",CO,Arapahoe,,,39.593873,-104.84316,Flexential (OSM operator)
+"Time Warner Datacenter · Arapahoe, CO #1",CO,Arapahoe,,,39.59896,-104.860377,
+"Time Warner Datacenter · Arapahoe, CO #2",CO,Arapahoe,,,39.599931,-104.860182,
+"Flexential - Denver - Aurora · Arapahoe, CO",CO,Arapahoe,,,39.661049,-104.848832,Flexential (OSM operator)
+"Unnamed data center · Arapahoe, CO #2",CO,Arapahoe,,,39.729478,-104.712754,
+"JPMorgan Chase · Broomfield, CO",CO,Broomfield,,,39.989087,-105.020703,JPMorgan Chase (OSM operator)
+"Pearl Plaza Office Building · Denver, CO",CO,Denver,,,39.74523,-104.979332,
+"Insurance Exchange Building · Denver, CO",CO,Denver,,,39.745572,-104.995691,
+"Flexential Denver - Downtown · Denver, CO",CO,Denver,,,39.74597,-104.994159,Flexential (OSM operator)
+"Flexential Denver - Englewood · Douglas, CO",CO,Douglas,,,39.558971,-104.837553,Flexential (OSM operator)
+"Unnamed data center · Douglas, CO",CO,Douglas,,,39.559072,-104.833588,
+"T5@Colorado Springs · El Paso, CO",CO,El Paso,,,38.786172,-104.788535,
+"Unnamed data center · El Paso, CO",CO,El Paso,,,38.80266,-104.521966,
+"Walmart Colorado Data Center · El Paso, CO",CO,El Paso,,,38.985746,-104.78727,Walmart (OSM operator)
+"SAP COS02 · El Paso, CO",CO,El Paso,,,38.988888,-104.786381,SAP (OSM operator)
+"Ergonomic Group · Capitol Planning Region, CT",CT,Capitol Planning Region,,,41.707078,-72.589864,
+"Digital Realty New York HVN10 · Greater Bridgeport Planning Region, CT",CT,Greater Bridgeport Planning Region,,,41.240846,-73.147299,Digital Realty (OSM operator)
+"Unnamed data center · South Central Connecticut Planning Region, CT",CT,South Central Connecticut Planning Region,,,41.478807,-72.801006,
+"amnet Data Center · Western Connecticut Planning Region, CT",CT,Western Connecticut Planning Region,,,41.091833,-73.516716,
+"CyrusOne Norwalk · Western Connecticut Planning Region, CT",CT,Western Connecticut Planning Region,,,41.113092,-73.388649,CyrusOne (OSM operator)
+"CoreSite DC1 · District of Columbia, DC",DC,District of Columbia,,,38.902888,-77.029149,CoreSite (OSM operator)
+"UF Research Computing Center · Alachua, FL",FL,Alachua,,,29.672591,-82.29993,University of Florida (OSM operator)
+"T-Mobile Everglades MSO Data Center · Broward, FL",FL,Broward,,,26.184997,-80.286916,
+"Flexential Fort Lauderdale · Broward, FL",FL,Broward,,,26.190086,-80.193297,Flexential (OSM operator)
+"Flexential Jacksonville · Duval, FL",FL,Duval,,,30.245748,-81.581723,Flexential (OSM operator)
+"Cologix Jacksonville JAX1 · Duval, FL",FL,Duval,,,30.33143,-81.662426,
+"Cyxtera Tampa TP1 · Hillsborough, FL",FL,Hillsborough,,,27.945532,-82.351162,Cyxtera (OSM operator)
+"Flexential Tampa - West · Hillsborough, FL",FL,Hillsborough,,,28.037299,-82.539978,Flexential (OSM operator)
+"Flexential Tampa - North · Hillsborough, FL",FL,Hillsborough,,,28.073856,-82.368338,Flexential (OSM operator)
+"NocRoom Miami IT Services · Miami-Dade, FL #1",FL,Miami-Dade,,,25.646562,-80.423435,
+"NAP of the Americas · Miami-Dade, FL",FL,Miami-Dade,,,25.782379,-80.193075,
+"NocRoom Miami IT Services · Miami-Dade, FL #2",FL,Miami-Dade,,,25.791545,-80.317748,
+"Unnamed data center · Miami-Dade, FL",FL,Miami-Dade,,,25.797544,-80.230034,
+"E-Foam · Orange, FL",FL,Orange,,,28.577943,-81.564545,
+"Unnamed data center · Orange, FL",FL,Orange,,,28.617468,-81.393439,
+"Unnamed data center · Polk, FL",FL,Polk,,,28.294077,-81.834848,
+"Digital Realty Atlanta ATL11 · Cobb, GA",GA,Cobb,,,33.746562,-84.579738,Digital Realty (OSM operator)
+"DataSite Atlanta · Cobb, GA",GA,Cobb,,,33.925511,-84.481616,datasite (OSM operator)
+"Unnamed data center · Cobb, GA",GA,Cobb,,,34.070704,-84.675908,
+"Flexential Atlanta - Douglasville 2 · Douglas, GA",GA,Douglas,,,33.730703,-84.61124,Flexential (OSM operator)
+"Flexential Atlanta - Douglasville 1 · Douglas, GA",GA,Douglas,,,33.731057,-84.616081,Flexential (OSM operator)
+"Centersquare Atlanta ATL1 · Douglas, GA",GA,Douglas,,,33.744228,-84.581216,
+"Digital Realty Atlanta ATL11 · Douglas, GA",GA,Douglas,,,33.746562,-84.579738,Digital Realty (OSM operator)
+"Google Datacenter - Douglas County · Douglas, GA",GA,Douglas,,,33.75059,-84.585223,Google (OSM operator)
+"Switch Data Center · Douglas, GA",GA,Douglas,,,33.755025,-84.587269,Switch (OSM operator)
+"QTS · Fayette, GA #1",GA,Fayette,,,33.448361,-84.522652,Quality Technology Services (OSM operator)
+"QTS · Fayette, GA #2",GA,Fayette,,,33.450932,-84.523619,Quality Technology Services (OSM operator)
+"UPS Data Center · Forsyth, GA",GA,Forsyth,,,34.103383,-84.214974,
+"Digital Realty Data Center · Fulton, GA",GA,Fulton,,,33.657032,-84.415203,Digital Realty (OSM operator)
+"Atlanta ATL13 · Fulton, GA",GA,Fulton,,,33.755519,-84.391481,Digital Realty (OSM operator)
+"CoreSite AT1 · Fulton, GA",GA,Fulton,,,33.755986,-84.391171,CoreSite (OSM operator)
+"CenturyLink · Fulton, GA",GA,Fulton,,,33.765144,-84.383736,
+"Google Fiber · Fulton, GA",GA,Fulton,,,33.771568,-84.366859,Google (OSM operator)
+"QTS Atlanta Data Center 2 · Fulton, GA",GA,Fulton,,,33.777505,-84.419552,Quality Technology Services (OSM operator)
+"QTS Atlanta Data Center 1 · Fulton, GA",GA,Fulton,,,33.777681,-84.4211,Quality Technology Services (OSM operator)
+"Cox Data Center · Fulton, GA",GA,Fulton,,,34.036202,-84.319553,
+"Ascent - Atlanta Data Center · Fulton, GA",GA,Fulton,,,34.057137,-84.273025,Ascent (OSM operator)
+"Unnamed data center · Fulton, GA",GA,Fulton,,,34.060985,-84.273982,
+"T5 Data Center · Fulton, GA",GA,Fulton,,,34.075922,-84.264316,
+"Hewlett-Packard · Fulton, GA",GA,Fulton,,,34.082226,-84.26745,
+"Flexential Atlanta - Alpharetta Data Center · Fulton, GA",GA,Fulton,,,34.087005,-84.251752,Flexential (OSM operator)
+"Secure Data Center · Fulton, GA",GA,Fulton,,,34.093708,-84.250876,
+"Strategic Datasphere · Fulton, GA",GA,Fulton,,,34.094797,-84.235697,
+"Mapletree Industrial · Fulton, GA",GA,Fulton,,,34.096584,-84.237391,
+"Flexential Atlanta - Norcross · Gwinnett, GA",GA,Gwinnett,,,33.954769,-84.198562,Flexential (OSM operator)
+"QTS Suwanee Data Center 1 · Gwinnett, GA",GA,Gwinnett,,,34.03539,-84.061075,Quality Technology Services (OSM operator)
+"QTS Suwanee Data Center 2 · Gwinnett, GA",GA,Gwinnett,,,34.037099,-84.057703,Quality Technology Services (OSM operator)
+"Unnamed data center · Muscogee, GA",GA,Muscogee,,,32.498267,-84.883571,
+"Meta data center · Newton, GA #1",GA,Newton,,,33.598021,-83.695013,Meta (OSM operator)
+"Meta data center · Newton, GA #2",GA,Newton,,,33.600094,-83.696839,Meta (OSM operator)
+"Meta data center · Newton, GA #3",GA,Newton,,,33.601371,-83.705417,Meta (OSM operator)
+"Microsoft · Dallas, IA #1",IA,Dallas,,,41.531814,-93.863442,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #2",IA,Dallas,,,41.532838,-93.863462,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #3",IA,Dallas,,,41.533916,-93.863439,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #4",IA,Dallas,,,41.53499,-93.863444,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #5",IA,Dallas,,,41.53967,-93.828665,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #6",IA,Dallas,,,41.539814,-93.826314,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #7",IA,Dallas,,,41.540616,-93.824949,Microsoft (OSM operator)
+"Microsoft · Dallas, IA #8",IA,Dallas,,,41.540709,-93.827895,Microsoft (OSM operator)
+"Apple · Dallas, IA",IA,Dallas,,,41.616851,-93.924402,Apple (OSM operator)
+"ForceAmp.com · Johnson, IA",IA,Johnson,,,41.703998,-91.587078,
+"Unnamed data center · Polk, IA #1",IA,Polk,,,41.513888,-93.72141,
+"Unnamed data center · Polk, IA #2",IA,Polk,,,41.514853,-93.720886,
+"Microsoft · Polk, IA #1",IA,Polk,,,41.515818,-93.706301,Microsoft (OSM operator)
+"Microsoft · Polk, IA #2",IA,Polk,,,41.515843,-93.702513,Microsoft (OSM operator)
+"Unnamed data center · Polk, IA #3",IA,Polk,,,41.515864,-93.720312,
+"Microsoft · Polk, IA #3",IA,Polk,,,41.516712,-93.706351,Microsoft (OSM operator)
+"Microsoft · Polk, IA #4",IA,Polk,,,41.516741,-93.702542,Microsoft (OSM operator)
+"Unnamed data center · Polk, IA #4",IA,Polk,,,41.516864,-93.719767,
+"Microsoft · Polk, IA #5",IA,Polk,,,41.517607,-93.706312,Microsoft (OSM operator)
+"Microsoft · Polk, IA #6",IA,Polk,,,41.517641,-93.702493,Microsoft (OSM operator)
+"Microsoft · Polk, IA #7",IA,Polk,,,41.518502,-93.706331,Microsoft (OSM operator)
+"Microsoft · Polk, IA #8",IA,Polk,,,41.518538,-93.702525,Microsoft (OSM operator)
+"Unnamed data center · Polk, IA #5",IA,Polk,,,41.558083,-93.527662,
+"Unnamed data center · Polk, IA #6",IA,Polk,,,41.558131,-93.528157,
+"Aureon · Polk, IA",IA,Polk,,,41.587999,-93.631009,
+"Facebook Altoona Data Center 1 · Polk, IA",IA,Polk,,,41.664241,-93.514728,Meta (OSM operator)
+"Facebook Altoona Data Center 2 · Polk, IA",IA,Polk,,,41.665537,-93.50817,Meta (OSM operator)
+"Lightedge Des Moines 2 · Polk, IA",IA,Polk,,,41.666799,-93.455955,
+"Facebook Altoona Data Center 3 · Polk, IA",IA,Polk,,,41.667071,-93.506466,Meta (OSM operator)
+"Lightedge Des Moines 1 · Polk, IA",IA,Polk,,,41.667657,-93.455482,
+"Facebook Altoona Data Center 4 · Polk, IA",IA,Polk,,,41.667737,-93.516399,Meta (OSM operator)
+"Facebook Altoona Data Center 5 · Polk, IA",IA,Polk,,,41.671173,-93.516629,Meta (OSM operator)
+"Meta · Polk, IA #1",IA,Polk,,,41.675572,-93.509657,Meta (OSM operator)
+"Meta · Polk, IA #2",IA,Polk,,,41.675823,-93.506031,Meta (OSM operator)
+"Google · Pottawattamie, IA #1",IA,Pottawattamie,,,41.172611,-95.801148,Google (OSM operator)
+"Google · Pottawattamie, IA #2",IA,Pottawattamie,,,41.172635,-95.804024,Google (OSM operator)
+"Google · Pottawattamie, IA #3",IA,Pottawattamie,,,41.17264,-95.802521,Google (OSM operator)
+"Google · Pottawattamie, IA #4",IA,Pottawattamie,,,41.173595,-95.792203,Google (OSM operator)
+"Google · Pottawattamie, IA #5",IA,Pottawattamie,,,41.173597,-95.788678,Google (OSM operator)
+"Google · Pottawattamie, IA #6",IA,Pottawattamie,,,41.17554,-95.805652,Google (OSM operator)
+"Google · Pottawattamie, IA #7",IA,Pottawattamie,,,41.17554,-95.806763,Google (OSM operator)
+"Google · Pottawattamie, IA #8",IA,Pottawattamie,,,41.175543,-95.804493,Google (OSM operator)
+"Google · Pottawattamie, IA #9",IA,Pottawattamie,,,41.175544,-95.80339,Google (OSM operator)
+"Google · Pottawattamie, IA #10",IA,Pottawattamie,,,41.175545,-95.801119,Google (OSM operator)
+"Google · Pottawattamie, IA #11",IA,Pottawattamie,,,41.175547,-95.802224,Google (OSM operator)
+"Google · Pottawattamie, IA #12",IA,Pottawattamie,,,41.175554,-95.799948,Google (OSM operator)
+"Google · Pottawattamie, IA #13",IA,Pottawattamie,,,41.177274,-95.80638,Google (OSM operator)
+"Google · Pottawattamie, IA #14",IA,Pottawattamie,,,41.177344,-95.804857,Google (OSM operator)
+"Google · Pottawattamie, IA #15",IA,Pottawattamie,,,41.177456,-95.803215,Google (OSM operator)
+"Google · Pottawattamie, IA #16",IA,Pottawattamie,,,41.177483,-95.800967,Google (OSM operator)
+"Unnamed data center · Pottawattamie, IA #1",IA,Pottawattamie,,,41.212099,-95.877914,
+"Unnamed data center · Pottawattamie, IA #2",IA,Pottawattamie,,,41.221486,-95.863822,
+"Geneseo Communications Inc · Scott, IA",IA,Scott,,,41.550269,-90.482409,
+"Microsoft · Warren, IA #1",IA,Warren,,,41.49475,-93.787021,Microsoft (OSM operator)
+"Microsoft · Warren, IA #2",IA,Warren,,,41.495806,-93.787055,Microsoft (OSM operator)
+"Microsoft · Warren, IA #3",IA,Warren,,,41.49683,-93.786996,Microsoft (OSM operator)
+"Microsoft · Warren, IA #4",IA,Warren,,,41.497871,-93.787039,Microsoft (OSM operator)
+"Microsoft · Warren, IA #5",IA,Warren,,,41.498913,-93.787075,Microsoft (OSM operator)
+"Unnamed data center · Ada, ID #1",ID,Ada,,,43.463149,-116.268228,
+"Unnamed data center · Ada, ID #2",ID,Ada,,,43.463349,-116.272085,
+"Family History Center · Bear Lake, ID",ID,Bear Lake,,,42.317296,-111.304245,The Church of Jesus Christ of Latter-day Saints (OSM operator)
+"VentureData · Madison, ID",ID,Madison,,,43.825243,-111.782093,
+"NCSA Petascale Computing Facility · Champaign, IL",IL,Champaign,,,40.095259,-88.242031,
+"QTS Chicago · Cook, IL",IL,Cook,,,41.842187,-87.669008,Quality Technology Services (OSM operator)
+"Iron Mountain Data & Record Storage · Cook, IL",IL,Cook,,,41.848797,-87.64551,Iron Mountain (OSM operator)
+"Lakeside Technology Center · Cook, IL",IL,Cook,,,41.853653,-87.618359,
+"CoreSite Chicago Data Center (CH2) · Cook, IL",IL,Cook,,,41.862798,-87.641304,CoreSite (OSM operator)
+"Serverfarm CH1 · Cook, IL",IL,Cook,,,41.870944,-87.640141,Serverfarm (OSM operator)
+"Netrality · Cook, IL",IL,Cook,,,41.872881,-87.63344,Netrality (OSM operator)
+"Digital Realty ORD11 · Cook, IL",IL,Cook,,,41.874293,-87.629954,Digital Realty (OSM operator)
+"CoreSite Chicago Data Center (CH1) · Cook, IL",IL,Cook,,,41.87594,-87.631466,CoreSite (OSM operator)
+"West Monroe · Cook, IL",IL,Cook,,,41.880527,-87.635938,
+"Aligned Data Center - Chicago ORD-02 · Cook, IL",IL,Cook,,,41.912962,-87.917492,Aligned (OSM operator)
+"Aligned Data Center - Chicago ORD-01 · Cook, IL",IL,Cook,,,41.913983,-87.917465,Aligned (OSM operator)
+"Microsoft - Azure Datacenter · Cook, IL",IL,Cook,,,41.923006,-87.918241,Microsoft (OSM operator)
+"Digital Realty Chicago ORD12 · Cook, IL",IL,Cook,,,41.928378,-87.859236,Digital Realty (OSM operator)
+"Skybox Chicago I · Cook, IL",IL,Cook,,,41.993668,-87.973519,Skybox (OSM operator)
+"Digital Realty CH1 · Cook, IL",IL,Cook,,,41.994237,-87.962172,Digital Realty (OSM operator)
+"Digital Realty CH3 · Cook, IL",IL,Cook,,,41.994396,-87.964904,Digital Realty (OSM operator)
+"Digital Realty CH2 · Cook, IL",IL,Cook,,,41.994464,-87.957736,Digital Realty (OSM operator)
+"Stream Chicago II · Cook, IL",IL,Cook,,,41.999124,-87.957765,Stream (OSM operator)
+"EdgeConneX CHI01 · Cook, IL",IL,Cook,,,42.000775,-87.950769,EdgeConneX (OSM operator)
+"Equinix Chicago CH3 · Cook, IL",IL,Cook,,,42.001159,-87.955213,Equinix (OSM operator)
+"EdgeConneX CHI02 · Cook, IL",IL,Cook,,,42.001494,-87.952563,EdgeConneX (OSM operator)
+"Stream Chicago I · Cook, IL",IL,Cook,,,42.002601,-87.951135,Stream (OSM operator)
+"STACK Chicago CHI01 · Cook, IL",IL,Cook,,,42.006844,-87.96519,Stack Infrastructure (OSM operator)
+"T5 Chicago II · Cook, IL",IL,Cook,,,42.023042,-87.975557,T5 Data Centers (OSM operator)
+"Unnamed data center · Cook, IL",IL,Cook,,,42.023143,-87.972186,
+"Microsoft Data Center - Hoffman Estates · Cook, IL",IL,Cook,,,42.076952,-88.133891,
+"Meta data center · DeKalb, IL #1",IL,DeKalb,,,41.88853,-88.721858,Meta (OSM operator)
+"Meta data center · DeKalb, IL #2",IL,DeKalb,,,41.889284,-88.731054,Meta (OSM operator)
+"Meta data center · DeKalb, IL #3",IL,DeKalb,,,41.890275,-88.726355,Meta (OSM operator)
+"Datacenter (386) · DuPage, IL",IL,DuPage,,,41.707134,-87.975956,UChicago Argonne LLC (OSM operator)
+"Lincoln Rackhouse · DuPage, IL",IL,DuPage,,,41.772165,-88.217091,
+"Unnamed data center · DuPage, IL #1",IL,DuPage,,,41.795384,-88.246923,
+"CyrusOne Chicago Aurora CME · DuPage, IL",IL,DuPage,,,41.796711,-88.243603,CyrusOne (OSM operator)
+"Centersquare Lisle ORD4 Data Center · DuPage, IL",IL,DuPage,,,41.802341,-88.094886,Centersquare (OSM operator)
+"Equinix Chicago Data CH7 · DuPage, IL",IL,DuPage,,,41.812557,-87.972843,Equinix (OSM operator)
+"Unnamed data center · DuPage, IL #2",IL,DuPage,,,41.905355,-88.219514,
+"Element Critical CH2 · DuPage, IL",IL,DuPage,,,41.974227,-87.967176,Element Critical (OSM operator)
+"Element Critical CH1 · DuPage, IL",IL,DuPage,,,41.975762,-87.964685,Element Critical (OSM operator)
+"NTT Chicago CH3 · DuPage, IL",IL,DuPage,,,41.986914,-88.008004,NTT (OSM operator)
+"NTT Chicago CH1 · DuPage, IL",IL,DuPage,,,41.987919,-88.007265,NTT (OSM operator)
+"NTT Chicago CH2 · DuPage, IL",IL,DuPage,,,41.988967,-88.007257,NTT (OSM operator)
+"NTT Chicago CH4 · DuPage, IL",IL,DuPage,,,41.989095,-88.004765,NTT (OSM operator)
+"Centersquare Elk Grove Village Data Center Campus ORD2 · DuPage, IL",IL,DuPage,,,41.99204,-87.958172,Centersquare (OSM operator)
+"VISA · Lake, IL",IL,Lake,,,42.216757,-87.952847,VISA (OSM operator)
+"Unnamed data center · Madison, IL",IL,Madison,,,38.81056,-89.948703,
+"Verizon Wireless data center · Hancock, IN",IN,Hancock,,,39.717184,-85.94133,Verizon Wireless (OSM operator)
+"Digital Crossroad · Lake, IN",IN,Lake,,,41.707418,-87.520193,Digital Crossroad (OSM operator)
+"IU Data Center · Monroe, IN",IN,Monroe,,,39.174419,-86.500703,Indiana University (OSM operator)
+"Learning GIS! · Tippecanoe, IN",IN,Tippecanoe,,,40.42179,-86.914155,
+"Agricultural and Biological Engineering · Tippecanoe, IN",IN,Tippecanoe,,,40.421854,-86.916545,
+"Cloud Storage Corp · Ellis, KS",KS,Ellis,,,38.872132,-99.300187,
+"Data Center Lenexa · Johnson, KS",KS,Johnson,,,38.92517,-94.77029,
+"Unnamed data center · Johnson, KS #1",KS,Johnson,,,38.926806,-94.768373,
+"U.S. Bank National Data Process Center · Johnson, KS",KS,Johnson,,,38.935643,-94.864471,
+"Unnamed data center · Johnson, KS #2",KS,Johnson,,,38.9392,-94.860185,
+"State Farm Data Center · Johnson, KS",KS,Johnson,,,38.940113,-94.867688,
+"TierPoint data center · Johnson, KS",KS,Johnson,,,38.940669,-94.755232,TierPoint (OSM operator)
+"East Kentucky Network Datacenter · Floyd, KY",KY,Floyd,,,37.600177,-82.678763,
+"Dynamics Mining · Hopkins, KY",KY,Hopkins,,,37.362991,-87.547121,
+"Flexential Louisville - Downtown · Jefferson, KY",KY,Jefferson,,,38.242496,-85.733351,Flexential (OSM operator)
+"Flexential Louisville - East · Jefferson, KY",KY,Jefferson,,,38.277198,-85.507241,Flexential (OSM operator)
+"Riot Kentucky · McCracken, KY",KY,McCracken,,,37.089239,-88.703058,
+"Center for Computation & Technology (CCT) · East Baton Rouge, LA",LA,East Baton Rouge,,,30.407446,-91.172545,
+"TierPoint data center · Essex, MA",MA,Essex,,,42.685709,-71.208599,TierPoint (OSM operator)
+"CoreSite BO1 · Middlesex, MA",MA,Middlesex,,,42.376706,-71.079758,
+"Markley Data Center · Middlesex, MA",MA,Middlesex,,,42.630262,-71.304424,Markley Group (OSM operator)
+"CyberNAP Glen Burnie · Anne Arundel, MD",MD,Anne Arundel,,,39.140242,-76.606431,AiNET (OSM operator)
+"TierPoint Baltimore BWI · Anne Arundel, MD",MD,Anne Arundel,,,39.213452,-76.682845,
+"Expedient Owings Mills · Baltimore, MD",MD,Baltimore,,,39.427318,-76.81155,Expedient (OSM operator)
+"Expedient Tidepoint · Baltimore city, MD",MD,Baltimore city,,,39.274655,-76.591671,Expedient (OSM operator)
+"Baltimore Technology Park · Baltimore city, MD",MD,Baltimore city,,,39.275384,-76.625527,
+"Crown Castle Baltimore · Baltimore city, MD",MD,Baltimore city,,,39.287702,-76.606489,Crown Castle Fiber (OSM operator)
+"AiNET One Market Center · Baltimore city, MD",MD,Baltimore city,,,39.291758,-76.620374,AiNET (OSM operator)
+"Lumen Baltimore · Baltimore city, MD",MD,Baltimore city,,,39.291759,-76.620402,Lumen Technologies (OSM operator)
+"Johns Hopkins Data Center · Baltimore city, MD",MD,Baltimore city,,,39.293559,-76.551738,
+"Unnamed data center · Frederick, MD",MD,Frederick,,,39.377776,-77.411519,
+"Unnamed data center · Howard, MD",MD,Howard,,,39.133685,-76.851407,
+"Lincoln Rackhouse Maryland · Montgomery, MD",MD,Montgomery,,,39.058563,-76.964322,Lincoln Rackhouse (OSM operator)
+"AiNET · Prince George's, MD",MD,Prince George's,,,39.052823,-76.925908,
+"FirstLight Data Center · Cumberland, ME",ME,Cumberland,,,43.657839,-70.261379,FirstLight (OSM operator)
+"Oxford Networks · Cumberland, ME",ME,Cumberland,,,43.895071,-69.923151,FirstLight (OSM operator)
+"Liquid Web · Eaton, MI",MI,Eaton,,,42.687951,-84.642995,
+"Liquid Web, Inc · Eaton, MI",MI,Eaton,,,42.70539,-84.666089,
+"Unnamed data center · Genesee, MI",MI,Genesee,,,42.968713,-83.779602,
+"Chick-fil-A Hiring Center · Macomb, MI",MI,Macomb,,,42.627942,-82.988394,
+"Unnamed data center · Monroe, MI",MI,Monroe,,,41.807282,-83.627629,
+"EdgeConneX Detroit DET01 · Oakland, MI",MI,Oakland,,,42.447697,-83.262667,EdgeConneX (OSM operator)
+"Comcast · Wayne, MI",MI,Wayne,,,42.213902,-83.198214,Comcast (OSM operator)
+"US Signal data center · Wayne, MI",MI,Wayne,,,42.235327,-83.444141,US Signal (OSM operator)
+"Quicken Loans data center · Wayne, MI",MI,Wayne,,,42.32618,-83.069759,Quicken Loans (OSM operator)
+"Verizon Wireless data center · Wayne, MI",MI,Wayne,,,42.326266,-83.076986,Verizon Wireless (OSM operator)
+"Encompass Minneapolis Facility · Anoka, MN",MN,Anoka,,,45.132197,-93.095622,Encompass (OSM operator)
+"Flexential Minneapolis - Chaska · Carver, MN",MN,Carver,,,44.851593,-93.598831,Flexential (OSM operator)
+"Unnamed data center · Dakota, MN #1",MN,Dakota,,,44.734508,-93.064881,
+"Unnamed data center · Dakota, MN #2",MN,Dakota,,,44.734759,-93.06186,
+"Minnesota Gateway Data Center · Hennepin, MN",MN,Hennepin,,,44.971302,-93.254652,
+"Unnamed data center · Hennepin, MN",MN,Hennepin,,,44.991458,-93.280292,
+"DataBank · Hennepin, MN",MN,Hennepin,,,45.143711,-93.387128,
+"Epic / Mayo Data Center · Olmsted, MN",MN,Olmsted,,,44.070816,-92.522121,
+"H5 Minneapolis · Ramsey, MN",MN,Ramsey,,,44.972253,-93.14746,H5 (OSM operator)
+"Ark Duluth Data Center · St. Louis, MN",MN,St. Louis,,,46.827467,-92.130431,
+"Carfax · Boone, MO",MO,Boone,,,38.923512,-92.288624,
+"CenturyLink · Caldwell, MO",MO,Caldwell,,,39.744048,-93.997376,
+"Unnamed data center · Clay, MO",MO,Clay,,,39.322637,-94.594924,
+"Meta Data Center · Clay, MO",MO,Clay,,,39.322651,-94.598064,Meta (OSM operator)
+"Netrality Data Centers · Jackson, MO",MO,Jackson,,,39.100907,-94.581145,
+"Unnamed data center · Jackson, MO",MO,Jackson,,,39.101182,-94.578821,
+"Unnamed data center · Platte, MO #1",MO,Platte,,,39.290121,-94.685051,
+"Unnamed data center · Platte, MO #2",MO,Platte,,,39.290601,-94.675865,
+"Black Rock Financial Management · Platte, MO",MO,Platte,,,39.295492,-94.678025,
+"Unnamed data center · Platte, MO #3",MO,Platte,,,39.295658,-94.673472,
+"Unnamed data center · Platte, MO #4",MO,Platte,,,39.302406,-94.684792,
+"Netrality Data Centers · St. Louis city, MO",MO,St. Louis city,,,38.629262,-90.197175,
+"TierPoint · St. Louis city, MO",MO,St. Louis city,,,38.629761,-90.19642,
+"Genome Data Center · St. Louis city, MO",MO,St. Louis city,,,38.636569,-90.255393,Washington University in St. Louis (OSM operator)
+"xAI Macrohardrr · DeSoto, MS",MS,DeSoto,,,34.993488,-90.03417,xAI (OSM operator)
+"Amazon Canton Data Center · Madison, MS",MS,Madison,,,32.597993,-90.091852,
+"State of Montana Data Center · Custer, MT",MT,Custer,,,46.406897,-105.820645,State of Montana (OSM operator)
+"Unnamed data center · Granite, MT",MT,Granite,,,46.332132,-113.292672,
+"Google Data Center · Caldwell, NC",NC,Caldwell,,,35.894738,-81.546515,Google (OSM operator)
+"Unnamed data center · Catawba, NC #1",NC,Catawba,,,35.58706,-81.260273,
+"Unnamed data center · Catawba, NC #2",NC,Catawba,,,35.588013,-81.262527,
+"Unnamed data center · Catawba, NC #3",NC,Catawba,,,35.590392,-81.26457,
+"T5 Charlotte Campus · Cleveland, NC",NC,Cleveland,,,35.25045,-81.395009,
+"Level 3 Communications · Durham, NC",NC,Durham,,,35.881364,-78.851573,
+"Windstream Communications · Durham, NC",NC,Durham,,,35.881397,-78.851552,
+"Brandaleone Lab for Data and Visualization · Durham, NC",NC,Durham,,,36.003099,-78.938532,Duke Libraries (OSM operator)
+"Flexential Charlotte - South · Mecklenburg, NC",NC,Mecklenburg,,,35.135431,-80.936872,Flexential (OSM operator)
+"Spectrum Charlotte National Data Center · Mecklenburg, NC",NC,Mecklenburg,,,35.142789,-80.916208,
+"TierPoint - Charlotte Data Center · Mecklenburg, NC",NC,Mecklenburg,,,35.173195,-80.928121,TierPoint (OSM operator)
+"SEGRA · Mecklenburg, NC",NC,Mecklenburg,,,35.180053,-80.926357,
+"Flexential Charlotte - North · Mecklenburg, NC",NC,Mecklenburg,,,35.329754,-80.765782,Flexential (OSM operator)
+"Meta Forest City datacenter · Rutherford, NC #1",NC,Rutherford,,,35.314231,-81.822139,Meta (OSM operator)
+"Meta Forest City datacenter · Rutherford, NC #2",NC,Rutherford,,,35.316555,-81.825132,Meta (OSM operator)
+"Meta Forest City datacenter · Rutherford, NC #3",NC,Rutherford,,,35.317372,-81.826327,Meta (OSM operator)
+"Unnamed data center · Union, NC",NC,Union,,,35.179383,-80.570175,
+"Segra Data Center · Wake, NC",NC,Wake,,,35.724992,-78.662363,
+"iGLASS Networks · Wake, NC",NC,Wake,,,35.766751,-78.783986,
+"BB&T Data Center · Wake, NC",NC,Wake,,,35.839325,-78.328127,
+"Flexential Raleigh · Wake, NC",NC,Wake,,,35.850528,-78.829143,Flexential (OSM operator)
+"Dakota Carrier Network · Cass, ND",ND,Cass,,,46.815097,-96.844326,
+"Applied Digital / Ellendale Data Center · Dickey, ND",ND,Dickey,,,46.013549,-98.572441,Applied Digital (OSM operator)
+"Compute North · Buffalo, NE",NE,Buffalo,,,40.725923,-99.038329,
+"Verizon Wireless data center · Douglas, NE",NE,Douglas,,,41.220408,-96.147619,Verizon Wireless (OSM operator)
+"1623 Farnam · Douglas, NE",NE,Douglas,,,41.257291,-95.937849,News-Press & Gazette Company (OSM operator)
+"Unnamed data center · Douglas, NE",NE,Douglas,,,41.261419,-95.936495,
+"Union Pacific Jack Koraleski Technology, Research & Development Center · Douglas, NE",NE,Douglas,,,41.318005,-96.050345,Union Pacific Railroad (OSM operator)
+"Verizon · Douglas, NE #1",NE,Douglas,,,41.338321,-96.027774,
+"Verizon · Douglas, NE #2",NE,Douglas,,,41.338436,-96.028614,
+"Google · Douglas, NE #1",NE,Douglas,,,41.339142,-96.084669,Google (OSM operator)
+"Google · Douglas, NE #2",NE,Douglas,,,41.341939,-96.087719,Google (OSM operator)
+"Google · Douglas, NE #3",NE,Douglas,,,41.345162,-96.093533,Google (OSM operator)
+"Meta Sarpy Data center · Sarpy, NE #1",NE,Sarpy,,,41.112163,-96.141555,Meta (OSM operator)
+"Meta Sarpy Data center · Sarpy, NE #2",NE,Sarpy,,,41.114329,-96.142836,Meta (OSM operator)
+"Meta Sarpy Data center · Sarpy, NE #3",NE,Sarpy,,,41.120732,-96.144854,Meta (OSM operator)
+"Meta Sarpy Data center · Sarpy, NE #4",NE,Sarpy,,,41.123542,-96.14419,Meta (OSM operator)
+"Meta Sarpy Data center · Sarpy, NE #5",NE,Sarpy,,,41.123573,-96.132894,Meta (OSM operator)
+"Travelers Insurance · Sarpy, NE",NE,Sarpy,,,41.127843,-96.145045,Travelers Insurance (OSM operator)
+"Google · Sarpy, NE #1",NE,Sarpy,,,41.134393,-96.155906,Google (OSM operator)
+"Google · Sarpy, NE #2",NE,Sarpy,,,41.13492,-96.144073,Google (OSM operator)
+"Google · Sarpy, NE #3",NE,Sarpy,,,41.134975,-96.14673,Google (OSM operator)
+"Google · Sarpy, NE #4",NE,Sarpy,,,41.13791,-96.151431,Google (OSM operator)
+"Fidelity · Sarpy, NE",NE,Sarpy,,,41.165469,-96.083388,Fidelity (OSM operator)
+"Yahoo · Sarpy, NE",NE,Sarpy,,,41.1805,-96.084899,Yahoo (OSM operator)
+"Information Technology Data Center · Rockingham, NH",NH,Rockingham,,,42.982091,-70.950593,Phillips Exeter Academy (OSM operator)
+"FirstLight data center · Rockingham, NH",NH,Rockingham,,,43.076119,-70.808043,FirstLight (OSM operator)
+"University of New Hampshire data center · Strafford, NH",NH,Strafford,,,43.143619,-70.952473,University of New Hampshire (OSM operator)
+"NYSE Data Center · Bergen, NJ",NJ,Bergen,,,41.078302,-74.152918,nyse (OSM operator)
+"165 Halsey / Equinix NY1 / Databank EWR1 · Essex, NJ",NJ,Essex,,,40.736726,-74.173925,Tishman (OSM operator)
+"BT Radianz: 492 River Road · Essex, NJ",NJ,Essex,,,40.821454,-74.134186,bt (OSM operator)
+"Unnamed data center · Gloucester, NJ",NJ,Gloucester,,,39.83093,-75.195323,
+"Cyxtera (Digital Realty Trust) Citibank Data Center · Hudson, NJ",NJ,Hudson,,,40.760765,-74.025758,Cyxtera (OSM operator)
+"Digital Realty New Jersey EWR10 · Hudson, NJ",NJ,Hudson,,,40.761831,-74.025025,Digital Realty (OSM operator)
+"Equinix NY3 · Hudson, NJ",NJ,Hudson,,,40.774852,-74.06889,Equinix (OSM operator)
+"Equinix New York Secaucus NY4 · Hudson, NJ",NJ,Hudson,,,40.776428,-74.069776,Equinix (OSM operator)
+"Equinix New York Secaucus NY2 · Hudson, NJ",NJ,Hudson,,,40.77742,-74.075917,Equinix (OSM operator)
+"Equinix Secaucus NY6 · Hudson, NJ",NJ,Hudson,,,40.777519,-74.0727,Equinix (OSM operator)
+"Equinix New York Secaucus NY5 · Hudson, NJ",NJ,Hudson,,,40.778602,-74.072301,Equinix (OSM operator)
+"Unnamed data center · Hudson, NJ #1",NJ,Hudson,,,40.784134,-74.06556,
+"Unnamed data center · Hudson, NJ #2",NJ,Hudson,,,40.784739,-74.064358,
+"CoreSite NY3 · Hudson, NJ",NJ,Hudson,,,40.784904,-74.065357,CoreSite (OSM operator)
+"H5 Secaucus · Hudson, NJ",NJ,Hudson,,,40.785395,-74.075012,H5 (OSM operator)
+"Centersquare NYC3 Data Center · Hudson, NJ",NJ,Hudson,,,40.786164,-74.069182,Centersquare (OSM operator)
+"Evocative Secaucus · Hudson, NJ",NJ,Hudson,,,40.78755,-74.068048,Evocative (OSM operator)
+"Equinix NY7 Data Center · Hudson, NJ",NJ,Hudson,,,40.796864,-74.031141,Equinix (OSM operator)
+"501 West · Mercer, NJ",NJ,Mercer,,,40.315558,-74.668851,
+"Verizon Wireline Network Building · Middlesex, NJ",NJ,Middlesex,,,40.494903,-74.443095,
+"IO Datacenter · Middlesex, NJ",NJ,Middlesex,,,40.520901,-74.347317,
+"Verizon · Middlesex, NJ",NJ,Middlesex,,,40.544256,-74.496521,
+"Equinix · Middlesex, NJ",NJ,Middlesex,,,40.544882,-74.495381,Equinix (OSM operator)
+"Optimum · Middlesex, NJ",NJ,Middlesex,,,40.546826,-74.492029,
+"Barclays Datacenter · Middlesex, NJ",NJ,Middlesex,,,40.547244,-74.459737,Barclays (OSM operator)
+"DataBank Piscataway EWR2 · Middlesex, NJ",NJ,Middlesex,,,40.549213,-74.45821,
+"Open Data Centers Piscataway · Middlesex, NJ",NJ,Middlesex,,,40.55035,-74.456856,
+"Unnamed data center · Middlesex, NJ #1",NJ,Middlesex,,,40.552819,-74.456676,
+"Digital Realty New York EWR12 · Middlesex, NJ",NJ,Middlesex,,,40.552905,-74.459301,Digital Realty (OSM operator)
+"Digital Realty New York EWR11 · Middlesex, NJ",NJ,Middlesex,,,40.553779,-74.457179,Digital Realty (OSM operator)
+"QTS Piscataway Data Center · Middlesex, NJ",NJ,Middlesex,,,40.556965,-74.484007,Quality Technology Services (OSM operator)
+"Unnamed data center · Middlesex, NJ #2",NJ,Middlesex,,,40.584343,-74.243507,
+"Apollo Cable Landing Station · Monmouth, NJ",NJ,Monmouth,,,40.157044,-74.101582,Apollo (OSM operator)
+"Digital Realty New Jersey EWR20 · Passaic, NJ",NJ,Passaic,,,40.829929,-74.126749,Digital Realty (OSM operator)
+"Digital Realty New Jersey EWR21 · Passaic, NJ",NJ,Passaic,,,40.830586,-74.124514,Digital Realty (OSM operator)
+"Credit Suisse: Clifton Data Center · Passaic, NJ",NJ,Passaic,,,40.83345,-74.140219,
+"Unnamed data center · Somerset, NJ #1",NJ,Somerset,,,40.524214,-74.54802,
+"Vital Records · Somerset, NJ",NJ,Somerset,,,40.528072,-74.682816,
+"BNY Mellon Somerset · Somerset, NJ",NJ,Somerset,,,40.53602,-74.553409,
+"Digital Realty data center · Somerset, NJ",NJ,Somerset,,,40.537538,-74.55554,Digital Realty (OSM operator)
+"CyrusOne Somerset · Somerset, NJ",NJ,Somerset,,,40.537986,-74.545659,CyrusOne (OSM operator)
+"Rackspace Belmont NYC2 · Somerset, NJ",NJ,Somerset,,,40.540839,-74.537492,
+"Unnamed data center · Somerset, NJ #2",NJ,Somerset,,,40.543339,-74.538435,
+"Rackspace Somerset NYC1 · Somerset, NJ",NJ,Somerset,,,40.544526,-74.537758,
+"Verizon Wireless NE Headquarters · Somerset, NJ",NJ,Somerset,,,40.555692,-74.705596,
+"Goldman Sachs · Somerset, NJ",NJ,Somerset,,,40.570372,-74.67033,
+"PSE&G Delivery Emergency Response Center · Somerset, NJ",NJ,Somerset,,,40.579894,-74.519393,PSE&G (OSM operator)
+"365 Bridgewater NJ · Somerset, NJ",NJ,Somerset,,,40.581474,-74.573878,
+"Unnamed data center · Somerset, NJ #3",NJ,Somerset,,,40.599345,-74.709623,
+"Unnamed data center · Somerset, NJ #4",NJ,Somerset,,,40.599719,-74.710112,
+"Barclays Datacenter · Union, NJ",NJ,Union,,,40.643753,-74.285481,Barclays (OSM operator)
+"Molina Healthcare · Bernalillo, NM",NM,Bernalillo,,,34.995446,-106.618034,
+"Unnamed data center · Bernalillo, NM",NM,Bernalillo,,,35.048349,-106.542175,
+"HPC · Bernalillo, NM",NM,Bernalillo,,,35.049942,-106.542822,Sandia National Laboratories (OSM operator)
+"123 Central · Bernalillo, NM",NM,Bernalillo,,,35.084449,-106.648985,bigbyte.cc (OSM operator)
+"UNM Data Center · Bernalillo, NM",NM,Bernalillo,,,35.086738,-106.615348,UNM (OSM operator)
+"505 Marquette · Bernalillo, NM",NM,Bernalillo,,,35.088629,-106.652646,
+"Oso Grande · Bernalillo, NM",NM,Bernalillo,,,35.092501,-106.653671,Oso Grande (OSM operator)
+"Southwest Cyberport · Bernalillo, NM",NM,Bernalillo,,,35.103293,-106.589349,
+"CenturyLink data center · Doña Ana, NM",NM,Doña Ana,,,32.309655,-106.729171,CenturyLink (OSM operator)
+"John F. Simms Building · Santa Fe, NM",NM,Santa Fe,,,35.672444,-105.956575,SONM (OSM operator)
+"Meta · Valencia, NM #1",NM,Valencia,,,34.825823,-106.782468,Meta (OSM operator)
+"Meta · Valencia, NM #2",NM,Valencia,,,34.82584,-106.778889,Meta (OSM operator)
+"Meta · Valencia, NM #3",NM,Valencia,,,34.83004,-106.780347,Meta (OSM operator)
+"Meta · Valencia, NM #4",NM,Valencia,,,34.830247,-106.783829,Meta (OSM operator)
+"Meta · Valencia, NM #5",NM,Valencia,,,34.830283,-106.776471,Meta (OSM operator)
+"Switch Las Vegas 10 · Clark, NV",NV,Clark,,,36.055586,-115.223061,
+"Switch Las Vegas 9 · Clark, NV",NV,Clark,,,36.055708,-115.219628,Switch (OSM operator)
+"Switch Las Vegas 11 · Clark, NV",NV,Clark,,,36.055885,-115.214137,Switch (OSM operator)
+"Google · Clark, NV #1",NV,Clark,,,36.056288,-115.008577,Google (OSM operator)
+"Switch Las Vegas 8 · Clark, NV",NV,Clark,,,36.057834,-115.214258,Switch (OSM operator)
+"Switch Las Vegas 12 · Clark, NV",NV,Clark,,,36.05813,-115.210389,
+"Google · Clark, NV #2",NV,Clark,,,36.058802,-115.008797,Google (OSM operator)
+"Switch Edge 1 · Clark, NV",NV,Clark,,,36.059149,-115.213682,
+"DataBank Las Vegas LAS1 · Clark, NV",NV,Clark,,,36.059728,-115.147211,
+"Switch Las Vegas 7 · Clark, NV",NV,Clark,,,36.059925,-115.210245,Switch (OSM operator)
+"Switch12 · Clark, NV",NV,Clark,,,36.061739,-115.213292,Switch (OSM operator)
+"Switch data center · Clark, NV",NV,Clark,,,36.064022,-115.221112,Switch (OSM operator)
+"Switch Las Vegas 14 · Clark, NV",NV,Clark,,,36.065208,-115.222045,Switch (OSM operator)
+"Fiberhub LAS1 · Clark, NV",NV,Clark,,,36.065941,-115.139883,Fiberhub (OSM operator)
+"Switch Las Vegas 5 · Clark, NV",NV,Clark,,,36.142763,-115.076696,Switch (OSM operator)
+"Switch Las Vegas 4 · Clark, NV",NV,Clark,,,36.143646,-115.076779,Switch (OSM operator)
+"CenturyLink · Clark, NV #1",NV,Clark,,,36.143716,-115.083386,Lumen Technologies (OSM operator)
+"Verizon · Clark, NV",NV,Clark,,,36.144733,-115.077928,
+"Flexential Las Vegas - Downtown · Clark, NV",NV,Clark,,,36.168644,-115.143145,Flexential (OSM operator)
+"CenturyLink · Clark, NV #2",NV,Clark,,,36.182998,-115.06267,
+"Verizon North Las Vegas · Clark, NV",NV,Clark,,,36.221893,-115.147055,Verizon (OSM operator)
+"Flexential Las Vegas - North · Clark, NV",NV,Clark,,,36.248165,-115.101261,Flexential (OSM operator)
+"Unnamed data center · Storey, NV #1",NV,Storey,,,39.51152,-119.483305,
+"Unnamed data center · Storey, NV #2",NV,Storey,,,39.51387,-119.484853,
+"Unnamed data center · Storey, NV #3",NV,Storey,,,39.514068,-119.475514,
+"Switch Tahoe Reno - The Citadel Campus · Storey, NV",NV,Storey,,,39.514096,-119.479592,Switch (OSM operator)
+"Unnamed data center · Washoe, NV #1",NV,Washoe,,,39.565106,-119.54769,
+"Unnamed data center · Washoe, NV #2",NV,Washoe,,,39.565758,-119.547974,
+"Unnamed data center · Washoe, NV #3",NV,Washoe,,,39.566921,-119.545227,
+"Unnamed data center · Washoe, NV #4",NV,Washoe,,,39.567105,-119.548574,
+"Unnamed data center · Washoe, NV #5",NV,Washoe,,,39.56716,-119.544388,
+"Unnamed data center · Washoe, NV #6",NV,Washoe,,,39.567501,-119.543209,
+"Unnamed data center · Washoe, NV #7",NV,Washoe,,,39.567714,-119.542363,
+"Unnamed data center · Washoe, NV #8",NV,Washoe,,,39.569711,-119.537859,
+"Unnamed data center · Washoe, NV #9",NV,Washoe,,,39.570053,-119.537092,
+"Unnamed data center · Washoe, NV #10",NV,Washoe,,,39.570592,-119.536034,
+"Unnamed data center · Washoe, NV #11",NV,Washoe,,,39.570986,-119.535318,
+"IBM Building · Albany, NY",NY,Albany,,,42.649353,-73.752745,
+"Lumen Albany 4 · Albany, NY",NY,Albany,,,42.735631,-73.818665,Lumen Technologies (OSM operator)
+"Turnkey Internet · Albany, NY",NY,Albany,,,42.745441,-73.7592,
+"Frontier Science · Erie, NY",NY,Erie,,,42.990201,-78.812384,
+"Unnamed data center · Erie, NY",NY,Erie,,,43.044985,-78.749207,
+"Dataverge · Kings, NY",NY,Kings,,,40.657696,-74.004816,Dataverge (OSM operator)
+"33 Thomas Street · New York, NY",NY,New York,,,40.716525,-74.005913,
+"Digital Realty New York JFK12 · New York, NY",NY,New York,,,40.717677,-74.008441,Digital Realty (OSM operator)
+"32 Avenue of the Americas · New York, NY",NY,New York,,,40.719998,-74.004636,
+"Blockfusion data center · Niagara, NY",NY,Niagara,,,43.074838,-78.944802,Blockfusion (OSM operator)
+"US Bitcoin data center · Niagara, NY",NY,Niagara,,,43.082056,-79.030723,US Bitcoin (OSM operator)
+"SU Green Data Center · Onondaga, NY",NY,Onondaga,,,43.012076,-76.115925,Syracuse University (OSM operator)
+"Telehouse Teleport · Richmond, NY",NY,Richmond,,,40.606985,-74.174887,Telehouse (OSM operator)
+"Merrill Lynch Data Center · Richmond, NY",NY,Richmond,,,40.60738,-74.17318,Merrill Lynch (OSM operator)
+"fifteenfortyseven CSR ORNY1 · Rockland, NY",NY,Rockland,,,41.034485,-73.975764,fifteenfortyseven Critical Systems Realty (OSM operator)
+"Bloomberg Data Center · Rockland, NY",NY,Rockland,,,41.03627,-73.987494,Bloomberg (OSM operator)
+"Databank LGA3 · Rockland, NY",NY,Rockland,,,41.039943,-73.989651,Databank (OSM operator)
+"Unnamed data center · Rockland, NY",NY,Rockland,,,41.05233,-73.971839,
+"Cable & Wireless Cable Landing Station · Suffolk, NY",NY,Suffolk,,,40.84366,-72.883345,
+"Unnamed data center · Westchester, NY",NY,Westchester,,,40.95127,-73.897901,
+"Flexential Cincinnati · Butler, OH",OH,Butler,,,39.315931,-84.449464,Flexential (OSM operator)
+"CyrusOne Cincinnati-Hamilton CIN4 · Butler, OH",OH,Butler,,,39.385239,-84.566131,CyrusOne (OSM operator)
+"LexisNexus Springfield · Clark, OH",OH,Clark,,,39.91278,-83.723761,
+"Involta Independence · Cuyahoga, OH",OH,Cuyahoga,,,41.361062,-81.632805,
+"T5@Cleveland · Cuyahoga, OH",OH,Cuyahoga,,,41.442469,-81.802154,T5 Data Centers (OSM operator)
+"Lumen Cleveland · Cuyahoga, OH",OH,Cuyahoga,,,41.505066,-81.657775,
+"H5 Data Center · Cuyahoga, OH",OH,Cuyahoga,,,41.506357,-81.683598,
+"Unnamed data center · Delaware, OH",OH,Delaware,,,40.224524,-83.04586,
+"Aligned Data Centers data center · Erie, OH",OH,Erie,,,41.43243,-82.719028,Aligned Data Centers (OSM operator)
+"Google · Fairfield, OH",OH,Fairfield,,,39.72401,-82.691127,Google (OSM operator)
+"Google · Franklin, OH",OH,Franklin,,,39.852098,-82.994875,Google (OSM operator)
+"Amazon Web Services · Franklin, OH #1",OH,Franklin,,,40.016418,-83.125858,Amazon Web Services (OSM operator)
+"Unnamed data center · Franklin, OH #1",OH,Franklin,,,40.020761,-83.124176,
+"Amazon Web Services · Franklin, OH #2",OH,Franklin,,,40.021017,-83.126024,Amazon Web Services (OSM operator)
+"Unnamed data center · Franklin, OH #2",OH,Franklin,,,40.021202,-83.123188,
+"Amazon Web Services · Franklin, OH #3",OH,Franklin,,,40.04791,-83.177547,Amazon Web Services (OSM operator)
+"Amazon Web Services data center · Franklin, OH",OH,Franklin,,,40.048131,-83.175284,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #4",OH,Franklin,,,40.049358,-83.17546,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #5",OH,Franklin,,,40.050176,-83.175524,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #6",OH,Franklin,,,40.051528,-83.175716,Amazon Web Services (OSM operator)
+"Oppidan data center · Franklin, OH",OH,Franklin,,,40.052673,-83.127423,Oppidan (OSM operator)
+"Google NBY-6 · Franklin, OH",OH,Franklin,,,40.053927,-82.767611,Google (OSM operator)
+"Google NBY-5 · Franklin, OH",OH,Franklin,,,40.05652,-82.772049,Google (OSM operator)
+"Amazon Web Services · Franklin, OH #7",OH,Franklin,,,40.058309,-83.134091,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #8",OH,Franklin,,,40.059325,-83.134606,Amazon Web Services (OSM operator)
+"Google NBY-4 · Franklin, OH",OH,Franklin,,,40.059342,-82.771776,Google (OSM operator)
+"Amazon Web Services · Franklin, OH #9",OH,Franklin,,,40.060147,-83.134907,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #10",OH,Franklin,,,40.06078,-83.132753,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #11",OH,Franklin,,,40.061152,-83.135173,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #12",OH,Franklin,,,40.099786,-83.19926,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #13",OH,Franklin,,,40.100768,-83.199475,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #14",OH,Franklin,,,40.101767,-83.199583,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #15",OH,Franklin,,,40.102573,-83.199699,Amazon Web Services (OSM operator)
+"Amazon Web Services · Franklin, OH #16",OH,Franklin,,,40.103587,-83.199764,Amazon Web Services (OSM operator)
+"Compugen New Albany · Franklin, OH #1",OH,Franklin,,,40.103677,-82.808939,
+"TJX Corporate Techno · Franklin, OH",OH,Franklin,,,40.10386,-82.810626,
+"Compugen New Albany · Franklin, OH #2",OH,Franklin,,,40.10455,-82.804945,
+"STACK New Albany · Franklin, OH",OH,Franklin,,,40.106354,-82.800748,
+"Unnamed data center · Franklin, OH #3",OH,Franklin,,,40.115717,-83.002565,
+"Unnamed data center · Franklin, OH #4",OH,Franklin,,,40.115816,-83.001549,
+"CyrusOne CIN2 · Hamilton, OH",OH,Hamilton,,,39.102695,-84.517898,CyrusOne (OSM operator)
+"Unnamed data center · Hamilton, OH",OH,Hamilton,,,39.294048,-84.412113,
+"QTS NAL 2 DC2 · Licking, OH",OH,Licking,,,40.05312,-82.756577,Quality Technology Services (OSM operator)
+"Google NBY-6 · Licking, OH",OH,Licking,,,40.053927,-82.767611,Google (OSM operator)
+"Google NBY-7 · Licking, OH",OH,Licking,,,40.05394,-82.764447,Google (OSM operator)
+"QTS NAL 2 DC1 · Licking, OH",OH,Licking,,,40.055684,-82.756375,Quality Technology Services (OSM operator)
+"Google NBY-3 · Licking, OH",OH,Licking,,,40.057957,-82.765285,Google (OSM operator)
+"Unnamed data center · Licking, OH",OH,Licking,,,40.059248,-82.762698,
+"Google NBY-2 · Licking, OH",OH,Licking,,,40.059633,-82.764527,Google (OSM operator)
+"Meta New Albany Data Center · Licking, OH #1",OH,Licking,,,40.06038,-82.750988,Meta (OSM operator)
+"Google NBY-1 · Licking, OH",OH,Licking,,,40.061145,-82.764294,Google (OSM operator)
+"Meta · Licking, OH #1",OH,Licking,,,40.061496,-82.740545,Meta (OSM operator)
+"QTS NAL1 DC2 · Licking, OH",OH,Licking,,,40.063562,-82.758169,Quality Technology Services (OSM operator)
+"QTS NAL1 DC1 · Licking, OH",OH,Licking,,,40.065108,-82.758056,Quality Technology Services (OSM operator)
+"Meta · Licking, OH #2",OH,Licking,,,40.065239,-82.741149,Meta (OSM operator)
+"Meta New Albany Data Center · Licking, OH #2",OH,Licking,,,40.065272,-82.74891,Meta (OSM operator)
+"Meta New Albany Data Center · Licking, OH #3",OH,Licking,,,40.068408,-82.750341,Meta (OSM operator)
+"Amazon Web Services · Licking, OH #1",OH,Licking,,,40.092158,-82.727551,Amazon Web Services (OSM operator)
+"Amazon Web Services · Licking, OH #2",OH,Licking,,,40.092965,-82.726491,Amazon Web Services (OSM operator)
+"Amazon Web Services CMH62 · Licking, OH",OH,Licking,,,40.092983,-82.747637,Amazon Web Services (OSM operator)
+"Amazon Web Services · Licking, OH #3",OH,Licking,,,40.09344,-82.73216,Amazon Web Services (OSM operator)
+"Amazon Web Services  CMH53 · Licking, OH",OH,Licking,,,40.093616,-82.751455,Amazon Web Services (OSM operator)
+"Amazon Web Services  CMH59 · Licking, OH",OH,Licking,,,40.094046,-82.747491,Amazon Web Services (OSM operator)
+"Amazon Web Services · Licking, OH #4",OH,Licking,,,40.094219,-82.732111,Amazon Web Services (OSM operator)
+"Amazon Web Services · Licking, OH #5",OH,Licking,,,40.094378,-82.729281,Amazon Web Services (OSM operator)
+"Amazon Web Services  CMH50 · Licking, OH",OH,Licking,,,40.09463,-82.751339,Amazon Web Services (OSM operator)
+"Amazon Web Services · Licking, OH #6",OH,Licking,,,40.095502,-82.732004,Amazon Web Services (OSM operator)
+"Amazon Web Services CMH56 · Licking, OH",OH,Licking,,,40.096534,-82.752051,Amazon Web Services (OSM operator)
+"Vantage Building 3 · Licking, OH",OH,Licking,,,40.098765,-82.747243,Vantage (OSM operator)
+"Amazon New Albany: Jug and Beach Road · Licking, OH",OH,Licking,,,40.099074,-82.751474,
+"Vantage Building 2 · Licking, OH",OH,Licking,,,40.100531,-82.747116,Vantage (OSM operator)
+"Amazon Web Services · Licking, OH #7",OH,Licking,,,40.101978,-82.751912,Amazon Web Services (OSM operator)
+"Amazon Web Services · Licking, OH #8",OH,Licking,,,40.102429,-82.750129,Amazon Web Services (OSM operator)
+"Vantage Building 1 · Licking, OH",OH,Licking,,,40.102498,-82.746954,Vantage (OSM operator)
+"Carrier Services Group · Mahoning, OH",OH,Mahoning,,,41.04106,-80.63309,
+"Involta-Akron · Summit, OH",OH,Summit,,,41.057431,-81.521972,
+"Amazon Web Services · Union, OH #1",OH,Union,,,40.116259,-83.201391,Amazon Web Services (OSM operator)
+"Amazon Web Services data center · Union, OH",OH,Union,,,40.1174,-83.202082,Amazon Web Services (OSM operator)
+"Amazon Web Services · Union, OH #2",OH,Union,,,40.118112,-83.202523,Amazon Web Services (OSM operator)
+"Amazon Web Services · Union, OH #3",OH,Union,,,40.119048,-83.20026,Amazon Web Services (OSM operator)
+"Amazon Web Services · Union, OH #4",OH,Union,,,40.119301,-83.203217,Amazon Web Services (OSM operator)
+"Amazon Web Services · Union, OH #5",OH,Union,,,40.120072,-83.199309,Amazon Web Services (OSM operator)
+"Amazon Web Services · Union, OH #6",OH,Union,,,40.13419,-83.215834,Amazon Web Services (OSM operator)
+"Amazon Web Services · Union, OH #7",OH,Union,,,40.135797,-83.212644,Amazon Web Services (OSM operator)
+"CyrusOne Cincinnati-Mason CIN3 · Warren, OH",OH,Warren,,,39.303896,-84.31158,CyrusOne (OSM operator)
+"CyrusOne Cincinnati-Lebanon · Warren, OH",OH,Warren,,,39.389019,-84.221875,
+"Meta Bowling Green Data Center · Wood, OH",OH,Wood,,,41.465298,-83.638355,
+"Choctaw Nation of Oklahoma Data Center · Bryan, OK",OK,Bryan,,,33.971721,-96.402855,Choctaw Nation of oklahoma (OSM operator)
+"Unnamed data center · Muskogee, OK",OK,Muskogee,,,35.568135,-95.512417,
+"Rack59 Data Center · Oklahoma, OK",OK,Oklahoma,,,35.467205,-97.649745,
+"Unnamed data center · Tulsa, OK",OK,Tulsa,,,36.081251,-95.854149,
+"TulsaConnect DC3 · Tulsa, OK",OK,Tulsa,,,36.099473,-95.838283,
+"Cherokee Data Center · Tulsa, OK",OK,Tulsa,,,36.262546,-95.910031,
+"Juniper · Clackamas, OR",OR,Clackamas,,,45.318731,-122.765874,
+"Unnamed data center · Crook, OR #1",OR,Crook,,,44.285754,-120.869921,
+"Unnamed data center · Crook, OR #2",OR,Crook,,,44.287277,-120.870216,
+"Unnamed data center · Crook, OR #3",OR,Crook,,,44.288882,-120.870125,
+"Apple data center · Crook, OR",OR,Crook,,,44.289416,-120.875077,Apple (OSM operator)
+"Unnamed data center · Crook, OR #4",OR,Crook,,,44.293683,-120.881519,
+"Unnamed data center · Crook, OR #5",OR,Crook,,,44.294894,-120.883998,
+"Unnamed data center · Crook, OR #6",OR,Crook,,,44.295883,-120.887261,
+"Unnamed data center · Crook, OR #7",OR,Crook,,,44.299095,-120.879435,
+"Unnamed data center · Crook, OR #8",OR,Crook,,,44.299288,-120.894595,
+"Unnamed data center · Crook, OR #9",OR,Crook,,,44.301255,-120.889884,
+"Unnamed data center · Crook, OR #10",OR,Crook,,,44.301672,-120.894596,
+"Unnamed data center · Deschutes, OR",OR,Deschutes,,,44.047407,-121.32855,
+"FCR · Josephine, OR",OR,Josephine,,,42.437882,-123.32863,
+"EarthClick.net LLC · Lane, OR",OR,Lane,,,43.797155,-123.055946,
+"PTC · Linn, OR",OR,Linn,,,44.775219,-122.615931,Stayton Cooperative Telephone Company (OSM operator)
+"Oregon State Data Center · Marion, OR",OR,Marion,,,44.926549,-123.001861,State of Oregon (OSM operator)
+"CenturyLink · Marion, OR",OR,Marion,,,44.93803,-123.033685,CenturyLink (OSM operator)
+"Amazon Web Services · Morrow, OR #1",OR,Morrow,,,45.818696,-119.636269,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #2",OR,Morrow,,,45.818707,-119.632005,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #3",OR,Morrow,,,45.819931,-119.632086,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #4",OR,Morrow,,,45.819957,-119.636287,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #5",OR,Morrow,,,45.836184,-119.694048,Amazon Web Services (OSM operator)
+"Amazon PDX93 · Morrow, OR",OR,Morrow,,,45.836542,-119.689866,Amazon Web Services (OSM operator)
+"Amazon PDX92 · Morrow, OR",OR,Morrow,,,45.83754,-119.693129,Amazon Web Services (OSM operator)
+"Amazon PDX91 · Morrow, OR",OR,Morrow,,,45.837924,-119.688355,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #1",OR,Morrow,,,45.840444,-119.654979,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #6",OR,Morrow,,,45.84067,-119.651302,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #2",OR,Morrow,,,45.841003,-119.652769,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #3",OR,Morrow,,,45.841174,-119.655449,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #4",OR,Morrow,,,45.841414,-119.657933,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #7",OR,Morrow,,,45.841481,-119.651777,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #5",OR,Morrow,,,45.846655,-119.605645,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #6",OR,Morrow,,,45.846655,-119.603709,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #7",OR,Morrow,,,45.846668,-119.607038,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #8",OR,Morrow,,,45.846754,-119.609063,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #9",OR,Morrow,,,45.850881,-119.630524,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #8",OR,Morrow,,,45.851731,-119.619663,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #10",OR,Morrow,,,45.852235,-119.629888,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #9",OR,Morrow,,,45.8531,-119.619685,Amazon Web Services (OSM operator)
+"Amazon Web Services us-west-2 · Morrow, OR #11",OR,Morrow,,,45.853786,-119.630036,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #10",OR,Morrow,,,45.858038,-119.604872,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #11",OR,Morrow,,,45.85875,-119.605096,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #12",OR,Morrow,,,45.860083,-119.605134,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #13",OR,Morrow,,,45.860969,-119.605153,Amazon Web Services (OSM operator)
+"Amazon Web Services · Morrow, OR #14",OR,Morrow,,,45.862253,-119.605112,Amazon Web Services (OSM operator)
+"Pittock Block · Multnomah, OR",OR,Multnomah,,,45.521544,-122.680704,
+"Amazon Web Services · Umatilla, OR #1",OR,Umatilla,,,45.797739,-119.35892,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #2",OR,Umatilla,,,45.797775,-119.361959,Amazon Web Services (OSM operator)
+"Amazon PDX80 · Umatilla, OR",OR,Umatilla,,,45.797809,-119.366616,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #3",OR,Umatilla,,,45.799021,-119.361733,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #4",OR,Umatilla,,,45.799165,-119.366658,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #5",OR,Umatilla,,,45.799687,-119.358445,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #6",OR,Umatilla,,,45.808273,-119.268613,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #7",OR,Umatilla,,,45.809637,-119.268615,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #8",OR,Umatilla,,,45.879533,-119.341636,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #9",OR,Umatilla,,,45.882518,-119.341652,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #10",OR,Umatilla,,,45.882525,-119.33969,Amazon Web Services (OSM operator)
+"Amazon PDX63 · Umatilla, OR",OR,Umatilla,,,45.90145,-119.320522,Amazon Web Services (OSM operator)
+"Amazon PDX65 · Umatilla, OR",OR,Umatilla,,,45.902763,-119.320498,Amazon Web Services (OSM operator)
+"Amazon PDX67 · Umatilla, OR",OR,Umatilla,,,45.903851,-119.320487,Amazon Web Services (OSM operator)
+"Amazon PDX69 · Umatilla, OR",OR,Umatilla,,,45.905094,-119.320167,Amazon Web Services (OSM operator)
+"Amazon PDX57/60 · Umatilla, OR",OR,Umatilla,,,45.913883,-119.267714,Amazon Web Services (OSM operator)
+"Unnamed data center · Umatilla, OR #1",OR,Umatilla,,,45.91571,-119.269981,
+"Unnamed data center · Umatilla, OR #2",OR,Umatilla,,,45.915832,-119.267512,
+"Unnamed data center · Umatilla, OR #3",OR,Umatilla,,,45.915836,-119.266726,
+"Unnamed data center · Umatilla, OR #4",OR,Umatilla,,,45.915836,-119.267717,
+"Unnamed data center · Umatilla, OR #5",OR,Umatilla,,,45.915836,-119.267112,
+"Unnamed data center · Umatilla, OR #6",OR,Umatilla,,,45.915836,-119.266527,
+"Unnamed data center · Umatilla, OR #7",OR,Umatilla,,,45.915836,-119.266324,
+"Unnamed data center · Umatilla, OR #8",OR,Umatilla,,,45.915843,-119.267316,
+"Amazon PDX2 · Umatilla, OR",OR,Umatilla,,,45.916404,-119.267776,Amazon Web Services (OSM operator)
+"Amazon PDX51/54 · Umatilla, OR",OR,Umatilla,,,45.917448,-119.267734,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #11",OR,Umatilla,,,45.919515,-119.22609,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #12",OR,Umatilla,,,45.92056,-119.227004,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #13",OR,Umatilla,,,45.920597,-119.228805,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #14",OR,Umatilla,,,45.920637,-119.231831,Amazon Web Services (OSM operator)
+"Amazon Web Services · Umatilla, OR #15",OR,Umatilla,,,45.920647,-119.229981,Amazon Web Services (OSM operator)
+"Google Data Center The Dalles Oregon · Wasco, OR",OR,Wasco,,,45.632048,-121.201302,Google (OSM operator)
+"Google Taylor Lake Data Center · Wasco, OR",OR,Wasco,,,45.638529,-121.202404,Google (OSM operator)
+"Data Center · Washington, OR",OR,Washington,,,45.526684,-122.875504,Oregon Health & Science University (OSM operator)
+"Stack Infrastructure Portland 2 Data Center · Washington, OR",OR,Washington,,,45.547312,-122.897449,
+"Digital Realty PDX10 Data Center · Washington, OR",OR,Washington,,,45.547617,-122.891958,Digital Realty (OSM operator)
+"NTT RagingWire Data Center · Washington, OR",OR,Washington,,,45.549584,-122.937393,NTT (OSM operator)
+"Flexential · Washington, OR",OR,Washington,,,45.549821,-122.890851,Flexential (OSM operator)
+"Adobe Data Center · Washington, OR",OR,Washington,,,45.550182,-122.931812,
+"Flexential Portland - Hillsboro 1 · Washington, OR",OR,Washington,,,45.550334,-122.892202,Flexential (OSM operator)
+"Aligned Data Centers data center · Washington, OR",OR,Washington,,,45.554064,-122.949312,Aligned Data Centers (OSM operator)
+"Stack Infrastructure Portland 3 Data Center -Bld POR3a · Washington, OR",OR,Washington,,,45.554197,-122.937912,Stack Infrastructure (OSM operator)
+"Stack Infrastructure Portland 3 Data Center -Bld POR3b · Washington, OR",OR,Washington,,,45.554216,-122.939427,Stack Infrastructure (OSM operator)
+"Stack Infrastructure Portland 3 Data Center -Bld POR3c · Washington, OR",OR,Washington,,,45.554217,-122.940939,Stack Infrastructure (OSM operator)
+"Flexential Portland - Hillsboro 4 · Washington, OR",OR,Washington,,,45.555205,-122.939884,Flexential (OSM operator)
+"Flexential Portland - Hillsboro 4 Expansion · Washington, OR",OR,Washington,,,45.555391,-122.941087,Flexential (OSM operator)
+"Flexential Portland - Hillsboro 5 · Washington, OR",OR,Washington,,,45.556424,-122.939296,Flexential (OSM operator)
+"EdgeConneX Data Center · Washington, OR",OR,Washington,,,45.556621,-122.912213,EdgeConneX (OSM operator)
+"Flexential Portland - Hillsboro 2 · Washington, OR",OR,Washington,,,45.558286,-122.917092,Flexential (OSM operator)
+"QTS Data Center Bld 2 · Washington, OR",OR,Washington,,,45.558764,-122.929631,Quality Technology Services (OSM operator)
+"QTS Data Center Bld 1 · Washington, OR",OR,Washington,,,45.558767,-122.92783,Quality Technology Services (OSM operator)
+"QTS Data Center Bld 3 · Washington, OR",OR,Washington,,,45.55878,-122.931906,Quality Technology Services (OSM operator)
+"QTS Data Center Bld 4 · Washington, OR",OR,Washington,,,45.558781,-122.932946,Quality Technology Services (OSM operator)
+"QTS Data Center Bld 5 · Washington, OR",OR,Washington,,,45.558801,-122.93522,Quality Technology Services (OSM operator)
+"Flexential Portland - Hillsboro 3 · Washington, OR",OR,Washington,,,45.559469,-122.938247,Flexential (OSM operator)
+"Digital Realty PDX11 Data Center · Washington, OR #1",OR,Washington,,,45.567993,-122.916853,Digital Realty (OSM operator)
+"Digital Realty PDX11 Data Center · Washington, OR #2",OR,Washington,,,45.568459,-122.919969,Digital Realty (OSM operator)
+"QTS North HIL3 South Building · Washington, OR",OR,Washington,,,45.570077,-122.919898,Quality Technology Services (OSM operator)
+"QTS North HIL3 North Building · Washington, OR",OR,Washington,,,45.572028,-122.918489,Quality Technology Services (OSM operator)
+"Expedient Pittsburgh South · Allegheny, PA",PA,Allegheny,,,40.427377,-80.042532,Expedient (OSM operator)
+"DataBank Pittsburgh PIT2 · Allegheny, PA",PA,Allegheny,,,40.451369,-80.190118,
+"Allentown-TekPark · Lehigh, PA",PA,Lehigh,,,40.544236,-75.654313,
+"Flexential Allentown data center · Lehigh, PA",PA,Lehigh,,,40.635695,-75.457573,Flexential (OSM operator)
+"DāStor: 3400 Horizon Drive · Montgomery, PA",PA,Montgomery,,,40.087919,-75.33972,
+"TierPoint Valley Forge · Montgomery, PA",PA,Montgomery,,,40.121879,-75.420877,TierPoint (OSM operator)
+"Lumen Norristown · Montgomery, PA",PA,Montgomery,,,40.127058,-75.408638,Lumen Technologies (OSM operator)
+"Flexential Philadelphia - Collegeville · Montgomery, PA",PA,Montgomery,,,40.15222,-75.477629,Flexential (OSM operator)
+"Terminal Commerce Building · Philadelphia, PA",PA,Philadelphia,,,39.95981,-75.160832,
+"Microsoft · Guaynabo, PR",PR,Guaynabo,,,18.417436,-66.10899,Microsoft (OSM operator)
+"Claro data center · San Juan, PR",PR,San Juan,,,18.446827,-66.051687,Claro (OSM operator)
+"Meta Aiken Data Center · Aiken, SC",SC,Aiken,,,33.642273,-81.842627,Meta (OSM operator)
+"Google · Berkeley, SC #1",SC,Berkeley,,,33.062001,-80.045057,Google (OSM operator)
+"Google data center · Berkeley, SC",SC,Berkeley,,,33.062022,-80.038316,Google (OSM operator)
+"Google · Berkeley, SC #2",SC,Berkeley,,,33.062053,-80.041154,Google (OSM operator)
+"Google · Berkeley, SC #3",SC,Berkeley,,,33.062174,-80.03966,Google (OSM operator)
+"Google · Berkeley, SC #4",SC,Berkeley,,,33.064157,-80.043575,Google (OSM operator)
+"Google · Berkeley, SC #5",SC,Berkeley,,,33.064272,-80.041453,Google (OSM operator)
+"Google · Berkeley, SC #6",SC,Berkeley,,,33.064312,-80.038456,Google (OSM operator)
+"Google · Berkeley, SC #7",SC,Berkeley,,,33.064435,-80.046068,Google (OSM operator)
+"Google · Berkeley, SC #8",SC,Berkeley,,,33.066436,-80.038428,Google (OSM operator)
+"DC BLOX Myrtle Beach Cable Landing Station · Horry, SC",SC,Horry,,,33.674583,-78.943696,
+"ADP South Dakota · Minnehaha, SD",SD,Minnehaha,,,43.599915,-96.794707,
+"TierPoint Sioux Falls West Data Center · Minnehaha, SD",SD,Minnehaha,,,43.606971,-96.809195,
+"Unnamed data center · Davidson, TN #1",TN,Davidson,,,36.032681,-86.637798,
+"Unnamed data center · Davidson, TN #2",TN,Davidson,,,36.140481,-86.764147,
+"BNYM data center · Davidson, TN",TN,Davidson,,,36.215352,-86.783684,BNYM (OSM operator)
+"Unnamed data center · Grainger, TN",TN,Grainger,,,36.328074,-83.376704,
+"Newrays Two LLC Mining · Henry, TN",TN,Henry,,,36.327032,-88.320073,
+"SPC4A · Montgomery, TN",TN,Montgomery,,,36.624055,-87.256917,Google (OSM operator)
+"SPC3A · Montgomery, TN",TN,Montgomery,,,36.624303,-87.259027,Google (OSM operator)
+"Google · Montgomery, TN #1",TN,Montgomery,,,36.624582,-87.261296,Google (OSM operator)
+"Google · Montgomery, TN #2",TN,Montgomery,,,36.62483,-87.263515,Google (OSM operator)
+"Frontier (supercomputer) · Roane, TN",TN,Roane,,,35.929513,-84.310567,Oak Ridge National Laboratory (OSM operator)
+"xAI Macrohard Colossus 2 · Shelby, TN",TN,Shelby,,,34.997983,-90.034867,xAI (OSM operator)
+"xAI Colossus · Shelby, TN",TN,Shelby,,,35.05996,-90.156452,
+"Meta Gallatin Data Center · Sumner, TN #1",TN,Sumner,,,36.406049,-86.366608,Meta (OSM operator)
+"Meta Gallatin Data Center · Sumner, TN #2",TN,Sumner,,,36.411351,-86.366012,Meta (OSM operator)
+"Meta Gallatin Data Center · Sumner, TN #3",TN,Sumner,,,36.411865,-86.369661,Meta (OSM operator)
+"Flexential Nashville - Franklin · Williamson, TN",TN,Williamson,,,35.920459,-86.815574,Flexential (OSM operator)
+"TierPoint · Williamson, TN",TN,Williamson,,,35.92451,-86.855687,
+"Flexential Nashville - Cool Springs · Williamson, TN",TN,Williamson,,,35.951041,-86.833381,Flexential (OSM operator)
+"Flexential Nashville - Brentwood · Williamson, TN",TN,Williamson,,,35.972729,-86.808495,Flexential (OSM operator)
+"Unnamed data center · Williamson, TN",TN,Williamson,,,36.023219,-86.791532,
+"Unnamed data center · Angelina, TX",TX,Angelina,,,31.194176,-94.796772,
+"Unnamed data center · Bexar, TX #1",TX,Bexar,,,29.418454,-98.788808,
+"Unnamed data center · Bexar, TX #2",TX,Bexar,,,29.418988,-98.787471,
+"H5 Data Centers San Antonio · Bexar, TX",TX,Bexar,,,29.429371,-98.486906,H5 Data Centers (OSM operator)
+"Lumen San Antonio 2 · Bexar, TX",TX,Bexar,,,29.438279,-98.506522,Lumen Technologies (OSM operator)
+"Unnamed data center · Bexar, TX #3",TX,Bexar,,,29.446674,-98.64069,
+"Unnamed data center · Bexar, TX #4",TX,Bexar,,,29.447199,-98.640993,
+"Unnamed data center · Bexar, TX #5",TX,Bexar,,,29.447922,-98.641129,
+"QTS San Antonio II · Bexar, TX",TX,Bexar,,,29.449156,-98.653145,Quality Technology Services (OSM operator)
+"Unnamed data center · Bexar, TX #6",TX,Bexar,,,29.44968,-98.714387,
+"Unnamed data center · Bexar, TX #7",TX,Bexar,,,29.450931,-98.713891,
+"Unnamed data center · Bexar, TX #8",TX,Bexar,,,29.452231,-98.714047,
+"CyrusOne San Antonio I · Bexar, TX",TX,Bexar,,,29.466555,-98.68811,CyrusOne (OSM operator)
+"CyrusOne San Antonio III · Bexar, TX",TX,Bexar,,,29.470044,-98.672193,CyrusOne (OSM operator)
+"Frost Bank data center · Bexar, TX",TX,Bexar,,,29.470223,-98.68765,Frost Bank (OSM operator)
+"CHRISTUS Health data center · Bexar, TX",TX,Bexar,,,29.470344,-98.68621,CHRISTUS Health (OSM operator)
+"CyrusOne San Antonio IV · Bexar, TX",TX,Bexar,,,29.470679,-98.67063,
+"CyrusOne San Antonio II · Bexar, TX",TX,Bexar,,,29.470849,-98.672999,CyrusOne (OSM operator)
+"Stream San Antonio II · Bexar, TX",TX,Bexar,,,29.472017,-98.671737,
+"Lowe's Data Center · Bexar, TX",TX,Bexar,,,29.472846,-98.689547,Lowe's (OSM operator)
+"Valero Wiserman · Bexar, TX",TX,Bexar,,,29.474285,-98.680064,Valero (OSM operator)
+"HEB data center · Bexar, TX",TX,Bexar,,,29.580141,-98.541327,HEB (OSM operator)
+"GVTC · Bexar, TX",TX,Bexar,,,29.686403,-98.462647,GVTC (OSM operator)
+"Flexential Dallas - Richardson · Collin, TX",TX,Collin,,,32.994813,-96.752502,Flexential (OSM operator)
+"Stream DFW IV · Collin, TX",TX,Collin,,,33.000144,-96.661646,Stream (OSM operator)
+"Flexential Dallas - Plano · Collin, TX",TX,Collin,,,33.007052,-96.666354,Flexential (OSM operator)
+"Unnamed data center · Collin, TX #1",TX,Collin,,,33.009299,-96.676544,
+"DataBank Plano Data Center · Collin, TX",TX,Collin,,,33.087569,-96.815131,
+"Evoque Allen DA1 · Collin, TX",TX,Collin,,,33.095064,-96.683764,Centersquare (OSM operator)
+"Unnamed data center · Collin, TX #2",TX,Collin,,,33.095994,-96.681565,
+"Cisco Allen · Collin, TX",TX,Collin,,,33.13598,-96.660952,
+"Unnamed data center · Collin, TX #3",TX,Collin,,,33.137805,-96.655926,
+"Tierpoint Dallas-Allen · Collin, TX",TX,Collin,,,33.137934,-96.657376,
+"CyrusOne Allen · Collin, TX",TX,Collin,,,33.138521,-96.659952,CyrusOne (OSM operator)
+"Experian McKinney Data Center · Collin, TX",TX,Collin,,,33.171796,-96.725505,
+"DataBank · Dallas, TX",TX,Dallas,,,32.778301,-96.798437,
+"VIRTBIZ · Dallas, TX",TX,Dallas,,,32.782546,-96.782815,
+"Live Oak Data Center · Dallas, TX",TX,Dallas,,,32.783712,-96.794575,
+"Equinix Infomart · Dallas, TX",TX,Dallas,,,32.800943,-96.819511,Equinix (OSM operator)
+"Lumen Dallas - 3180 Irving Blvd. · Dallas, TX",TX,Dallas,,,32.806955,-96.868589,Lumen Technologies (OSM operator)
+"TierPoint Dallas Data Center · Dallas, TX",TX,Dallas,,,32.807973,-96.857355,TierPoint (OSM operator)
+"CoreSpace Dallas · Dallas, TX",TX,Dallas,,,32.817559,-96.873065,CoreSpace (OSM operator)
+"DataBank Dallas Empire Central Data Center · Dallas, TX",TX,Dallas,,,32.821738,-96.873598,DataBank (OSM operator)
+"Digital Realty DFW36 · Dallas, TX",TX,Dallas,,,32.82755,-96.87375,Digital Realty (OSM operator)
+"Lumen Dallas 6 · Dallas, TX",TX,Dallas,,,32.827998,-96.884382,Lumen Technologies (OSM operator)
+"Prime DFW01-01 · Dallas, TX #1",TX,Dallas,,,32.837814,-96.879846,Prime (OSM operator)
+"Prime DFW01-01 · Dallas, TX #2",TX,Dallas,,,32.837967,-96.878393,Prime (OSM operator)
+"Unnamed data center · Dallas, TX #1",TX,Dallas,,,32.894762,-96.981946,
+"QTS Irving - Dallas Data Center Campus · Dallas, TX",TX,Dallas,,,32.897283,-96.982788,Quality Technology Services (OSM operator)
+"Rackspace Richardson DFW3 · Dallas, TX",TX,Dallas,,,32.964789,-96.715877,Rackspace (OSM operator)
+"Digital Realty Dallas DFW35 · Dallas, TX",TX,Dallas,,,32.965046,-96.710291,Digital Realty (OSM operator)
+"Digital Realty Dallas DFW18 · Dallas, TX",TX,Dallas,,,32.965204,-96.712609,Digital Realty (OSM operator)
+"Digital Realty Dallas DFW16 · Dallas, TX",TX,Dallas,,,32.966077,-96.715587,Digital Realty (OSM operator)
+"Unnamed data center · Dallas, TX #2",TX,Dallas,,,32.966254,-96.711196,
+"Digital Realty Dallas DFW17 · Dallas, TX",TX,Dallas,,,32.966281,-96.713212,Digital Realty (OSM operator)
+"Digital Realty Dallas DFW29 · Dallas, TX",TX,Dallas,,,32.967233,-96.710546,Digital Realty (OSM operator)
+"Digital Realty Dallas DFW28 · Dallas, TX",TX,Dallas,,,32.967241,-96.713308,Digital Realty (OSM operator)
+"Stream Data Centers · Dallas, TX",TX,Dallas,,,32.983668,-96.654273,
+"Charles Schwab Data Center · Denton, TX",TX,Denton,,,33.004502,-97.246155,
+"CITIGROUP TECHNOLOGY INC · Denton, TX",TX,Denton,,,33.006381,-97.24529,
+"Compass Data Center · Ellis, TX #1",TX,Ellis,,,32.538722,-96.804396,
+"Compass Data Center · Ellis, TX #2",TX,Ellis,,,32.54029,-96.802106,
+"Compass Data Center · Ellis, TX #3",TX,Ellis,,,32.541602,-96.802099,
+"Compass Data Center · Ellis, TX #4",TX,Ellis,,,32.542674,-96.79361,
+"Compass Data Center · Ellis, TX #5",TX,Ellis,,,32.542913,-96.802085,
+"Compass Data Center · Ellis, TX #6",TX,Ellis,,,32.543965,-96.788507,
+"Compass Data Center · Ellis, TX #7",TX,Ellis,,,32.543993,-96.793611,
+"Compass Data Center · Ellis, TX #8",TX,Ellis,,,32.544205,-96.802081,
+"Compass Data Center · Ellis, TX #9",TX,Ellis,,,32.545297,-96.788491,
+"Compass Data Center · Ellis, TX #10",TX,Ellis,,,32.545297,-96.793648,
+"Compass Data Center · Ellis, TX #11",TX,Ellis,,,32.545518,-96.802099,
+"Rice Data Center · Harris, TX",TX,Harris,,,29.658146,-95.443328,
+"Skybox Houston One · Harris, TX",TX,Harris,,,29.802868,-95.75545,Skybox (OSM operator)
+"Unnamed data center · Harris, TX",TX,Harris,,,29.821506,-95.570785,
+"DXC Technology data center · Harris, TX #1",TX,Harris,,,29.995201,-95.563254,DXC Technology (OSM operator)
+"DXC Technology data center · Harris, TX #2",TX,Harris,,,29.997307,-95.563985,DXC Technology (OSM operator)
+"DXC Technology data center · Harris, TX #3",TX,Harris,,,30.018698,-95.863676,DXC Technology (OSM operator)
+"MARA Data Center · Hood, TX",TX,Hood,,,32.341745,-97.731228,Marathon Digital Holdings (OSM operator)
+"Riot Rockdale · Milam, TX",TX,Milam,,,30.573315,-97.080185,
+"Unnamed data center · Montgomery, TX",TX,Montgomery,,,30.177783,-95.486526,
+"Stream Data Centers Houston · Montgomery, TX",TX,Montgomery,,,30.178137,-95.486046,
+"Riot Corsiana · Navarro, TX",TX,Navarro,,,31.969859,-96.513289,
+"Alinged Data Center · Tarrant, TX",TX,Tarrant,,,32.549823,-97.074855,"Aligned Data Centers, LLC (OSM operator)"
+"Novartis · Tarrant, TX",TX,Tarrant,,,32.651234,-97.319709,
+"Cyxtera Dallas-Fort Worth Data Center · Tarrant, TX",TX,Tarrant,,,32.832718,-97.041042,Cyxtera (OSM operator)
+"Verizon Wireless Mew Building · Tarrant, TX",TX,Tarrant,,,32.972155,-97.156611,
+"Facebook Fort Worth Datacenter · Tarrant, TX #1",TX,Tarrant,,,32.983784,-97.259343,Meta (OSM operator)
+"Facebook Fort Worth Datacenter · Tarrant, TX #2",TX,Tarrant,,,32.984994,-97.255075,Meta (OSM operator)
+"Facebook Fort Worth Datacenter · Tarrant, TX #3",TX,Tarrant,,,32.988296,-97.25546,Meta (OSM operator)
+"QTS Data Center · Tarrant, TX",TX,Tarrant,,,32.988855,-97.259202,Quality Technology Services (OSM operator)
+"Lumen Austin 1 · Travis, TX",TX,Travis,,,30.196499,-97.7124,
+"Data Foundry - Texas 1 · Travis, TX",TX,Travis,,,30.198926,-97.713788,
+"Data Foundry - Texas 2 · Travis, TX",TX,Travis,,,30.199588,-97.713076,
+"LightEdge Austin II · Travis, TX",TX,Travis,,,30.200676,-97.707044,
+"CyrusOne Austin Data Center II · Travis, TX",TX,Travis,,,30.20593,-97.697965,
+"CyrusOne Austin Data Center III · Travis, TX",TX,Travis,,,30.206994,-97.701114,
+"Digital Realty Austin AUS11 · Travis, TX",TX,Travis,,,30.212176,-97.695781,
+"LightEdge Austin I · Travis, TX",TX,Travis,,,30.214297,-97.712668,
+"Cortex supercomputer · Travis, TX",TX,Travis,,,30.215399,-97.61896,
+"Data Foundry Austin 1 Data Center · Travis, TX",TX,Travis,,,30.215504,-97.696074,
+"Alpheus DataCenter · Travis, TX",TX,Travis,,,30.261043,-97.722102,Alpheus (OSM operator)
+"Lumen Austin 3 · Travis, TX",TX,Travis,,,30.261396,-97.723597,Lumen Technologies (OSM operator)
+"Element Critical · Travis, TX",TX,Travis,,,30.3428,-97.696176,
+"Thin-nology · Travis, TX",TX,Travis,,,30.421141,-97.591603,
+"IONIC Digital Cedarvale · Ward, TX",TX,Ward,,,31.513474,-103.448621,IONIC Digital (OSM operator)
+"Unnamed data center · Wichita, TX",TX,Wichita,,,33.953378,-98.524731,
+"eBay · Salt Lake, UT",UT,Salt Lake,,,40.563749,-112.047725,
+"Ebay · Salt Lake, UT",UT,Salt Lake,,,40.564095,-112.050628,
+"Flexential Salt Lake City - South Valley · Salt Lake, UT",UT,Salt Lake,,,40.620352,-111.986047,Flexential (OSM operator)
+"Flexential Salt Lake City - Millcreek · Salt Lake, UT",UT,Salt Lake,,,40.685525,-111.885044,Flexential (OSM operator)
+"Flexential Salt Lake City - Downtown · Salt Lake, UT",UT,Salt Lake,,,40.756307,-111.954838,Flexential (OSM operator)
+"Flexential Salt Lake City - Fair Park · Salt Lake, UT",UT,Salt Lake,,,40.766786,-111.920292,Flexential (OSM operator)
+"Strata Networks · Uintah, UT",UT,Uintah,,,40.456593,-109.528999,
+"Meta Eagle Mountain Data Center · Utah, UT #1",UT,Utah,,,40.265564,-112.015127,Meta (OSM operator)
+"Unnamed data center · Utah, UT #1",UT,Utah,,,40.265856,-112.01942,
+"Meta Eagle Mountain Data Center · Utah, UT #2",UT,Utah,,,40.268288,-112.015077,Meta (OSM operator)
+"Unnamed data center · Utah, UT #2",UT,Utah,,,40.269876,-112.019453,
+"Meta Eagle Mountain Data Center · Utah, UT #3",UT,Utah,,,40.272334,-112.015055,Meta (OSM operator)
+"Flexential Salt Lake City - Lindon · Utah, UT",UT,Utah,,,40.332648,-111.727875,Flexential (OSM operator)
+"Lumen · Washington, UT",UT,Washington,,,37.062799,-113.544749,Lumen Technologies (OSM operator)
+"Equinix CU2 · Culpeper, VA",VA,Culpeper,,,38.454937,-77.978187,Equinix (OSM operator)
+"Unnamed data center · Fairfax, VA #1",VA,Fairfax,,,38.750817,-77.196273,
+"Amazon IAD-1 · Fairfax, VA",VA,Fairfax,,,38.897859,-77.454075,Amazon Web Services (OSM operator)
+"Amazon IAD22 · Fairfax, VA",VA,Fairfax,,,38.897902,-77.455102,
+"Amazon IAD-9 · Fairfax, VA",VA,Fairfax,,,38.899652,-77.45344,Amazon Web Services (OSM operator)
+"Amazon Web Services · Fairfax, VA #1",VA,Fairfax,,,38.904346,-77.452473,Amazon Web Services (OSM operator)
+"Amazon Web Services · Fairfax, VA #2",VA,Fairfax,,,38.904837,-77.45476,Amazon Web Services (OSM operator)
+"Element Critical VA1 · Fairfax, VA",VA,Fairfax,,,38.908367,-77.219744,
+"Equinix DC7 · Fairfax, VA",VA,Fairfax,,,38.909139,-77.220557,Equinix (OSM operator)
+"Unnamed data center · Fairfax, VA #2",VA,Fairfax,,,38.909245,-77.472245,
+"Unnamed data center · Fairfax, VA #3",VA,Fairfax,,,38.909798,-77.473466,
+"Digital Realty · Fairfax, VA",VA,Fairfax,,,38.910133,-77.47258,Digital Realty (OSM operator)
+"Unnamed data center · Fairfax, VA #4",VA,Fairfax,,,38.913702,-77.225838,
+"DataBank McLean IAD2 · Fairfax, VA",VA,Fairfax,,,38.919905,-77.213585,DataBank (OSM operator)
+"Lumen McLean · Fairfax, VA #1",VA,Fairfax,,,38.920021,-77.211619,Lumen Technologies (OSM operator)
+"Lumen McLean · Fairfax, VA #2",VA,Fairfax,,,38.920854,-77.211571,Lumen Technologies (OSM operator)
+"Unnamed data center · Fairfax, VA #5",VA,Fairfax,,,38.921125,-77.426554,
+"Unnamed data center · Fairfax, VA #6",VA,Fairfax,,,38.922692,-77.426307,
+"Unnamed data center · Fairfax, VA #7",VA,Fairfax,,,38.922773,-77.427871,
+"Unnamed data center · Fairfax, VA #8",VA,Fairfax,,,38.923101,-77.424979,
+"Unnamed data center · Fairfax, VA #9",VA,Fairfax,,,38.936479,-77.424691,
+"VA3 · Fairfax, VA",VA,Fairfax,,,38.948464,-77.327295,Digital Realty (OSM operator)
+"CoreSite Reston VA3 · Fairfax, VA",VA,Fairfax,,,38.948468,-77.37237,CoreSite (OSM operator)
+"IAD1 · Fairfax, VA",VA,Fairfax,,,38.948816,-77.32941,Evocative (OSM operator)
+"CoreSite Reston Campus VA1 · Fairfax, VA",VA,Fairfax,,,38.950586,-77.364548,CoreSite (OSM operator)
+"CoreSite Reston Campus VA2 · Fairfax, VA",VA,Fairfax,,,38.951451,-77.364004,CoreSite (OSM operator)
+"Equinix DC97 · Fairfax, VA",VA,Fairfax,,,38.961571,-77.377423,
+"Unnamed data center · Fauquier, VA #1",VA,Fauquier,,,38.737213,-77.826249,
+"Unnamed data center · Fauquier, VA #2",VA,Fauquier,,,38.738222,-77.825806,
+"OVH US East Vint Hill · Fauquier, VA",VA,Fauquier,,,38.747445,-77.674454,
+"Middletown Data Center · Frederick, VA",VA,Frederick,,,39.017644,-78.29096,
+"DBT Data - Harrisonburg Center · Harrisonburg city, VA",VA,Harrisonburg city,,,38.462545,-78.856797,
+"Meta Henrico Data Center · Henrico, VA #1",VA,Henrico,,,37.477845,-77.226455,Meta (OSM operator)
+"Meta Henrico Data Center · Henrico, VA #2",VA,Henrico,,,37.481963,-77.233805,Meta (OSM operator)
+"Meta Henrico Data Center · Henrico, VA #3",VA,Henrico,,,37.483928,-77.237311,Meta (OSM operator)
+"QTS Richmond Data Center · Henrico, VA",VA,Henrico,,,37.489001,-77.245886,Quality Technology Services (OSM operator)
+"Bank of America Data Center · Henrico, VA",VA,Henrico,,,37.495809,-77.238286,
+"Flexential - Richmond · Henrico, VA",VA,Henrico,,,37.64689,-77.438695,Flexential (OSM operator)
+"Amazon Web Services · Loudoun, VA #1",VA,Loudoun,,,38.91499,-77.490976,Amazon Web Services (OSM operator)
+"Amazon IAD-61 · Loudoun, VA",VA,Loudoun,,,38.915805,-77.491987,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #2",VA,Loudoun,,,38.915905,-77.490552,Amazon Web Services (OSM operator)
+"Amazon IAD150 · Loudoun, VA",VA,Loudoun,,,38.916076,-77.477251,Amazon Web Services (OSM operator)
+"Amazon IAD151 · Loudoun, VA",VA,Loudoun,,,38.916151,-77.478705,Amazon Web Services (OSM operator)
+"Amazon IAD152 · Loudoun, VA",VA,Loudoun,,,38.916576,-77.479742,Amazon Web Services (OSM operator)
+"Amazon IAD63 · Loudoun, VA",VA,Loudoun,,,38.916885,-77.493251,Amazon Web Services (OSM operator)
+"Amazon IAD65 · Loudoun, VA",VA,Loudoun,,,38.917011,-77.494366,Amazon Web Services (OSM operator)
+"Amazon IAD86 · Loudoun, VA",VA,Loudoun,,,38.917256,-77.495674,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #3",VA,Loudoun,,,38.921314,-77.4858,Amazon Web Services (OSM operator)
+"Google: Arcola 2 · Loudoun, VA",VA,Loudoun,,,38.941821,-77.527429,Google (OSM operator)
+"Google · Loudoun, VA",VA,Loudoun,,,38.943154,-77.524369,Google (OSM operator)
+"Amazon Web Services · Loudoun, VA #4",VA,Loudoun,,,38.946539,-77.522188,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #5",VA,Loudoun,,,38.947361,-77.520226,Amazon Web Services (OSM operator)
+"Amazon IAD83 · Loudoun, VA",VA,Loudoun,,,38.947946,-77.523108,Amazon Web Services (OSM operator)
+"Unnamed data center · Loudoun, VA #1",VA,Loudoun,,,38.948017,-77.558987,
+"Amazon IAD125 · Loudoun, VA",VA,Loudoun,,,38.94809,-77.560545,Amazon Web Services (OSM operator)
+"Microsoft IAD11 · Loudoun, VA",VA,Loudoun,,,38.948258,-77.555911,Microsoft (OSM operator)
+"Amazon IAD81 · Loudoun, VA",VA,Loudoun,,,38.948386,-77.521831,Amazon Web Services (OSM operator)
+"Amazon IAD68 · Loudoun, VA",VA,Loudoun,,,38.948687,-77.520952,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #6",VA,Loudoun,,,38.949135,-77.52358,Amazon Web Services (OSM operator)
+"Amazon IAD62 · Loudoun, VA",VA,Loudoun,,,38.949322,-77.519875,Amazon Web Services (OSM operator)
+"Unnamed data center · Loudoun, VA #2",VA,Loudoun,,,38.949862,-77.549509,
+"Amazon IAD124 · Loudoun, VA",VA,Loudoun,,,38.949895,-77.560452,Amazon Web Services (OSM operator)
+"Unnamed data center · Loudoun, VA #3",VA,Loudoun,,,38.950065,-77.55887,
+"Amazon IAD122 · Loudoun, VA",VA,Loudoun,,,38.955863,-77.49718,Amazon Web Services (OSM operator)
+"Amazon IAD121 · Loudoun, VA",VA,Loudoun,,,38.956783,-77.497787,Amazon Web Services (OSM operator)
+"Amazon IAD120 · Loudoun, VA",VA,Loudoun,,,38.957922,-77.498061,Amazon Web Services (OSM operator)
+"CyrusOne Sterling IX · Loudoun, VA",VA,Loudoun,,,38.958308,-77.50575,CyrusOne (OSM operator)
+"Digital Realty Northern Virginia IAD44 · Loudoun, VA",VA,Loudoun,,,38.960856,-77.491432,Digital Realty (OSM operator)
+"Amazon Web Services · Loudoun, VA #7",VA,Loudoun,,,38.979147,-77.419905,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #8",VA,Loudoun,,,38.979557,-77.41749,Amazon Web Services (OSM operator)
+"Amazon IAD175 · Loudoun, VA",VA,Loudoun,,,38.979868,-77.42548,Amazon Web Services (OSM operator)
+"Centersquare IAD3 · Loudoun, VA",VA,Loudoun,,,38.980925,-77.444247,Centersquare (OSM operator)
+"Amazon IAD140 · Loudoun, VA",VA,Loudoun,,,38.981455,-77.41755,Amazon Web Services (OSM operator)
+"Amazon IAD603 · Loudoun, VA",VA,Loudoun,,,38.981546,-77.419357,Amazon Web Services (OSM operator)
+"Amazon IAD144 · Loudoun, VA",VA,Loudoun,,,38.981643,-77.427422,Amazon Web Services (OSM operator)
+"Amazon IAD141 · Loudoun, VA",VA,Loudoun,,,38.982388,-77.416786,Amazon Web Services (OSM operator)
+"Amazon IAD145 · Loudoun, VA",VA,Loudoun,,,38.982552,-77.424625,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #9",VA,Loudoun,,,38.983575,-77.417527,Amazon Web Services (OSM operator)
+"Centersquare IAD2-B · Loudoun, VA",VA,Loudoun,,,38.983604,-77.424105,Centersquare (OSM operator)
+"Centersquare IAD2-A · Loudoun, VA",VA,Loudoun,,,38.984418,-77.423817,Centersquare (OSM operator)
+"CyrusOne data center · Loudoun, VA",VA,Loudoun,,,38.984887,-77.425649,CyrusOne (OSM operator)
+"Amazon IAD58 · Loudoun, VA",VA,Loudoun,,,38.986279,-77.441842,Amazon Web Services (OSM operator)
+"Amazon IAD214 · Loudoun, VA",VA,Loudoun,,,38.986526,-77.435176,Amazon Web Services (OSM operator)
+"Amazon IAD92 · Loudoun, VA",VA,Loudoun,,,38.986943,-77.410475,Amazon Web Services (OSM operator)
+"Amazon IAD57 · Loudoun, VA",VA,Loudoun,,,38.986997,-77.442638,Amazon Web Services (OSM operator)
+"Amazon IAD91 · Loudoun, VA",VA,Loudoun,,,38.987847,-77.411119,Amazon Web Services (OSM operator)
+"Amazon IAD90 · Loudoun, VA",VA,Loudoun,,,38.988603,-77.411652,Amazon Web Services (OSM operator)
+"Aligned IAD03 · Loudoun, VA",VA,Loudoun,,,38.988621,-77.440752,Aligned (OSM operator)
+"Amazon IAD12 · Loudoun, VA",VA,Loudoun,,,38.988723,-77.447671,Amazon Web Services (OSM operator)
+"Amazon IAD192 · Loudoun, VA",VA,Loudoun,,,38.989554,-77.434801,Amazon Web Services (OSM operator)
+"Amazon IAD56 · Loudoun, VA",VA,Loudoun,,,38.990568,-77.437062,Amazon Web Services (OSM operator)
+"Amazon IAD16 · Loudoun, VA",VA,Loudoun,,,38.990699,-77.448825,Amazon Web Services (OSM operator)
+"Amazon IAD88 · Loudoun, VA",VA,Loudoun,,,38.990964,-77.44187,Amazon Web Services (OSM operator)
+"Amazon IAD51 · Loudoun, VA",VA,Loudoun,,,38.991414,-77.436507,Amazon Web Services (OSM operator)
+"Amazon IAD15 · Loudoun, VA",VA,Loudoun,,,38.991693,-77.44858,Amazon Web Services (OSM operator)
+"Amazon IAD87 · Loudoun, VA",VA,Loudoun,,,38.991814,-77.441168,Amazon Web Services (OSM operator)
+"Digital Realty IAD55 · Loudoun, VA",VA,Loudoun,,,38.992269,-77.433932,Digital Realty (OSM operator)
+"Amazon IAD76 · Loudoun, VA",VA,Loudoun,,,38.993785,-77.450509,Amazon Web Services (OSM operator)
+"Unnamed data center · Loudoun, VA #4",VA,Loudoun,,,38.994227,-77.448189,
+"QTS Data Centers data center · Loudoun, VA",VA,Loudoun,,,38.994637,-77.447902,QTS Data Centers (OSM operator)
+"Amazon IAD147 · Loudoun, VA",VA,Loudoun,,,38.995012,-77.435359,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #10",VA,Loudoun,,,38.995094,-77.471072,Amazon Web Services (OSM operator)
+"QTS Ashburn Lockridge · Loudoun, VA #1",VA,Loudoun,,,38.995199,-77.456888,Quality Technology Services (OSM operator)
+"QTS Ashburn Lockridge · Loudoun, VA #2",VA,Loudoun,,,38.995355,-77.455183,Quality Technology Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #11",VA,Loudoun,,,38.995848,-77.471291,Amazon Web Services (OSM operator)
+"Amazon Web Services · Loudoun, VA #12",VA,Loudoun,,,38.996608,-77.473262,Amazon Web Services (OSM operator)
+"Amazon IAD146 · Loudoun, VA",VA,Loudoun,,,38.996725,-77.435598,Amazon Web Services (OSM operator)
+"Vantage VA2 · Loudoun, VA",VA,Loudoun,,,38.997959,-77.430254,
+"QTS Ashburn-Shellhorn DC1 · Loudoun, VA",VA,Loudoun,,,38.998079,-77.475571,Quality Technology Services (OSM operator)
+"QTS Ashburn-Shellhorn DC2 · Loudoun, VA",VA,Loudoun,,,38.998772,-77.474264,Quality Technology Services (OSM operator)
+"Unnamed data center · Loudoun, VA #5",VA,Loudoun,,,38.999113,-77.460867,
+"QTS Ashburn 1 · Loudoun, VA",VA,Loudoun,,,38.999515,-77.450171,Quality Technology Services (OSM operator)
+"Digital Realty Northern Virginia IAD37 · Loudoun, VA",VA,Loudoun,,,39.00001,-77.47807,Digital Realty (OSM operator)
+"Unnamed data center · Loudoun, VA #6",VA,Loudoun,,,39.000446,-77.460774,
+"Digital Realty Northern Virginia IAD35 · Loudoun, VA",VA,Loudoun,,,39.000511,-77.480595,Digital Realty (OSM operator)
+"GI Partners data center · Loudoun, VA",VA,Loudoun,,,39.000655,-77.43982,GI Partners (OSM operator)
+"Digital Realty Northern Virginia IAD38 · Loudoun, VA",VA,Loudoun,,,39.00111,-77.477184,Digital Realty (OSM operator)
+"Digital Realty Northern Virginia IAD36 · Loudoun, VA",VA,Loudoun,,,39.001552,-77.479344,Digital Realty (OSM operator)
+"Vantage VA12 · Loudoun, VA",VA,Loudoun,,,39.001779,-77.438071,Vantage Data Centers (OSM operator)
+"Digital Realty Northern Virginia IAD12 · Loudoun, VA",VA,Loudoun,,,39.002022,-77.483345,Digital Realty (OSM operator)
+"CloudHQ data center · Loudoun, VA",VA,Loudoun,,,39.002357,-77.471993,CloudHQ (OSM operator)
+"Vantage VA11 · Loudoun, VA",VA,Loudoun,,,39.002395,-77.437661,Vantage Data Centers (OSM operator)
+"Amazon Web Services Building C · Loudoun, VA",VA,Loudoun,,,39.002752,-77.485449,Amazon Web Services (OSM operator)
+"Digital Realty Building A · Loudoun, VA",VA,Loudoun,,,39.002755,-77.481954,Digital Realty (OSM operator)
+"Vantage VA13 · Loudoun, VA",VA,Loudoun,,,39.003108,-77.439851,Vantage Data Centers (OSM operator)
+"Digital Realty Northern Virginia IAD14 · Loudoun, VA",VA,Loudoun,,,39.003336,-77.487093,Digital Realty (OSM operator)
+"Digital Realty Northern Virginia IAD24 · Loudoun, VA",VA,Loudoun,,,39.004292,-77.484355,Digital Realty (OSM operator)
+"STACK NVA01A - Northern Virginia · Loudoun, VA",VA,Loudoun,,,39.004699,-77.441764,Stack Infrastructure (OSM operator)
+"AWS Building E · Loudoun, VA",VA,Loudoun,,,39.005052,-77.485612,Amazon Web Services (OSM operator)
+"Digital Realty IAD42 · Loudoun, VA",VA,Loudoun,,,39.005719,-77.449449,Digital Realty (OSM operator)
+"Digital Realty Northern Virginia IAD40 · Loudoun, VA",VA,Loudoun,,,39.006454,-77.467254,Digital Realty (OSM operator)
+"Digital Realty Northern Virginia IAD39 · Loudoun, VA",VA,Loudoun,,,39.007718,-77.467623,Digital Realty (OSM operator)
+"Digital Realty IAD41 (Building P) · Loudoun, VA",VA,Loudoun,,,39.008677,-77.458221,Digital Realty (OSM operator)
+"CloudHQ LC1 · Loudoun, VA",VA,Loudoun,,,39.010157,-77.462785,CloudHQ (OSM operator)
+"Aligned IAD02 · Loudoun, VA",VA,Loudoun,,,39.010411,-77.475189,Aligned (OSM operator)
+"CloudHQ LC3 · Loudoun, VA",VA,Loudoun,,,39.011212,-77.460405,
+"CloudHQ LC2 · Loudoun, VA",VA,Loudoun,,,39.011764,-77.462457,CloudHQ (OSM operator)
+"Equinix Ashburn DC21 · Loudoun, VA",VA,Loudoun,,,39.011823,-77.454558,Equinix (OSM operator)
+"Unnamed data center · Loudoun, VA #7",VA,Loudoun,,,39.012027,-77.471561,
+"Equinix DC13 · Loudoun, VA",VA,Loudoun,,,39.012537,-77.475393,Equinix (OSM operator)
+"Digital Realty ACC10 · Loudoun, VA",VA,Loudoun,,,39.012707,-77.465536,Digital Realty (OSM operator)
+"Aligned Ashburn · Loudoun, VA",VA,Loudoun,,,39.01362,-77.470578,Aligned (OSM operator)
+"H5 Data Centers Ashburn · Loudoun, VA",VA,Loudoun,,,39.013675,-77.45172,H5 (OSM operator)
+"Equinix · Loudoun, VA",VA,Loudoun,,,39.013792,-77.453798,Equinix (OSM operator)
+"Sabey Intergate.Ashburn (Building A) · Loudoun, VA",VA,Loudoun,,,39.014498,-77.479988,Sabey Data Centers (OSM operator)
+"Equinix Ashburn DC11 · Loudoun, VA",VA,Loudoun,,,39.014931,-77.458804,Equinix (OSM operator)
+"Equinix Ashburn DC6 · Loudoun, VA",VA,Loudoun,,,39.015198,-77.459538,Equinix (OSM operator)
+"Amazon IAD601 · Loudoun, VA",VA,Loudoun,,,39.015263,-77.43777,Amazon Web Services (OSM operator)
+"Unnamed data center · Loudoun, VA #8",VA,Loudoun,,,39.015417,-77.478273,
+"Digital Realty ACC9 · Loudoun, VA",VA,Loudoun,,,39.015466,-77.467319,Digital Realty (OSM operator)
+"Databank Ashburn IAD1 · Loudoun, VA",VA,Loudoun,,,39.015549,-77.482138,Databank (OSM operator)
+"Equinix Ashburn DC1 · Loudoun, VA",VA,Loudoun,,,39.01556,-77.460327,Equinix (OSM operator)
+"Golds Gym Ashburn · Loudoun, VA",VA,Loudoun,,,39.015601,-77.483271,
+"Amazon Web Services · Loudoun, VA #13",VA,Loudoun,,,39.015886,-77.453145,Amazon Web Services (OSM operator)
+"Equinix Ashburn DC5 · Loudoun, VA",VA,Loudoun,,,39.015987,-77.461248,Equinix (OSM operator)
+"NTT Ashburn VA7 Data Center · Loudoun, VA",VA,Loudoun,,,39.016014,-77.471954,NTT (OSM operator)
+"Amazon IAD128 · Loudoun, VA",VA,Loudoun,,,39.016082,-77.438384,Amazon Web Services (OSM operator)
+"Equinix Ashburn DC4 · Loudoun, VA",VA,Loudoun,,,39.016408,-77.461887,Equinix (OSM operator)
+"Equinix Ashburn DC2 · Loudoun, VA",VA,Loudoun,,,39.016471,-77.459006,Equinix (OSM operator)
+"Amazon Web Services · Loudoun, VA #14",VA,Loudoun,,,39.016744,-77.452001,Amazon Web Services (OSM operator)
+"Amazon IAD119 · Loudoun, VA",VA,Loudoun,,,39.01693,-77.439387,Amazon Web Services (OSM operator)
+"Unnamed data center · Loudoun, VA #9",VA,Loudoun,,,39.017102,-77.473267,
+"NTT Ashburn VA3 Data Center · Loudoun, VA",VA,Loudoun,,,39.017182,-77.470376,NTT (OSM operator)
+"Digital Realty ACC7 · Loudoun, VA",VA,Loudoun,,,39.017532,-77.465643,Digital Realty (OSM operator)
+"DataBank Ashburn IAD3 · Loudoun, VA",VA,Loudoun,,,39.017878,-77.481828,Databank (OSM operator)
+"Digital Realty ACC4 · Loudoun, VA",VA,Loudoun,,,39.017902,-77.462549,Digital Realty (OSM operator)
+"Unnamed data center · Loudoun, VA #10",VA,Loudoun,,,39.017948,-77.459474,
+"NTT Ashburn VA5 Data Center · Loudoun, VA",VA,Loudoun,,,39.018296,-77.472614,NTT (OSM operator)
+"Amazon IAD118 · Loudoun, VA",VA,Loudoun,,,39.018507,-77.438839,Amazon Web Services (OSM operator)
+"Amazon IAD99 · Loudoun, VA",VA,Loudoun,,,39.019169,-77.43403,Amazon Web Services (OSM operator)
+"PowerHouse ABX-1 · Loudoun, VA",VA,Loudoun,,,39.019578,-77.450465,PowerHouse (OSM operator)
+"NTT Ashburn VA4 Data Center · Loudoun, VA",VA,Loudoun,,,39.019869,-77.472595,NTT (OSM operator)
+"Digital Realty ACC3 · Loudoun, VA",VA,Loudoun,,,39.019936,-77.459842,Digital Realty (OSM operator)
+"Digital Realty ACC5 · Loudoun, VA",VA,Loudoun,,,39.020113,-77.463071,Digital Realty (OSM operator)
+"NTT Ashburn VA8 Data Centre · Loudoun, VA",VA,Loudoun,,,39.02019,-77.475531,NTT (OSM operator)
+"Amazon IAD98 · Loudoun, VA",VA,Loudoun,,,39.020225,-77.433886,Amazon Web Services (OSM operator)
+"Equinix Ashburn DC10 · Loudoun, VA",VA,Loudoun,,,39.021014,-77.451513,Equinix (OSM operator)
+"Digital Realty ACC6 · Loudoun, VA",VA,Loudoun,,,39.021068,-77.46359,Digital Realty (OSM operator)
+"CyrusOne NVA8 · Loudoun, VA",VA,Loudoun,,,39.021167,-77.41322,CyrusOne (OSM operator)
+"Amazon IAD32 · Loudoun, VA",VA,Loudoun,,,39.021569,-77.434794,Amazon Web Services (OSM operator)
+"Amazon IAD10 · Loudoun, VA",VA,Loudoun,,,39.021646,-77.432876,Amazon Web Services (OSM operator)
+"Centersquare IAD4-A · Loudoun, VA",VA,Loudoun,,,39.021734,-77.452747,Centersquare (OSM operator)
+"Equinix Ashburn DC3 · Loudoun, VA",VA,Loudoun,,,39.021948,-77.460287,Equinix (OSM operator)
+"Centersquare IAD4-B · Loudoun, VA",VA,Loudoun,,,39.02214,-77.45361,Centersquare (OSM operator)
+"Level 3 Ashburn · Loudoun, VA",VA,Loudoun,,,39.022173,-77.457595,Lumen Technologies (OSM operator)
+"Equinix Ashburn DC15 · Loudoun, VA",VA,Loudoun,,,39.0225,-77.450256,Equinix (OSM operator)
+"NTT Ashburn VA1 Data Center · Loudoun, VA",VA,Loudoun,,,39.022764,-77.454869,NTT (OSM operator)
+"Equinix Ashburn DC12 · Loudoun, VA",VA,Loudoun,,,39.023007,-77.449758,Equinix (OSM operator)
+"Centersquare IAD1-A · Loudoun, VA",VA,Loudoun,,,39.023321,-77.413201,Centersquare (OSM operator)
+"Amazon Web Services IAD117 · Loudoun, VA",VA,Loudoun,,,39.023698,-77.419095,Amazon Web Services (OSM operator)
+"Centersquare IAD1-B · Loudoun, VA",VA,Loudoun,,,39.023907,-77.41519,Centersquare (OSM operator)
+"Equinix Ashburn DC16 · Loudoun, VA",VA,Loudoun,,,39.024257,-77.452327,Equinix (OSM operator)
+"CyrusOne NVA5 · Loudoun, VA",VA,Loudoun,,,39.024327,-77.434034,CyrusOne (OSM operator)
+"Amazon Web Services IAD116 · Loudoun, VA",VA,Loudoun,,,39.024346,-77.420439,Amazon Web Services (OSM operator)
+"Centersquare IAD1-C · Loudoun, VA",VA,Loudoun,,,39.024756,-77.412204,Centersquare (OSM operator)
+"NTT Ashburn VA2 Data Center · Loudoun, VA",VA,Loudoun,,,39.02501,-77.457639,NTT (OSM operator)
+"CyrusOne NVA1, NVA2 & NVA3 · Loudoun, VA",VA,Loudoun,,,39.025947,-77.414523,CyrusOne (OSM operator)
+"CyrusOne NVA7 · Loudoun, VA",VA,Loudoun,,,39.026301,-77.434028,CyrusOne (OSM operator)
+"Amazon IAD79 · Loudoun, VA",VA,Loudoun,,,39.026357,-77.45087,Amazon Web Services (OSM operator)
+"Amazon IAD78 · Loudoun, VA",VA,Loudoun,,,39.026368,-77.44952,Amazon Web Services (OSM operator)
+"Amazon IAD80 · Loudoun, VA",VA,Loudoun,,,39.027109,-77.452829,Amazon Web Services (OSM operator)
+"Amazon IAD71 · Loudoun, VA",VA,Loudoun,,,39.027908,-77.457503,Amazon Web Services (OSM operator)
+"Amazon IAD60 · Loudoun, VA",VA,Loudoun,,,39.028774,-77.458246,Amazon Web Services (OSM operator)
+"Amazon IAD174 · Loudoun, VA",VA,Loudoun,,,39.028916,-77.427473,Amazon Web Services (OSM operator)
+"Amazon IAD50 · Loudoun, VA",VA,Loudoun,,,39.02957,-77.459683,Amazon Web Services (OSM operator)
+"Amazon IAD164 · Loudoun, VA",VA,Loudoun,,,39.030473,-77.428942,Amazon Web Services (OSM operator)
+"Amazon IAD163 · Loudoun, VA",VA,Loudoun,,,39.032305,-77.429702,Amazon Web Services (OSM operator)
+"Amazon IAD114 · Loudoun, VA",VA,Loudoun,,,39.035494,-77.450699,Amazon Web Services (OSM operator)
+"Amazon IAD115 · Loudoun, VA",VA,Loudoun,,,39.036294,-77.449795,Amazon Web Services (OSM operator)
+"42255 THUNDERBALL DR · Loudoun, VA",VA,Loudoun,,,39.041623,-77.539224,True North Data Solutions (OSM operator)
+"42311 THUNDERBALL DR · Loudoun, VA",VA,Loudoun,,,39.042553,-77.5383,True North Data Solutions (OSM operator)
+"42254 THUNDERBALL DR · Loudoun, VA",VA,Loudoun,,,39.043502,-77.540874,True North Data Solutions (OSM operator)
+"42310 THUNDERBALL DR · Loudoun, VA",VA,Loudoun,,,39.044099,-77.539674,True North Data Solutions (OSM operator)
+"TikTok Data Center · Loudoun, VA",VA,Loudoun,,,39.044247,-77.537998,True North Data Solutions (OSM operator)
+"VISA Data Center · Loudoun, VA",VA,Loudoun,,,39.048728,-77.445416,
+"Unnamed data center · Loudoun, VA #11",VA,Loudoun,,,39.050608,-77.540026,
+"Unnamed data center · Loudoun, VA #12",VA,Loudoun,,,39.051021,-77.534749,
+"Google Data Center · Loudoun, VA",VA,Loudoun,,,39.052641,-77.539577,Google (OSM operator)
+"Unnamed data center · Loudoun, VA #13",VA,Loudoun,,,39.054122,-77.545995,
+"Unnamed data center · Loudoun, VA #14",VA,Loudoun,,,39.055261,-77.544822,
+"Unnamed data center · Loudoun, VA #15",VA,Loudoun,,,39.055994,-77.547338,
+"Unnamed data center · Loudoun, VA #16",VA,Loudoun,,,39.057819,-77.546733,
+"Unnamed data center · Loudoun, VA #17",VA,Loudoun,,,39.058427,-77.549757,
+"Unnamed data center · Loudoun, VA #18",VA,Loudoun,,,39.066015,-77.558569,
+"Unnamed data center · Loudoun, VA #19",VA,Loudoun,,,39.069647,-77.560771,
+"Unnamed data center · Loudoun, VA #20",VA,Loudoun,,,39.069654,-77.559433,
+"Microsoft · Loudoun, VA #1",VA,Loudoun,,,39.074787,-77.564129,Microsoft (OSM operator)
+"Microsoft · Loudoun, VA #2",VA,Loudoun,,,39.075508,-77.563035,Microsoft (OSM operator)
+"Unnamed data center · Loudoun, VA #21",VA,Loudoun,,,39.082191,-77.565112,
+"Lumos Networks · Lynchburg city, VA",VA,Lynchburg city,,,37.415688,-79.142706,
+"Unnamed data center · Manassas city, VA",VA,Manassas city,,,38.740436,-77.503984,
+"Microsoft Boydton Data Center · Mecklenburg, VA",VA,Mecklenburg,,,36.685374,-78.376553,Microsoft (OSM operator)
+"CloudHQ MCC3 · Prince William, VA",VA,Prince William,,,38.71497,-77.495128,CloudHQ (OSM operator)
+"CloudHQ MCC1 · Prince William, VA",VA,Prince William,,,38.717028,-77.499897,CloudHQ (OSM operator)
+"CloudHQ MCC2 · Prince William, VA",VA,Prince William,,,38.723182,-77.499009,CloudHQ (OSM operator)
+"Amazon IAD100 · Prince William, VA",VA,Prince William,,,38.734598,-77.506642,Amazon Web Services (OSM operator)
+"Amazon IAD101 · Prince William, VA",VA,Prince William,,,38.73544,-77.505695,Amazon Web Services (OSM operator)
+"Amazon IAD102 · Prince William, VA",VA,Prince William,,,38.73597,-77.504901,Amazon Web Services (OSM operator)
+"Amazon IAD103 · Prince William, VA",VA,Prince William,,,38.736984,-77.504075,Amazon Web Services (OSM operator)
+"Amazon Web Services · Prince William, VA #1",VA,Prince William,,,38.743053,-77.533384,Amazon Web Services (OSM operator)
+"COPT Innovation Park Data Center · Prince William, VA",VA,Prince William,,,38.743886,-77.530625,Amazon Web Services (OSM operator)
+"COPT Data Center Bldg 2 · Prince William, VA",VA,Prince William,,,38.744055,-77.529196,Amazon Web Services (OSM operator)
+"Amazon Web Services · Prince William, VA #2",VA,Prince William,,,38.744286,-77.533322,Amazon Web Services (OSM operator)
+"Amazon Web Services · Prince William, VA #3",VA,Prince William,,,38.74512,-77.533094,Amazon Web Services (OSM operator)
+"Unnamed data center · Prince William, VA #1",VA,Prince William,,,38.745959,-77.537509,
+"Amazon Web Services · Prince William, VA #4",VA,Prince William,,,38.746146,-77.517215,Amazon Web Services (OSM operator)
+"AWS IAD106 · Prince William, VA",VA,Prince William,,,38.746975,-77.518528,Amazon Web Services (OSM operator)
+"COPT Data Center · Prince William, VA",VA,Prince William,,,38.747281,-77.531845,
+"AWS IAD105 · Prince William, VA",VA,Prince William,,,38.747596,-77.519475,Amazon Web Services (OSM operator)
+"AWS IAD104 · Prince William, VA",VA,Prince William,,,38.748374,-77.520705,Amazon Web Services (OSM operator)
+"QTS Manassas DC1 · Prince William, VA #1",VA,Prince William,,,38.752517,-77.513111,Quality Technology Services (OSM operator)
+"QTS Manassas DC1 · Prince William, VA #2",VA,Prince William,,,38.752551,-77.512523,Quality Technology Services (OSM operator)
+"QTS Manassas DC2 · Prince William, VA",VA,Prince William,,,38.753195,-77.510797,Quality Technology Services (OSM operator)
+"QTS Manassas DC5 · Prince William, VA",VA,Prince William,,,38.754693,-77.517447,Quality Technology Services (OSM operator)
+"Unnamed data center · Prince William, VA #2",VA,Prince William,,,38.758875,-77.516652,
+"Amazon IAD130 · Prince William, VA",VA,Prince William,,,38.760361,-77.519302,Amazon Web Services (OSM operator)
+"Amazon IAD131 · Prince William, VA",VA,Prince William,,,38.761105,-77.518221,Amazon Web Services (OSM operator)
+"Iron Mountain VA-6 · Prince William, VA",VA,Prince William,,,38.768143,-77.538648,
+"Iron Mountain VA-5 · Prince William, VA",VA,Prince William,,,38.773043,-77.541169,
+"Google · Prince William, VA #1",VA,Prince William,,,38.774417,-77.585627,Google (OSM operator)
+"Iron Mountain VA-4 · Prince William, VA",VA,Prince William,,,38.774423,-77.542221,
+"Iron Mountain VA-3 · Prince William, VA",VA,Prince William,,,38.775507,-77.5452,
+"Google · Prince William, VA #2",VA,Prince William,,,38.776123,-77.582524,Google (OSM operator)
+"Iron Mountain VA-2 · Prince William, VA",VA,Prince William,,,38.777249,-77.545965,
+"Amazon IAD74 · Prince William, VA",VA,Prince William,,,38.777437,-77.557891,Amazon Web Services (OSM operator)
+"Iron Mountain VA-1 · Prince William, VA",VA,Prince William,,,38.777917,-77.547073,
+"Amazon IAD73 · Prince William, VA",VA,Prince William,,,38.777979,-77.559099,Amazon Web Services (OSM operator)
+"VA 4 · Prince William, VA",VA,Prince William,,,38.778111,-77.594876,Digital Realty (OSM operator)
+"Amazon Web Services · Prince William, VA #5",VA,Prince William,,,38.778451,-77.539427,Amazon IAD95 (OSM operator)
+"Amazon IAD601 · Prince William, VA",VA,Prince William,,,38.778857,-77.557115,Amazon Web Services (OSM operator)
+"Google · Prince William, VA #3",VA,Prince William,,,38.779293,-77.58634,Google (OSM operator)
+"Amazon Web Services · Prince William, VA #6",VA,Prince William,,,38.779343,-77.542896,Amazon IAD75 (OSM operator)
+"Amazon Web Services · Prince William, VA #7",VA,Prince William,,,38.779382,-77.541725,Amazon IAD85 (OSM operator)
+"Amazon Web Services · Prince William, VA #8",VA,Prince William,,,38.780151,-77.539884,Amazon IAD96 (OSM operator)
+"Amazon IAD14 · Prince William, VA",VA,Prince William,,,38.789932,-77.548217,Amazon Web Services (OSM operator)
+"Amazon IAD24 · Prince William, VA",VA,Prince William,,,38.79035,-77.540006,Amazon Web Services (OSM operator)
+"Amazon IAD11 · Prince William, VA",VA,Prince William,,,38.7905,-77.541111,Amazon Web Services (OSM operator)
+"Amazon IAD52 · Prince William, VA",VA,Prince William,,,38.791069,-77.548372,Amazon Web Services (OSM operator)
+"Amazon IAD7 · Prince William, VA",VA,Prince William,,,38.791204,-77.538277,Amazon Web Services (OSM operator)
+"Amazon IAD59 · Prince William, VA",VA,Prince William,,,38.792226,-77.54845,Amazon Web Services (OSM operator)
+"Microsoft Data Center 2 · Prince William, VA",VA,Prince William,,,38.799956,-77.58338,Microsoft (OSM operator)
+"NTT VA11 Data Center · Prince William, VA",VA,Prince William,,,38.799973,-77.609964,NTT (OSM operator)
+"Amazon Web Services · Prince William, VA #9",VA,Prince William,,,38.801257,-77.620481,Amazon Web Services (OSM operator)
+"Amazon Web Services · Prince William, VA #10",VA,Prince William,,,38.801857,-77.62121,Amazon Web Services (OSM operator)
+"Microsoft Data Center 1 · Prince William, VA",VA,Prince William,,,38.802411,-77.582379,Microsoft (OSM operator)
+"Amazon Web Services · Prince William, VA #11",VA,Prince William,,,38.802897,-77.622127,Amazon Web Services (OSM operator)
+"Unnamed data center · Prince William, VA #3",VA,Prince William,,,38.803415,-77.510577,
+"Amazon Web Services · Prince William, VA #12",VA,Prince William,,,38.814598,-77.654331,Amazon Web Services (OSM operator)
+"Amazon IAD-55 · Prince William, VA",VA,Prince William,,,38.815062,-77.648764,Amazon Web Services (OSM operator)
+"Amazon IAD64 · Prince William, VA",VA,Prince William,,,38.815132,-77.652919,Amazon Web Services (OSM operator)
+"Amazon IAD84 · Prince William, VA",VA,Prince William,,,38.816103,-77.652499,Amazon Web Services (OSM operator)
+"Amazon Web Services · Prince William, VA #13",VA,Prince William,,,38.816968,-77.652159,Amazon Web Services (OSM operator)
+"EAT12 · Chelan, WA",WA,Chelan,,,47.357433,-120.159546,
+"EAT13 · Chelan, WA",WA,Chelan,,,47.358426,-120.159976,
+"EAT14 · Chelan, WA",WA,Chelan,,,47.359497,-120.160091,
+"Unnamed data center · Douglas, WA #1",WA,Douglas,,,47.391757,-120.217514,
+"Unnamed data center · Douglas, WA #2",WA,Douglas,,,47.391759,-120.216901,
+"Unnamed data center · Douglas, WA #3",WA,Douglas,,,47.391794,-120.217877,
+"Unnamed data center · Douglas, WA #4",WA,Douglas,,,47.392149,-120.217462,
+"Intergate Columbia B · Douglas, WA",WA,Douglas,,,47.407164,-120.18749,Sabey Data Centers (OSM operator)
+"Unnamed data center · Douglas, WA #5",WA,Douglas,,,47.407243,-120.213965,
+"Intergate Columbia D · Douglas, WA",WA,Douglas,,,47.407585,-120.191601,Sabey Data Centers (OSM operator)
+"Intergate Columbia A · Douglas, WA",WA,Douglas,,,47.408714,-120.189294,Sabey Data Centers (OSM operator)
+"Microsoft EAT02 · Douglas, WA",WA,Douglas,,,47.416868,-120.207688,Microsoft (OSM operator)
+"Microsoft EAT03 · Douglas, WA",WA,Douglas,,,47.418324,-120.20771,Microsoft (OSM operator)
+"Microsoft EAT04 · Douglas, WA",WA,Douglas,,,47.419637,-120.213821,Microsoft (OSM operator)
+"Microsoft · Grant, WA #1",WA,Grant,,,47.236722,-119.88329,Microsoft (OSM operator)
+"Microsoft · Grant, WA #2",WA,Grant,,,47.236737,-119.887476,Microsoft (OSM operator)
+"Unnamed data center · Grant, WA #1",WA,Grant,,,47.237098,-119.895156,
+"Microsoft · Grant, WA #3",WA,Grant,,,47.237628,-119.883198,Microsoft (OSM operator)
+"Unnamed data center · Grant, WA #2",WA,Grant,,,47.237633,-119.864487,
+"Microsoft · Grant, WA #4",WA,Grant,,,47.237657,-119.887573,Microsoft (OSM operator)
+"Unnamed data center · Grant, WA #3",WA,Grant,,,47.238262,-119.859366,
+"Unnamed data center · Grant, WA #4",WA,Grant,,,47.238561,-119.864453,
+"Microsoft · Grant, WA #5",WA,Grant,,,47.238575,-119.883084,Microsoft (OSM operator)
+"Microsoft · Grant, WA #6",WA,Grant,,,47.238592,-119.887412,Microsoft (OSM operator)
+"Unnamed data center · Grant, WA #5",WA,Grant,,,47.238819,-119.859359,
+"Microsoft · Grant, WA #7",WA,Grant,,,47.239479,-119.882998,Microsoft (OSM operator)
+"Microsoft · Grant, WA #8",WA,Grant,,,47.239487,-119.887407,Microsoft (OSM operator)
+"Unnamed data center · Grant, WA #6",WA,Grant,,,47.239488,-119.859406,
+"Unnamed data center · Grant, WA #7",WA,Grant,,,47.240179,-119.863207,
+"NTT Data Quincy · Grant, WA",WA,Grant,,,47.243588,-119.865712,NTT (OSM operator)
+"Unnamed data center · Grant, WA #8",WA,Grant,,,47.243645,-119.869051,
+"Unnamed data center · Grant, WA #9",WA,Grant,,,47.244276,-119.814813,
+"Unnamed data center · Grant, WA #10",WA,Grant,,,47.244811,-119.817984,
+"Unnamed data center · Grant, WA #11",WA,Grant,,,47.245989,-119.828159,
+"Unnamed data center · Grant, WA #12",WA,Grant,,,47.245989,-119.82917,
+"Unnamed data center · Grant, WA #13",WA,Grant,,,47.245991,-119.829791,
+"Unnamed data center · Grant, WA #14",WA,Grant,,,47.246003,-119.827542,
+"Unnamed data center · Grant, WA #15",WA,Grant,,,47.246067,-119.828662,
+"Unnamed data center · Grant, WA #16",WA,Grant,,,47.246168,-119.815756,
+"Unnamed data center · Grant, WA #17",WA,Grant,,,47.246212,-119.813229,
+"Unnamed data center · Grant, WA #18",WA,Grant,,,47.246736,-119.828866,
+"Unnamed data center · Grant, WA #19",WA,Grant,,,47.247601,-119.825429,
+"Unnamed data center · Grant, WA #20",WA,Grant,,,47.247652,-119.813187,
+"Vantage WA11 · Grant, WA",WA,Grant,,,47.250165,-119.81449,
+"Vantage WA13 · Grant, WA",WA,Grant,,,47.252528,-119.813623,
+"Unnamed data center · Grant, WA #21",WA,Grant,,,47.252574,-119.819665,
+"Vantage WA12 · Grant, WA",WA,Grant,,,47.253946,-119.813721,
+"Intergate Seattle East Building 5 · King, WA",WA,King,,,47.49192,-122.289736,Sabey (OSM operator)
+"Intergate Seattle West Building A · King, WA",WA,King,,,47.492148,-122.29332,Sabey (OSM operator)
+"Intergate Seattle West Building B · King, WA",WA,King,,,47.493076,-122.293684,Sabey (OSM operator)
+"Intergate Seattle East Building 4 · King, WA",WA,King,,,47.493411,-122.288858,Digital Realty (OSM operator)
+"Intergate Seattle East Building 3 · King, WA",WA,King,,,47.493556,-122.290302,Sabey (OSM operator)
+"Intergate Seattle West Building C · King, WA",WA,King,,,47.494131,-122.294407,Sabey (OSM operator)
+"Intergate Seattle East Building 1 · King, WA",WA,King,,,47.49486,-122.288194,Sabey (OSM operator)
+"Intergate Seattle East Building 2 · King, WA",WA,King,,,47.495031,-122.29057,
+"Westin Building · King, WA",WA,King,,,47.614355,-122.338864,Digital Realty (OSM operator)
+"Equinix SE3 Data Center · King, WA",WA,King,,,47.614423,-122.339743,Equinix (OSM operator)
+"CTI Biopharma · King, WA",WA,King,,,47.617788,-122.356693,
+"KOMO Plaza West · King, WA",WA,King,,,47.61892,-122.348596,
+"The Seattle Times · King, WA",WA,King,,,47.618985,-122.336462,H5 Data Centers (OSM operator)
+"KOMO Plaza East · King, WA",WA,King,,,47.619325,-122.348153,
+"Comcast data center · King, WA",WA,King,,,47.693324,-122.317317,Comcast (OSM operator)
+"Centeris SH2 Build-to-Suit · Pierce, WA",WA,Pierce,,,47.158844,-122.279862,
+"Centeris SH1 Colocation · Pierce, WA",WA,Pierce,,,47.160855,-122.279306,
+"Digital Fortress Lynnwood · Snohomish, WA",WA,Snohomish,,,47.822425,-122.289561,
+"Centersquare Lynnwood SE1 · Snohomish, WA",WA,Snohomish,,,47.841811,-122.30169,Centersquare (OSM operator)
+"Norma Beach Cable Landing Station · Snohomish, WA",WA,Snohomish,,,47.864698,-122.284158,Unity Cable System (OSM operator)
+"Unnamed data center · Snohomish, WA",WA,Snohomish,,,47.958744,-122.191532,
+"Iron Mountain · Spokane, WA",WA,Spokane,,,47.594616,-117.537148,
+"Lumen · Spokane, WA",WA,Spokane,,,47.654226,-117.420003,Lumen Technologies (OSM operator)
+"TierPoint · Spokane, WA",WA,Spokane,,,47.671917,-117.095935,
+"Wave Broadband Tahoma Terra Facility · Thurston, WA",WA,Thurston,,,46.941424,-122.625044,
+"CSSNW Bellingham · Whatcom, WA",WA,Whatcom,,,48.757268,-122.480548,CSS Communications (OSM operator)
+"Involta data center · Calumet, WI",WI,Calumet,,,44.204455,-88.344876,Involta (OSM operator)
+"Unnamed data center · Columbia, WI",WI,Columbia,,,43.638333,-89.721403,
+"Unnamed data center · Dane, WI",WI,Dane,,,43.067289,-89.436736,
+"Lumen Madison 1 Data Center · Dane, WI",WI,Dane,,,43.067716,-89.392279,Lumen Technologies (OSM operator)
+"Meta Beaver Dam Data Center · Dodge, WI",WI,Dodge,,,43.510374,-88.816522,Meta (OSM operator)
+"West Wisconsin Telcom data center · Dunn, WI",WI,Dunn,,,44.877165,-91.919999,West Wisconsin Telcom (OSM operator)
+"Marquette-Adams Telephone Coop · Marquette, WI",WI,Marquette,,,43.782184,-89.574809,
+"Expedient Milwaukee · Milwaukee, WI",WI,Milwaukee,,,42.863177,-87.977858,
+"TierPoint Milwaukee · Milwaukee, WI",WI,Milwaukee,,,43.009378,-87.961062,
+"Data Holdings Data Center · Milwaukee, WI",WI,Milwaukee,,,43.043941,-87.953979,
+"Unnamed data center · Racine, WI",WI,Racine,,,42.675665,-87.918405,
+"Central Office · Walworth, WI",WI,Walworth,,,42.833654,-88.73398,AT&T (OSM operator)
+"Pewaukee Data Center · Waukesha, WI",WI,Waukesha,,,43.051389,-88.216665,WE Energies (OSM operator)
+"Morgan Wireless · Morgan, WV",WV,Morgan,,,39.630985,-78.22532,
+"Unnamed data center · Campbell, WY",WY,Campbell,,,44.189237,-105.61048,
+"Meta Cheyenne Data Center · Laramie, WY",WY,Laramie,,,41.077903,-104.825498,Meta (OSM operator)
+"Unnamed data center · Laramie, WY #1",WY,Laramie,,,41.122246,-104.909517,
+"Unnamed data center · Laramie, WY #2",WY,Laramie,,,41.122266,-104.908142,
+"Unnamed data center · Laramie, WY #3",WY,Laramie,,,41.124033,-104.898089,
+"Unnamed data center · Laramie, WY #4",WY,Laramie,,,41.124037,-104.899269,
+"CYS41 Datacenter · Laramie, WY",WY,Laramie,,,41.124393,-104.897013,Microsoft (OSM operator)
+"MineOne Wyoming Data Center · Laramie, WY",WY,Laramie,,,41.125124,-104.894984,MineOne (OSM operator)
+"Unnamed data center · Laramie, WY #5",WY,Laramie,,,41.125284,-104.899271,
+"Unnamed data center · Laramie, WY #6",WY,Laramie,,,41.125287,-104.898083,
+"CYS42 Datacenter · Laramie, WY",WY,Laramie,,,41.125383,-104.90891,Microsoft (OSM operator)
+"Unnamed data center · Laramie, WY #7",WY,Laramie,,,41.125399,-104.907516,
+"Unnamed data center · Laramie, WY #8",WY,Laramie,,,41.125411,-104.901978,
+"Unnamed data center · Laramie, WY #9",WY,Laramie,,,41.126231,-104.901876,
+"Unnamed data center · Laramie, WY #10",WY,Laramie,,,41.12646,-104.899537,
+"NCAR-Wyoming Supercomputing Center · Laramie, WY",WY,Laramie,,,41.12879,-104.897487,University Corporation for Atmospheric Research (OSM operator)
+"Windbreak Cable · Laramie, WY",WY,Laramie,,,41.182601,-104.068498,

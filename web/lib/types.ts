@@ -3,6 +3,8 @@ import type { Tier } from "./constants";
 export interface Project {
   project_id: number;
   name: string;
+  /** USPS state code. */
+  state: string;
   county: string | null;
   city: string | null;
   lat: number | null;
@@ -13,6 +15,7 @@ export interface Project {
   location_method: string | null;
   location_precision: string | null;
   location_confidence: number | null;
+  county_fips: string | null;
   current_status: string | null;
   status_observed_at: string | null;
   sourced_mw: number | null;
@@ -29,6 +32,8 @@ export interface Project {
   mw_est: number | null;
   total_cost: number | null;
   has_permit: boolean;
+  /** True when the project has a public record beyond an atlas mapping (anything but `site_mapped`). */
+  has_records: boolean;
   tier: Tier;
   factors: Record<string, boolean>;
   is_sample: boolean;
@@ -94,6 +99,7 @@ export interface EvidenceEvent {
 export interface ProjectInfo {
   project_id: number;
   name: string;
+  state: string;
   county: string | null;
   city: string | null;
   address: string | null;
@@ -115,9 +121,36 @@ export interface ProjectInfo {
   is_sample: boolean;
 }
 
+export interface RegionTag {
+  region_key: string;
+  name: string;
+  confidence: number;
+  method: string;
+  county_fips: string;
+  source_url: string;
+}
+
+/** A modeled range (estimates table) with its method's backtest. Never a record, never scored. */
+export interface Estimate {
+  metric: string;
+  as_of: string;
+  low: number;
+  mid: number;
+  high: number;
+  unit: string;
+  method: string;
+  method_version: string;
+  inputs: { sqft?: number; sqft_source?: string; sqft_source_url?: string | null; training_n?: number };
+  validation: { n?: number; median_abs_pct_error?: number; interval_coverage_pct?: number; nominal_interval_pct?: number };
+}
+
 export interface Timeline {
   as_of: string;
   project: ProjectInfo & Partial<Project>;
+  /** Balancing authorities EIA-861 lists for the site's county (lookup only; 1/n each). */
+  regions: RegionTag[];
+  /** Modeled ranges for this project (estimates table). */
+  estimates: Estimate[];
   scores: ScorePoint[];
   events: EvidenceEvent[];
 }
@@ -164,6 +197,42 @@ export interface QueueWeek {
   projects_new: number;
 }
 
+export type LoadScope = "data_centers" | "data_centers_and_crypto" | "large_loads_all";
+
+/** One figure from a large-load / data-center load report (dc_load_reports). */
+export interface LoadReport {
+  ts: string;
+  region_key: string;
+  metric: string;
+  scope: LoadScope;
+  value_mw: number;
+  forecast_year: number | null;
+  stage: string | null;
+  dc_share_pct: number | null;
+  dc_share_quote: string | null;
+  source_key: string;
+  source_url: string;
+  document: string | null;
+  quote: string;
+}
+
+export interface LoadRegion {
+  region_key: string;
+  name: string;
+  kind: string;
+  source_key: string;
+  rows: number;
+  first_ts: string;
+  last_ts: string;
+}
+
+export interface LoadReports {
+  as_of: string;
+  regions: LoadRegion[];
+  region: string;
+  rows: LoadReport[];
+}
+
 export interface QueueTimeline {
   as_of: string;
   weeks: QueueWeek[];
@@ -178,6 +247,7 @@ export interface QueueTimeline {
 export interface Site {
   project_id: number;
   name: string;
+  state: string;
   county: string | null;
   city: string | null;
   address: string | null;
@@ -275,7 +345,7 @@ export interface GeocodeResult {
 
 export interface GeocodeFailure {
   ok: false;
-  reason: "not_found" | "outside_texas" | "lookup_failed";
+  reason: "not_found" | "outside_us" | "lookup_failed";
   message: string;
 }
 

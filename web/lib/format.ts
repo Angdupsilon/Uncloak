@@ -41,9 +41,10 @@ const EVENT_NOUN: Record<string, [string, string]> = {
   square_footage: ["square-footage record", "square-footage records"],
   tenant_named: ["tenant named", "tenants named"],
   inspection_done: ["inspection done", "inspections done"],
-  certified: ["Comptroller certification", "Comptroller certifications"],
-  permit_filed: ["TCEQ permit filed", "TCEQ permits filed"],
+  certified: ["state certification", "state certifications"],
+  permit_filed: ["air permit filed", "air permits filed"],
   status_change: ["status change", "status changes"],
+  site_mapped: ["atlas mapping", "atlas mappings"],
 };
 
 /** One-line description of a single event, e.g. "Tenant named: OpenAI". */
@@ -57,13 +58,23 @@ export function describeEvent(e: EvidenceEvent): string {
     case "square_footage":
       return `Square footage${e.value_num != null ? `: ${Math.round(e.value_num).toLocaleString()} sq ft` : ""}`;
     case "permit_filed":
-      return `TCEQ permit filed${p.permit_id ? ` (${String(p.permit_id)})` : ""}`;
+      return `${e.source === "VA_DEQ" ? "Virginia DEQ air permit" : "TCEQ permit filed"}${p.permit_id ? ` (${String(p.permit_id)})` : ""}${
+        e.source === "VA_DEQ" && e.value_num != null ? ` · ${Math.round(e.value_num).toLocaleString()} MW of generators` : ""
+      }`;
     case "certified":
+      if (e.source === "IL_DCEO") return `Illinois Data Center Investment Program MOU${p.mou_year ? ` (${String(p.mou_year)})` : ""}`;
+      if (e.source === "MN_DEED") return "Listed as a certified qualified data center by Minnesota DEED";
+      if (e.source === "IN_IEDC") return `Indiana data center sales tax exemption contract${p.iedc_project_id ? ` (IEDC ${String(p.iedc_project_id)})` : ""}`;
+      if (e.source === "WI_DOR") return "Certified as a qualified data center in Wisconsin";
       return "Comptroller certified";
     case "inspection_done":
       return "Inspection done";
     case "status_change":
       return `Status${p.status ? `: ${String(p.status)}` : " changed"}`;
+    case "site_mapped":
+      return `Mapped in the IM3 data-center atlas (OpenStreetMap)${
+        e.value_num != null ? ` · ${Math.round(e.value_num).toLocaleString()} sq ft footprint` : ""
+      }`;
     default:
       return e.event_type;
   }

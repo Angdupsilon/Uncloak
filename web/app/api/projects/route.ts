@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
       : null;
     const projects = await getProjects(as_of, {
       parent: sp.get("parent"),
+      state: sp.get("state"),
       county: sp.get("county"),
       min_prob: numParam(sp, "min_prob"),
       max_prob: numParam(sp, "max_prob"),

@@ -398,7 +398,7 @@ export default function QueueTimeline({
               </label>
             </div>
             {noErcot && (
-              <div className="ub-caption text-amber-700">No ERCOT queue reports loaded yet: add rows to ercot_queue.csv to draw the queue line.</div>
+              <div className="ub-caption text-amber-700">No ERCOT queue reports loaded yet: run etl/import_load_reports.py and load data/seed to draw the queue line.</div>
             )}
             <div className={isPage ? "h-[300px]" : "h-[140px]"}>
               <ResponsiveContainer width="100%" height="100%">

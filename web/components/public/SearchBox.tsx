@@ -175,7 +175,7 @@ export default function SearchBox({
           <path d="m13.5 13.5 4 4" strokeLinecap="round" />
         </svg>
         <label htmlFor={`${id}-input`} className="sr-only">
-          Search organizations, sites, entities and places, or ask a question about Texas data centers
+          Search organizations, sites, entities and places, or ask a question about U.S. data centers
         </label>
         <input
           ref={inputRef}
@@ -230,7 +230,7 @@ export default function SearchBox({
             <span className="inline-flex shrink-0 items-center rounded-full bg-black px-2 py-0.5 text-[11px] font-semibold text-white">Ask</span>
             <span className="min-w-0">
               <span className="block text-[15px] font-medium text-black">Ask Uncloak</span>
-              <span className="block text-[13px] text-slate-600">Analyze this question from the Texas data-center records</span>
+              <span className="block text-[13px] text-slate-600">Analyze this question from the data-center records</span>
             </span>
           </li>
         )}

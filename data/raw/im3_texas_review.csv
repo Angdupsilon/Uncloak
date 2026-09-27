@@ -1,0 +1,121 @@
+atlas_name,operator,county,lat,lon,footprint_sqft,atlas_type,nearest_texas_project,distance_m,review_status
+Microsoft,Microsoft,Bexar,29.478216,-98.690721,258191,building,San Antonio Data Center II,737,held_same_parent_in_county
+Microsoft San Antonio,Microsoft,Bexar,29.479926,-98.692608,478642,building,San Antonio Data Center II,994,held_same_parent_in_county
+Microsoft,Microsoft,Bexar,29.481066,-98.696559,194916,building,San Antonio Data Center II,1384,held_same_parent_in_county
+Google,Google,Ellis,32.538994,-96.793169,288830,building,DFW 10,2652,held_same_parent_in_county
+Google,Google,Ellis,32.443555,-97.063333,138230,building,Alamo Data Center,6550,held_same_parent_in_county
+Google,Google,Ellis,32.44213,-97.062488,144574,building,Alamo Data Center,6572,held_same_parent_in_county
+Google,Google,Ellis,32.440117,-97.060915,282284,building,Alamo Data Center,6581,held_same_parent_in_county
+Amazon AWS SAT - 12807 Donop,Amazon Web Services,Bexar,29.293005,-98.391625,110391,building,ALE61 Data Center,10188,held_same_parent_in_county
+Microsoft,Microsoft,Bexar,29.415797,-98.803316,228882,building,San Antonio Data Center III,12454,held_same_parent_in_county
+Microsoft,Microsoft,Bexar,29.415796,-98.804515,228885,building,San Antonio Data Center III,12529,held_same_parent_in_county
+Microsoft TRP1,Microsoft,Bexar,29.412012,-98.80273,177468,building,San Antonio Data Center III,12742,held_same_parent_in_county
+Microsoft TRP2,Microsoft,Bexar,29.411954,-98.803985,169781,building,San Antonio Data Center III,12824,held_same_parent_in_county
+Microsoft TRP3 (SAT46),Microsoft,Medina,29.412977,-98.806374,228897,building,San Antonio Data Center III,12884,held_same_parent_in_county
+Amazon,,Bexar,29.450736,-98.638714,104910,building,ALE60 Data Center,26,held_within_250m
+Valero Wiserman,Valero,Bexar,29.474285,-98.680064,58304,building,San Antonio Data Center II,404,loaded
+,,Bexar,29.447922,-98.641129,142712,building,ALE60 Data Center,413,loaded
+,,Bexar,29.447199,-98.640993,36014,building,ALE60 Data Center,472,loaded
+,,Bexar,29.446674,-98.64069,127563,building,ALE60 Data Center,510,loaded
+,CHRISTUS Health,Bexar,29.470344,-98.68621,48815,building,San Antonio Data Center II,532,loaded
+Lowe's Data Center,Lowe's,Bexar,29.472846,-98.689547,55066,building,San Antonio Data Center II,561,loaded
+,Frost Bank,Bexar,29.470223,-98.68765,68591,building,San Antonio Data Center II,609,loaded
+CyrusOne San Antonio I,CyrusOne,Bexar,29.466555,-98.68811,102327,building,San Antonio Data Center II,992,loaded
+CyrusOne San Antonio II,CyrusOne,Bexar,29.470849,-98.672999,108554,building,San Antonio Data Center II,1170,loaded
+Stream San Antonio II,,Bexar,29.472017,-98.671737,71324,building,San Antonio Data Center II,1246,loaded
+CyrusOne San Antonio III,CyrusOne,Bexar,29.470044,-98.672193,100537,building,San Antonio Data Center II,1277,loaded
+Cortex supercomputer,,Travis,30.215399,-97.61896,427833,building,Giga Texas Datacenter,1297,loaded
+CyrusOne San Antonio IV,,Bexar,29.470679,-98.67063,92543,building,San Antonio Data Center II,1391,loaded
+QTS San Antonio II,Quality Technology Services,Bexar,29.449156,-98.653145,140321,building,ALE60 Data Center,1433,loaded
+Data Foundry Austin 1 Data Center,,Travis,30.215504,-97.696074,50461,building,EdgeConneX AU02,1756,loaded
+Digital Realty Austin AUS11,,Travis,30.212176,-97.695781,79985,building,EdgeConneX AU02,2094,loaded
+,,Collin,33.009299,-96.676544,108401,building,Independence Data Center,2214,loaded
+Digital Realty Dallas DFW35,Digital Realty,Dallas,32.965046,-96.710291,116539,building,State Farm Richardson Data Center,2296,loaded
+,,Dallas,32.966254,-96.711196,62460,building,State Farm Richardson Data Center,2440,loaded
+Digital Realty Dallas DFW29,Digital Realty,Dallas,32.967233,-96.710546,122436,building,State Farm Richardson Data Center,2454,loaded
+Digital Realty Dallas DFW18,Digital Realty,Dallas,32.965204,-96.712609,222335,building,State Farm Richardson Data Center,2490,loaded
+Digital Realty Dallas DFW17,Digital Realty,Dallas,32.966281,-96.713212,83615,building,State Farm Richardson Data Center,2600,loaded
+Digital Realty Dallas DFW28,Digital Realty,Dallas,32.967241,-96.713308,122015,building,State Farm Richardson Data Center,2665,loaded
+Rackspace Richardson DFW3,Rackspace,Dallas,32.964789,-96.715877,112950,building,State Farm Richardson Data Center,2738,loaded
+,,Dallas,32.894762,-96.981946,141788,building,QTS Irving DC3 Data Center,2743,loaded
+Digital Realty Dallas DFW16,Digital Realty,Dallas,32.966077,-96.715587,109470,building,State Farm Richardson Data Center,2780,loaded
+Compass Data Center,,Ellis,32.543965,-96.788507,251923,building,DFW 10,2796,loaded
+CyrusOne Austin Data Center III,,Travis,30.206994,-97.701114,189921,building,EdgeConneX AU02,2817,loaded
+CyrusOne Austin Data Center II,,Travis,30.20593,-97.697965,77356,building,EdgeConneX AU02,2819,loaded
+LightEdge Austin I,,Travis,30.214297,-97.712668,30876,building,EdgeConneX AU02,2866,loaded
+Compass Data Center,,Ellis,32.545297,-96.788491,251941,building,DFW 10,2921,loaded
+Compass Data Center,,Ellis,32.542674,-96.79361,251939,building,DFW 10,2973,loaded
+QTS Irving - Dallas Data Center Campus,Quality Technology Services,Dallas,32.897283,-96.982788,306213,building,QTS Irving DC3 Data Center,3026,loaded
+Compass Data Center,,Ellis,32.543993,-96.793611,251912,building,DFW 10,3083,loaded
+Flexential Dallas - Plano,Flexential,Collin,33.007052,-96.666354,217850,building,Independence Data Center,3196,loaded
+Compass Data Center,,Ellis,32.545297,-96.793648,251911,building,DFW 10,3198,loaded
+Thin-nology,,Travis,30.421141,-97.591603,9209,building,Austin Data Center 2 LLC,3334,loaded
+Compass Data Center,,Ellis,32.54029,-96.802106,247998,building,DFW 10,3397,loaded
+Compass Data Center,,Ellis,32.541602,-96.802099,248989,building,DFW 10,3482,loaded
+Compass Data Center,,Ellis,32.538722,-96.804396,41692,building,DFW 10,3483,loaded
+Compass Data Center,,Ellis,32.542913,-96.802085,248988,building,DFW 10,3570,loaded
+Cisco Allen,,Collin,33.13598,-96.660952,162023,building,C1 Dallas - Allen (LOT 1) LLC,3610,loaded
+,,Collin,33.137805,-96.655926,33064,building,C1 Dallas - Allen (LOT 1) LLC,3627,loaded
+Compass Data Center,,Ellis,32.544205,-96.802081,248985,building,DFW 10,3662,loaded
+,,Collin,33.095994,-96.681565,121665,building,C1 Dallas - Allen (LOT 1) LLC,3678,loaded
+Tierpoint Dallas-Allen,,Collin,33.137934,-96.657376,30651,building,C1 Dallas - Allen (LOT 1) LLC,3683,loaded
+LightEdge Austin II,,Travis,30.200676,-97.707044,86445,building,EdgeConneX AU02,3698,loaded
+Compass Data Center,,Ellis,32.545518,-96.802099,248978,building,DFW 10,3759,loaded
+,,Bexar,29.452231,-98.714047,154439,building,San Antonio Data Center II,3827,loaded
+CyrusOne Allen,CyrusOne,Collin,33.138521,-96.659952,271378,building,C1 Dallas - Allen (LOT 1) LLC,3830,loaded
+,DXC Technology,Harris,30.018698,-95.863676,352246,building,Hockley Data Center,3847,loaded
+Stream DFW IV,Stream,Collin,33.000144,-96.661646,19684,building,Independence Data Center,3855,loaded
+Evoque Allen DA1,Centersquare,Collin,33.095064,-96.683764,114534,building,C1 Dallas - Allen (LOT 1) LLC,3906,loaded
+,,Bexar,29.450931,-98.713891,154441,building,San Antonio Data Center II,3912,loaded
+,,Harris,29.821506,-95.570785,98195,building,Cyrusone LLC - Houston West III Data Center,4008,loaded
+,,Bexar,29.44968,-98.714387,154443,building,San Antonio Data Center II,4043,loaded
+Data Foundry - Texas 2,,Travis,30.199588,-97.713076,104857,building,EdgeConneX AU02,4101,loaded
+Data Foundry - Texas 1,,Travis,30.198926,-97.713788,137095,building,EdgeConneX AU02,4200,loaded
+,DXC Technology,Harris,29.995201,-95.563254,264173,building,Cutten Data Center,4289,loaded
+,DXC Technology,Harris,29.997307,-95.563985,113970,building,Cutten Data Center,4289,loaded
+Lumen Austin 1,,Travis,30.196499,-97.7124,74722,building,EdgeConneX AU02,4356,loaded
+Stream Data Centers,,Dallas,32.983668,-96.654273,280635,building,State Farm Richardson Data Center,4656,loaded
+Alpheus DataCenter,Alpheus,Travis,30.261043,-97.722102,36089,building,EdgeConneX AU02,4679,loaded
+Lumen Austin 3,Lumen Technologies,Travis,30.261396,-97.723597,5068,building,EdgeConneX AU02,4805,loaded
+Flexential Dallas - Richardson,Flexential,Collin,32.994813,-96.752502,68520,building,Lincoln Rackhouse,5336,loaded
+IONIC Digital Cedarvale,IONIC Digital,Ward,31.513474,-103.448621,2238928,building,"Cedarvale, Barslow/Pyote TX Data Center",6242,loaded
+Cyxtera Dallas-Fort Worth Data Center,Cyxtera,Tarrant,32.832718,-97.041042,309104,building,QTS Irving DC3 Data Center,6966,loaded
+H5 Data Centers San Antonio,H5 Data Centers,Bexar,29.429371,-98.486906,20898,building,ALE61 Data Center,8401,loaded
+Prime DFW01-01,Prime,Dallas,32.837814,-96.879846,49683,building,QTS Irving DC3 Data Center,10125,loaded
+Lumen Dallas 6,Lumen Technologies,Dallas,32.827998,-96.884382,12977,building,QTS Irving DC3 Data Center,10184,loaded
+Prime DFW01-01,Prime,Dallas,32.837967,-96.878393,88881,building,QTS Irving DC3 Data Center,10246,loaded
+Experian McKinney Data Center,,Collin,33.171796,-96.725505,76624,building,C1 Dallas - Allen (LOT 1) LLC,10474,loaded
+Lumen San Antonio 2,Lumen Technologies,Bexar,29.438279,-98.506522,12722,building,ALE61 Data Center,10505,loaded
+Alinged Data Center,"Aligned Data Centers, LLC",Tarrant,32.549823,-97.074855,188257,building,Alamo Data Center,10577,loaded
+Digital Realty DFW36,Digital Realty,Dallas,32.82755,-96.87375,24499,building,QTS Irving DC3 Data Center,11097,loaded
+DataBank Plano Data Center,,Collin,33.087569,-96.815131,375691,campus,DFW-04 Data Center,11208,loaded
+,,Bexar,29.418988,-98.787471,109489,building,San Antonio Data Center III,11230,loaded
+,,Bexar,29.418454,-98.788808,64212,building,San Antonio Data Center III,11354,loaded
+DataBank Dallas Empire Central Data Center,DataBank,Dallas,32.821738,-96.873598,67717,building,QTS Irving DC3 Data Center,11400,loaded
+Novartis,,Tarrant,32.651234,-97.319709,42691,building,Winner LLC d/b/a Ernst LLC,11640,loaded
+CoreSpace Dallas,CoreSpace,Dallas,32.817559,-96.873065,31626,building,QTS Irving DC3 Data Center,11670,loaded
+Riot Rockdale,,Milam,30.573315,-97.080185,4357993,campus,Riot Rockdale Data Center 1,11809,loaded
+Riot Corsiana,,Navarro,31.969859,-96.513289,11717820,campus,Riot Corsicana Data Center,12494,loaded
+Element Critical,,Travis,30.3428,-97.696176,61978,building,EdgeConneX AU02,12550,loaded
+Lumen Dallas - 3180 Irving Blvd.,Lumen Technologies,Dallas,32.806955,-96.868589,80859,building,QTS Irving DC3 Data Center,12649,loaded
+,HEB,Bexar,29.580141,-98.541327,36241,building,Microsoft Corporation,12930,loaded
+TierPoint Dallas Data Center,TierPoint,Dallas,32.807973,-96.857355,71358,building,QTS Irving DC3 Data Center,13476,loaded
+Verizon Wireless Mew Building,,Tarrant,32.972155,-97.156611,176383,building,Lewisville DFW38,16183,loaded
+Equinix Infomart,Equinix,Dallas,32.800943,-96.819511,239835,building,QTS Irving DC3 Data Center,16951,loaded
+Skybox Houston One,Skybox,Harris,29.802868,-95.75545,344540,campus,Cyrusone LLC - Houston West III Data Center,17372,loaded
+Rice Data Center,,Harris,29.658146,-95.443328,25487,building,Cyrusone LLC - Houston West III Data Center,19154,loaded
+,,Montgomery,30.177783,-95.486526,126121,building,Cutten Data Center,19234,loaded
+Stream Data Centers Houston,,Montgomery,30.178137,-95.486046,,point,Cutten Data Center,19281,loaded
+DataBank,,Dallas,32.778301,-96.798437,43564,building,QTS Irving DC3 Data Center,19896,loaded
+Live Oak Data Center,,Dallas,32.783712,-96.794575,49853,building,QTS Irving DC3 Data Center,19909,loaded
+VIRTBIZ,,Dallas,32.782546,-96.782815,,point,DFW 37,20576,loaded
+CITIGROUP TECHNOLOGY INC,,Denton,33.006381,-97.24529,242536,building,Lewisville DFW38,22634,loaded
+Charles Schwab Data Center,,Denton,33.004502,-97.246155,79688,building,Lewisville DFW38,22755,loaded
+Facebook Fort Worth Datacenter,Meta,Tarrant,32.988296,-97.25546,753193,building,Lewisville DFW38,24026,loaded
+Facebook Fort Worth Datacenter,Meta,Tarrant,32.984994,-97.255075,435206,building,Lewisville DFW38,24093,loaded
+QTS Data Center,Quality Technology Services,Tarrant,32.988855,-97.259202,277996,building,Lewisville DFW38,24346,loaded
+Facebook Fort Worth Datacenter,Meta,Tarrant,32.983784,-97.259343,634395,building,Lewisville DFW38,24513,loaded
+GVTC,GVTC,Bexar,29.686403,-98.462647,445,building,Microsoft Corporation,26970,loaded
+MARA Data Center,Marathon Digital Holdings,Hood,32.341745,-97.731228,1768886,campus,Winner LLC d/b/a Ernst LLC,59375,loaded
+,,Wichita,33.953378,-98.524731,39127,building,Fort Haskell Data Center,142723,loaded
+,,Angelina,31.194176,-94.796772,12987,building,Cutten Data Center,149059,loaded
