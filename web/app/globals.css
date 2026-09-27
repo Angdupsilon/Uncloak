@@ -633,6 +633,14 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+
+/* The search field lives inside a pill that already owns the focus treatment.
+   Suppressing the inner outline keeps focus as one coherent control instead of
+   drawing an awkward rectangle through the pill. This follows the public-page
+   focus rule above it so its more-specific selector keeps the intended style. */
+.rw .ub-search-input:focus-visible {
+  outline: none;
+}
 .rw summary::marker {
   color: var(--ink);
 }
