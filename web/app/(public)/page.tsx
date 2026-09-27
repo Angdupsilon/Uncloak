@@ -2,7 +2,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import SearchBox from "@/components/public/SearchBox";
 import LocateButton from "@/components/public/LocateButton";
-import HeroVisual from "@/components/public/HeroVisual";
+import HeroReel from "@/components/public/HeroReel";
 import OrgRanking from "@/components/public/OrgRanking";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
 import { Container, ErrorState, KindBadge, SampleBanner, SectionTitle } from "@/components/public/ui";
@@ -44,15 +44,14 @@ export default async function Home() {
         {/* Inset cinematic panel (DESIGN.md hero-photo): content anchored bottom-left. */}
         <section className="px-4 sm:px-8">
           <div className="relative flex min-h-[560px] flex-col justify-end rounded-2xl text-white sm:min-h-[min(calc(100svh-5.5rem),860px)]">
-            <HeroVisual points={data.ok ? data.sites.filter((x) => x.lat != null && x.lon != null).map((x) => ({ lat: x.lat!, lon: x.lon!, mw: x.mw_est })) : []} />
+            <HeroReel />
             <div className="relative px-6 pb-10 pt-24 sm:px-12 sm:pb-14 lg:px-16 lg:pb-16">
               <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-white/60">U.S. data-center records</p>
               <h1 className="mt-4 max-w-4xl text-[40px] font-medium leading-[1.05] tracking-[-1.2px] text-white sm:text-[64px] sm:tracking-[-1.8px]">
-                Who is building data centers in the U.S., and where?
+                Who’s building data centers in the U.S.?
               </h1>
               <p className="mt-6 max-w-2xl text-[18px] leading-[1.5] text-white/85 sm:text-[21px]">
-                Search a company, a place or a ZIP code, or ask a question. Every answer and number comes from the public record. Texas has
-                the deepest public records; other states start from mapped sites.
+                Find companies and nearby sites. Ask questions. Follow the public records.
               </p>
               <div className="mt-8">
                 <div className="max-w-2xl">
@@ -73,11 +72,6 @@ export default async function Home() {
                   <LocateButton dark />
                 </div>
               </div>
-              {data.ok && (
-                <p className="mt-10 text-[12px] text-white/50 sm:absolute sm:bottom-6 sm:right-8 sm:mt-0 sm:text-right">
-                  Each point is one of the {data.sites.filter((x) => x.lat != null).length} recorded sites with a published, reviewed or mapped location.
-                </p>
-              )}
             </div>
           </div>
         </section>
@@ -121,7 +115,7 @@ export default async function Home() {
                   </SectionTitle>
                   <OrgRanking orgs={data.orgs} />
                   <p className="mt-3 text-[12px] leading-5 text-slate-500">
-                    Ranked by the number of sites linked to each organization in these records, not by size or investment.
+                    Ranked by recorded site count, not size or investment.
                   </p>
                 </section>
 
@@ -208,7 +202,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
   const cards = [
     {
       title: "Look up any company",
-      text: "See every site tied to a company, even behind unfamiliar LLC names.",
+      text: "Find a company’s recorded sites, including those filed under LLCs.",
       href: "/org/google",
       cta: "Try Google",
       visual: (
@@ -227,7 +221,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
     },
     {
       title: "Find what's near you",
-      text: "Enter a city, ZIP or address and see the recorded sites around it, with distances.",
+      text: "Search a city, ZIP or address to find nearby sites.",
       href: "/near?q=Abilene%2C%20TX",
       cta: "Try Abilene",
       visual: (
@@ -253,7 +247,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
     },
     {
       title: "Rewind the record",
-      text: "Replay any week since 2024 and watch sites appear as filings land.",
+      text: "See how the records changed, week by week since 2024.",
       href: "/dashboard",
       cta: "Open the time machine",
       visual: (
@@ -272,7 +266,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
     },
     {
       title: "Check every number",
-      text: "Each figure links to the state filing it came from. Nothing is shown without a source.",
+      text: "Trace each figure to its source record.",
       href: "/methodology",
       cta: "How it works",
       visual: (

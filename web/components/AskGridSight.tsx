@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import type { AskResponse } from "@/lib/types";
+import GrokVoice from "@/components/GrokVoice";
 
 const EXAMPLES = [
   "Which projects around Dallas look least certain?",
@@ -61,9 +62,10 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
     <div className="fixed bottom-6 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
       <div className="flex items-center justify-between border-b border-[#efefef] px-4 py-3 text-black">
         <div className="text-sm font-semibold">✦ Ask Uncloak</div>
-        <button onClick={() => setOpen(false)} className="text-lg leading-none text-[#afafaf] hover:text-black" aria-label="Collapse">
-          –
-        </button>
+        <div className="flex items-center gap-2">
+          <GrokVoice asOf={asOf} onResult={onResult} />
+          <button onClick={() => setOpen(false)} className="text-lg leading-none text-[#afafaf] hover:text-black" aria-label="Collapse">–</button>
+        </div>
       </div>
       <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-sm">
         {msgs.length === 0 && (
