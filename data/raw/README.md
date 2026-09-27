@@ -228,7 +228,10 @@ Two errors in DEQ's own table are kept as published and noted in the `note` colu
 ### Permit documents and details
 
 The 194 PDFs were downloaded manually from the registration links on the DEQ page into
-`va_deq_permits_2026-09-26/`; no scripted request was made to DEQ's 403-protected CDN.
+`va_deq_permits_2026-09-26/`; no scripted request was made to DEQ's 403-protected CDN. The PDFs
+(103.6 MB) are not stored in the repository: `va_deq_permits_2026-09-26/manifest.csv` lists each
+file with its SHA-256, size, the permit it was attributed to and its DEQ document link, so a fresh
+download can be checked byte for byte before the parser is rerun.
 `etl/parse_va_deq_permits.py` reads only those local files and writes
 `va_deq_permit_details.csv` (`permit_no, facility_address, lat, lon, generator_count,
 generator_mw_total, detail_source, reviewed_by`) plus `va_deq_permit_parse_review.csv`.
