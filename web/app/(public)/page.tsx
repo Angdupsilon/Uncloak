@@ -16,7 +16,7 @@ const EXAMPLES = [
   { label: "Google", href: "/org/google", kind: "Organization" },
   { label: "Anthropic", href: "/org/anthropic", kind: "Organization" },
   { label: "Abilene", href: "/near?q=Abilene%2C%20TX", kind: "City" },
-  { label: "Hutto", href: "/near?q=Hutto%2C%20TX", kind: "City" },
+  { label: "Loudoun County, VA", href: "/near?q=Loudoun%20County%2C%20VA&county=Loudoun", kind: "County" },
   { label: "Ellis County", href: "/near?q=Ellis%20County%2C%20TX&county=Ellis", kind: "County" },
   { label: "78725", href: "/near?q=78725", kind: "ZIP code" },
 ];
@@ -46,9 +46,9 @@ export default async function Home() {
           <div className="relative flex min-h-[560px] flex-col justify-end rounded-2xl text-white sm:min-h-[min(calc(100svh-5.5rem),860px)]">
             <HeroReel />
             <div className="relative px-6 pb-10 pt-24 sm:px-12 sm:pb-14 lg:px-16 lg:pb-16">
-              <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-white/60">Texas data-center public records</p>
+              <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-white/60">U.S. data-center records</p>
               <h1 className="mt-4 max-w-4xl text-[40px] font-medium leading-[1.05] tracking-[-1.2px] text-white sm:text-[64px] sm:tracking-[-1.8px]">
-                Who’s building data centers in Texas?
+                Who’s building data centers in the U.S.?
               </h1>
               <p className="mt-6 max-w-2xl text-[18px] leading-[1.5] text-white/85 sm:text-[21px]">
                 Find companies and nearby sites. Ask questions. Follow the public records.
@@ -86,9 +86,9 @@ export default async function Home() {
                 <Glance
                   value={data.sites.length.toLocaleString()}
                   label="data-center sites on record"
-                  detail={`${data.sites.filter((s) => s.lat != null).length} with a known location`}
+                  detail={`${data.sites.filter((s) => s.lat != null).length} with a known location · ${new Set(data.sites.map((s) => s.state)).size} states and territories`}
                   kind="documented"
-                  source={<Link href="/methodology#sources" className="rw-link">Comptroller registry and TDLR filings</Link>}
+                  source={<Link href="/methodology#sources" className="rw-link">Texas public records and the IM3 data-center atlas</Link>}
                 />
                 <Glance
                   value={data.orgs.filter((o) => o.sites > 0).length.toLocaleString()}
@@ -121,11 +121,12 @@ export default async function Home() {
 
                 <section aria-labelledby="read-h">
                   <SectionTitle id="read-h">How to read this site</SectionTitle>
-                  <ul className="space-y-4">
-                    {(["documented", "derived", "context"] as MetricKind[]).map((k) => (
-                      <li key={k} className="flex gap-3">
-                        <div className="w-[128px] shrink-0 pt-0.5">
-                          <KindBadge kind={k} />
+                  {/* One shared grid so the badge column always fits the widest badge. */}
+                  <ul className="grid grid-cols-[minmax(128px,max-content)_1fr] gap-x-4 gap-y-4">
+                    {(["documented", "derived", "modeled", "context"] as MetricKind[]).map((k) => (
+                      <li key={k} className="col-span-2 grid grid-cols-subgrid">
+                        <div className="pt-0.5">
+                          <KindBadge kind={k} stacked />
                         </div>
                         <p className="text-[14px] leading-6 text-[var(--hairline-mid)]">
                           <span className="sr-only">{KIND_LABEL[k]}: </span>
@@ -133,8 +134,8 @@ export default async function Home() {
                         </p>
                       </li>
                     ))}
-                    <li className="flex gap-3">
-                      <div className="w-[128px] shrink-0 pt-0.5 text-[13px] font-semibold text-slate-500">Unavailable</div>
+                    <li className="col-span-2 grid grid-cols-subgrid">
+                      <div className="pt-0.5 text-[13px] font-semibold text-slate-500">Unavailable</div>
                       <p className="text-[14px] leading-6 text-[var(--hairline-mid)]">
                         The records we have don&apos;t report it. It is never shown as zero.
                       </p>
@@ -270,7 +271,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       cta: "How it works",
       visual: (
         <div className="flex h-full flex-col justify-center gap-2 p-5">
-          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports"].map((t) => (
+          {["Texas Comptroller registry", "TDLR construction filings", "TCEQ permits", "ERCOT queue reports", "Illinois DCEO data-center MOUs", "Minnesota DEED qualified data centers", "Indiana IEDC data-center contracts", "Wisconsin certified data centers", "IM3 data-center atlas (OpenStreetMap)"].map((t) => (
             <div key={t} className="flex items-center gap-2.5 rounded-md bg-white/[0.07] px-3 py-2 text-[12px] text-white/85">
               <span aria-hidden className="grid h-4 w-4 place-items-center rounded-full bg-white text-[9px] font-bold text-black">
                 ✓

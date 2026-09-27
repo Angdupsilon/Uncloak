@@ -11,6 +11,11 @@ import type {
   Project,
   ProjectInfo,
   QueueTimeline,
+  Estimate,
+  LoadRegion,
+  LoadReport,
+  LoadReports,
+  RegionTag,
   QueueWeek,
   ScorePoint,
   ScoringConfig,
@@ -67,6 +72,8 @@ export type Metro = keyof typeof METROS;
 
 export interface ProjectFilters {
   parent?: string | null;
+  /** USPS state code, e.g. "VA". */
+  state?: string | null;
   county?: string | null;
   metro?: Metro | null;
   min_prob?: number | null;
@@ -94,13 +101,14 @@ const PROJECTS_AS_OF = `
   evidence_by_project AS (
     SELECT s.project_id,
            SUM(x.value_num) FILTER (WHERE x.event_type = 'building_registered') AS total_cost,
-           bool_or(x.event_type = 'permit_filed') AS has_permit
+           bool_or(x.event_type = 'permit_filed') AS has_permit,
+           bool_or(x.event_type <> 'site_mapped') AS has_records
     FROM latest_scores s
     LEFT JOIN evidence_events x
       ON x.project_id = s.project_id AND x.ts < s.ts + interval '1 day'
     GROUP BY s.project_id
   )
-  SELECT p.project_id, p.name, COALESCE(si.county,p.county) AS county,
+  SELECT p.project_id, p.name, p.state, COALESCE(si.county,p.county) AS county,
          COALESCE(si.city,p.city) AS city, COALESCE(si.lat,p.lat) AS lat,
          COALESCE(si.lon,p.lon) AS lon, p.is_sample,
          si.site_id, si.name AS site_name, si.location_source_url, si.location_method,
@@ -110,7 +118,8 @@ const PROJECTS_AS_OF = `
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color,
          s.ts AS scored_at, s.score, s.probability, s.mw_est, s.factors,
-         ev.total_cost, COALESCE(ev.has_permit, false) AS has_permit
+         ev.total_cost, COALESCE(ev.has_permit, false) AS has_permit,
+         COALESCE(ev.has_records, false) AS has_records
   FROM projects p
   LEFT JOIN entities e ON e.entity_id = p.entity_id
   LEFT JOIN parents pa ON pa.parent_id = e.parent_id
@@ -151,6 +160,10 @@ export async function getProjects(asOf: string, f: ProjectFilters = {}): Promise
   if (f.parent) {
     if (f.parent.toLowerCase() === UNRESOLVED_PARENT.toLowerCase()) where.push("q.parent IS NULL");
     else where.push(`q.parent ILIKE '%' || ${add(f.parent)} || '%'`);
+  }
+  if (f.state) {
+    if (!/^[A-Za-z]{2}$/.test(f.state)) throw new BadRequest("state must be a 2-letter USPS code");
+    where.push(`q.state = ${add(f.state.toUpperCase())}`);
   }
   if (f.county) where.push(`q.county ILIKE ${add(f.county.replace(/\s+county$/i, "").trim())}`);
   if (f.metro) {
@@ -195,10 +208,13 @@ export async function getSummary(asOf: string): Promise<Summary> {
              WHERE ts < ${DAY_END} AND gw_observed_peak IS NOT NULL ORDER BY ts DESC LIMIT 1) o ON true`,
       [asOf],
     ),
+    // ERCOT is the Texas grid, so the totals compared with it count Texas projects that have a
+    // public record (not atlas-only sites), matching the weekly_realistic_demand view.
     query<{ found_mw: number | null; realistic_mw: number | null; projects: number; projects_with_mw: number }>(
       `SELECT SUM(q.mw_est) AS found_mw, SUM(q.probability * q.mw_est) AS realistic_mw,
               COUNT(*) AS projects, COUNT(q.mw_est) AS projects_with_mw
-       FROM (${PROJECTS_AS_OF}) q`,
+       FROM (${PROJECTS_AS_OF}) q
+       WHERE q.state = 'TX' AND q.has_records`,
       [asOf],
     ),
     // Continuous aggregate (time_bucket + last()) rolled up by the weekly_realistic_demand view.
@@ -288,10 +304,61 @@ export async function getQueueTimeline(asOf: string): Promise<QueueTimeline> {
 }
 
 // ---------------------------------------------------------------------------
+// Load reports by region (dc_load_reports). Each figure keeps its own publisher, scope and date;
+// figures from different publishers are never added together.
+// ---------------------------------------------------------------------------
+
+export const DEFAULT_LOAD_REGION = "ERCO";
+
+/** Model versions with their backtests, for the methodology page. */
+export async function getEstimateMethods(): Promise<
+  { method: string; method_version: string; fitted_at: string; description: string; params: Record<string, unknown>; validation: Estimate["validation"]; estimates: number }[]
+> {
+  const rows = await query<{ method: string; method_version: string; fitted_at: Date; description: string; params: Record<string, unknown>; validation: Estimate["validation"]; estimates: number }>(
+    `SELECT m.method, m.method_version, m.fitted_at, m.description, m.params, m.validation,
+            (SELECT COUNT(*)::int FROM estimates x WHERE x.method = m.method AND x.method_version = m.method_version) AS estimates
+     FROM estimate_methods m ORDER BY m.method, m.method_version`,
+  );
+  return rows.map((r) => ({ ...r, fitted_at: r.fitted_at.toISOString() }));
+}
+
+export async function getLoadReports(asOf: string, region: string | null): Promise<LoadReports> {
+  const regions = await query<Omit<LoadRegion, "first_ts" | "last_ts"> & { first_ts: Date; last_ts: Date }>(
+    `SELECT r.region_key, g.name, g.kind, MIN(r.source_key) AS source_key, COUNT(*)::int AS rows,
+            MIN(r.ts) AS first_ts, MAX(r.ts) AS last_ts
+     FROM dc_load_reports r JOIN grid_regions g USING (region_key)
+     WHERE r.ts < ${DAY_END}
+     GROUP BY r.region_key, g.name, g.kind
+     ORDER BY (r.region_key <> '${DEFAULT_LOAD_REGION}'), MIN(r.source_key), g.name`,
+    [asOf],
+  );
+  const key = region && regions.some((r) => r.region_key === region) ? region : (regions[0]?.region_key ?? DEFAULT_LOAD_REGION);
+  const rows = await query<Omit<LoadReport, "ts"> & { ts: Date }>(
+    `SELECT ts, region_key, metric, scope, value_mw, forecast_year, stage, dc_share_pct, dc_share_quote,
+            source_key, source_url, document, quote
+     FROM dc_load_reports WHERE region_key = $2 AND ts < ${DAY_END}
+     ORDER BY metric, forecast_year NULLS FIRST, ts, stage`,
+    [asOf, key],
+  );
+  return {
+    as_of: asOf,
+    regions: regions.map((r) => ({ ...r, first_ts: r.first_ts.toISOString(), last_ts: r.last_ts.toISOString() })),
+    region: key,
+    rows: rows.map((r) => ({
+      ...r,
+      ts: r.ts.toISOString(),
+      value_mw: Number(r.value_mw),
+      dc_share_pct: r.dc_share_pct == null ? null : Number(r.dc_share_pct),
+    })),
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Parents
 // ---------------------------------------------------------------------------
 
-export async function getParents(asOf: string): Promise<ParentRow[]> {
+export async function getParents(asOf: string, state: string | null = null, recordsOnly = false): Promise<ParentRow[]> {
+  if (state && !/^[A-Za-z]{2}$/.test(state)) throw new BadRequest("state must be a 2-letter USPS code");
   return query<ParentRow>(
     `SELECT COALESCE(q.parent, $2) AS name, q.parent_color AS color,
             SUM(q.mw_est) AS mw_total,
@@ -299,9 +366,10 @@ export async function getParents(asOf: string): Promise<ParentRow[]> {
             SUM(q.mw_est) FILTER (WHERE q.probability >= $3) AS mw_verified,
             COUNT(*) AS projects
      FROM (${PROJECTS_AS_OF}) q
+     WHERE ($4::text IS NULL OR q.state = $4) AND (NOT $5::boolean OR q.has_records)
      GROUP BY q.parent, q.parent_color
      ORDER BY SUM(q.probability * q.mw_est) DESC NULLS LAST, COUNT(*) DESC, 1`,
-    [asOf, UNRESOLVED_PARENT, TIER_THRESHOLDS.verified],
+    [asOf, UNRESOLVED_PARENT, TIER_THRESHOLDS.verified, state ? state.toUpperCase() : null, recordsOnly],
   );
 }
 
@@ -310,11 +378,11 @@ export async function getParents(asOf: string): Promise<ParentRow[]> {
 // ---------------------------------------------------------------------------
 
 const PROJECT_INFO = `
-  SELECT p.project_id, p.name, COALESCE(si.county,p.county) AS county,
+  SELECT p.project_id, p.name, p.state, COALESCE(si.county,p.county) AS county,
          COALESCE(si.city,p.city) AS city, COALESCE(si.address,p.address) AS address,
          COALESCE(si.lat,p.lat) AS lat, COALESCE(si.lon,p.lon) AS lon, p.is_sample,
          si.site_id, si.name AS site_name, si.location_source_url, si.location_method,
-         si.location_precision, si.location_confidence,
+         si.location_precision, si.location_confidence, si.county_fips,
          st.status AS current_status, to_char(st.observed_at, 'YYYY-MM-DD') AS status_observed_at,
          e.llc_name, e.resolved_by, e.source_url AS entity_source_url,
          pa.name AS parent, pa.color_hex AS parent_color
@@ -329,7 +397,7 @@ const PROJECT_INFO = `
   ) st ON true`;
 
 export async function getTimeline(projectId: number, asOf: string): Promise<Timeline | null> {
-  const [info, scored, scores, events] = await Promise.all([
+  const [info, scored, scores, events, regions, estimates] = await Promise.all([
     query<ProjectInfo>(`${PROJECT_INFO} WHERE p.project_id = $1`, [projectId]),
     getProjects(asOf, { ids: [projectId] }),
     query<Omit<ScorePoint, "ts"> & { ts: Date }>(
@@ -342,11 +410,25 @@ export async function getTimeline(projectId: number, asOf: string): Promise<Time
        FROM evidence_events WHERE project_id = $2 AND ts < ${DAY_END} ORDER BY ts`,
       [asOf, projectId],
     ),
+    query<RegionTag>(
+      `SELECT r.region_key, g.name, r.confidence, r.method, r.county_fips, r.source_url
+       FROM project_sites ps JOIN site_regions r USING (site_id) JOIN grid_regions g USING (region_key)
+       WHERE ps.project_id = $1 ORDER BY g.name`,
+      [projectId],
+    ),
+    query<Estimate>(
+      `SELECT x.metric, to_char(x.as_of, 'YYYY-MM-DD') AS as_of, x.low, x.mid, x.high, x.unit, x.method, x.method_version, x.inputs, m.validation
+       FROM estimates x JOIN estimate_methods m USING (method, method_version)
+       WHERE x.project_id = $1 ORDER BY x.metric`,
+      [projectId],
+    ),
   ]);
   if (!info[0]) return null;
   return {
     as_of: asOf,
     project: { ...info[0], ...(scored[0] ?? {}) },
+    regions,
+    estimates: estimates.map((x) => ({ ...x, low: Number(x.low), mid: Number(x.mid), high: Number(x.high) })),
     scores: scores.map((s) => ({ ...s, ts: s.ts.toISOString() })),
     events: events.map((e) => ({ ...e, ts: e.ts.toISOString() })),
   };

@@ -3,7 +3,7 @@ import "leaflet/dist/leaflet.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { CircleMarker, GeoJSON, MapContainer, Tooltip, useMap } from "react-leaflet";
-import type { FeatureCollection } from "geojson";
+import type { Feature, FeatureCollection, MultiPolygon, Polygon } from "geojson";
 import { latLngBounds } from "leaflet";
 import maplibreGL from "@maplibre/maplibre-gl-leaflet";
 import { setWorkerUrl } from "maplibre-gl";
@@ -13,6 +13,8 @@ import type { Project } from "@/lib/types";
 
 export interface MapProps {
   projects: Project[];
+  /** USPS code of the state in focus, or null for the whole country. */
+  region?: string | null;
   selectedId: number | null;
   onSelect: (id: number) => void;
   activeParents: Set<string>;
@@ -58,58 +60,119 @@ function radiusFor(mw: number | null): number {
   return Math.min(UI.markerMaxRadiusPx, UI.markerMinRadiusPx + UI.markerRadiusPerSqrtMw * Math.sqrt(mw));
 }
 
+type StateFeature = Feature<Polygon | MultiPolygon, { code: string; name: string }>;
+
+/** public/us_states.geojson (Census cartographic boundaries, simplified), loaded once per page. */
+let statesPromise: Promise<StateFeature[]> | null = null;
+export function loadStates(): Promise<StateFeature[]> {
+  statesPromise ??= fetch("/us_states.geojson")
+    .then((r) => (r.ok ? r.json() : { features: [] }))
+    .then((j: FeatureCollection) => j.features as StateFeature[])
+    .catch(() => []);
+  return statesPromise;
+}
+
+const outerRings = (g: Polygon | MultiPolygon): number[][][] =>
+  g.type === "MultiPolygon" ? g.coordinates.map((poly) => poly[0]) : [g.coordinates[0]];
+
+/** [[minLat, minLon], [maxLat, maxLon]] of one state's outline. */
+export function stateBounds(f: StateFeature): [[number, number], [number, number]] {
+  let minLat = 90, minLon = 180, maxLat = -90, maxLon = -180;
+  for (const ring of outerRings(f.geometry)) {
+    for (const [lon, lat] of ring) {
+      minLat = Math.min(minLat, lat); maxLat = Math.max(maxLat, lat);
+      minLon = Math.min(minLon, lon); maxLon = Math.max(maxLon, lon);
+    }
+  }
+  return [[minLat, minLon], [maxLat, maxLon]];
+}
+
+/** MapLibre's vector basemap needs WebGL2 (missing on old devices, locked-down or headless browsers). */
+function hasWebGL2(): boolean {
+  try {
+    return !!document.createElement("canvas").getContext("webgl2");
+  } catch {
+    return false;
+  }
+}
+
 /**
- * Spotlight mask: a world-sized polygon with Texas punched out as a hole, drawn
- * over the basemap. Everything outside the state recedes, so a wide panel that
- * unavoidably shows Oklahoma and Chihuahua still reads as a map OF Texas.
- * Texas is close to square, so fitting it into a 3:2 panel always leaves
- * neighbours on screen; dimming them is what makes the subject obvious.
+ * Spotlight mask: a world-sized polygon with the area in focus punched out as a hole,
+ * drawn over the basemap. Everything outside recedes, so a wide panel that unavoidably
+ * shows neighbours still reads as a map OF that state (or of the U.S. when `state` is null,
+ * with every state outlined).
  */
-export function TexasSpotlight() {
+export function StateSpotlight({ state = null }: { state?: string | null }) {
   const [mask, setMask] = useState<FeatureCollection | null>(null);
   useEffect(() => {
     let alive = true;
-    fetch("/tx_state.geojson")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((tx) => {
-        if (!alive || !tx?.geometry) return;
-        // Outer ring covers the whole world; each Texas ring becomes a hole.
-        const world = [
-          [-180, -85],
-          [180, -85],
-          [180, 85],
-          [-180, 85],
-          [-180, -85],
-        ];
-        const geom = tx.geometry;
-        const holes: number[][][] =
-          geom.type === "MultiPolygon" ? geom.coordinates.map((poly: number[][][]) => poly[0]) : [geom.coordinates[0]];
-        setMask({
-          type: "FeatureCollection",
-          features: [
-            { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...holes] } },
-            { type: "Feature", properties: { outline: true }, geometry: geom },
-          ],
-        } as FeatureCollection);
-      })
-      .catch(() => {});
+    loadStates().then((all) => {
+      if (!alive) return;
+      const focus = state ? all.filter((f) => f.properties.code === state) : all;
+      if (!focus.length) return setMask(null);
+      const world = [
+        [-180, -85],
+        [180, -85],
+        [180, 85],
+        [-180, 85],
+        [-180, -85],
+      ];
+      setMask({
+        type: "FeatureCollection",
+        features: [
+          { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...focus.flatMap((f) => outerRings(f.geometry))] } },
+          // In the national view the basemap draws the state lines (see VectorBasemap);
+          // outline them here only when it can't render. A single state keeps its outline.
+          ...(state || !hasWebGL2() ? focus : []).map((f) => ({ type: "Feature" as const, properties: { outline: true }, geometry: f.geometry })),
+        ],
+      } as FeatureCollection);
+    });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [state]);
   if (!mask) return null;
   return (
     <GeoJSON
+      key={state ?? "US"}
       data={mask}
       interactive={false}
       style={(f) =>
         f?.properties?.outline
-          ? { color: "#000000", weight: 2, opacity: 0.85, fill: false }
+          ? { color: "#000000", weight: state ? 2 : 0.8, opacity: state ? 0.85 : 0.5, fill: false }
           : { stroke: false, fillColor: "#ffffff", fillOpacity: 0.62 }
       }
     />
   );
 }
+
+/** The spare-capacity finder still covers Texas only. */
+export function TexasSpotlight() {
+  return <StateSpotlight state="TX" />;
+}
+
+/** Frame the region in focus whenever it changes (and on mount, so framing adapts to the panel size). */
+function FitRegion({ region }: { region: string | null }) {
+  const map = useMap();
+  useEffect(() => {
+    let alive = true;
+    if (!region) {
+      map.fitBounds(UI.usBounds, { padding: [UI.fitPaddingPx / 2, UI.fitPaddingPx / 2] });
+      return;
+    }
+    loadStates().then((all) => {
+      const f = all.find((x) => x.properties.code === region);
+      if (alive && f) map.fitBounds(stateBounds(f), { padding: [UI.fitPaddingPx, UI.fitPaddingPx], maxZoom: UI.fitMaxZoom });
+    });
+    return () => {
+      alive = false;
+    };
+  }, [region, map]);
+  return null;
+}
+
+/** Liberty's state/province border layer (OSM admin levels 3-6). */
+const STATE_LINES = "boundary_3";
 
 /**
  * Vector basemap via MapLibre GL, bridged into Leaflet so every existing layer
@@ -132,30 +195,36 @@ export function VectorBasemap() {
     // (and the shared chunk it imports) from public/ sidesteps the bundler.
     setWorkerUrl("/maplibre-gl-worker.mjs");
 
-    // MapLibre throws without WebGL2 (old devices, locked-down or headless browsers), which
-    // would take the whole page down. Skip the basemap; markers and outlines still render.
-    let webgl2 = false;
-    try {
-      webgl2 = !!document.createElement("canvas").getContext("webgl2");
-    } catch {}
-    if (!webgl2) return;
+    // MapLibre throws without WebGL2, which would take the whole page down.
+    // Skip the basemap; markers and outlines still render.
+    if (!hasWebGL2()) return;
 
     const layer = maplibreGL({ style: "https://tiles.openfreemap.org/styles/liberty" });
     layer.addTo(map);
 
-    // Place labels ship small for a full-screen map; this dashboard shows the
-    // whole state in a panel, so bump every symbol layer's text size.
     const gl = layer.getMaplibreMap();
-    const enlarge = () => {
+    const restyle = () => {
+      // Place labels ship small for a full-screen map; this dashboard shows the
+      // whole state in a panel, so bump every symbol layer's text size.
       for (const lyr of gl.getStyle()?.layers ?? []) {
         if (lyr.type !== "symbol") continue;
         const size = gl.getLayoutProperty(lyr.id, "text-size");
         if (size == null) continue;
         gl.setLayoutProperty(lyr.id, "text-size", scaleTextSize(size));
       }
+      // State lines come from the basemap, so they follow its own coastlines and
+      // country borders. Drawing our Census outlines over them as well left two
+      // slightly offset sets of borders. Liberty only shows them from zoom 5,
+      // dashed; show them at national zoom too, as solid hairlines.
+      if (gl.getLayer(STATE_LINES)) {
+        gl.setLayerZoomRange(STATE_LINES, 0, 24);
+        gl.setPaintProperty(STATE_LINES, "line-dasharray", undefined);
+        gl.setPaintProperty(STATE_LINES, "line-color", "rgba(0, 0, 0, 0.4)");
+        gl.setPaintProperty(STATE_LINES, "line-width", ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 1, 11, 2]);
+      }
     };
-    if (gl.isStyleLoaded()) enlarge();
-    else gl.once("styledata", enlarge);
+    if (gl.isStyleLoaded()) restyle();
+    else gl.once("styledata", restyle);
 
     return () => {
       map.removeLayer(layer);
@@ -217,7 +286,7 @@ function CooperativeWheel({ onBlocked }: { onBlocked: () => void }) {
 
 const HINT_MS = 1400;
 
-export default function ProjectMap({ projects, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading, cooperativeZoom = false }: MapProps) {
+export default function ProjectMap({ projects, region = null, selectedId, onSelect, activeParents, highlightIds, fitRequest, loading, cooperativeZoom = false }: MapProps) {
   const [zoomHint, setZoomHint] = useState(false);
   const hintTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const flashZoomHint = useCallback(() => {
@@ -242,11 +311,12 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
 
   return (
     <div className="gs-map relative h-full w-full overflow-hidden bg-[#aad3df]">
-      <MapContainer center={UI.txCenter} zoom={UI.txZoom} className="h-full w-full" preferCanvas={false} zoomControl={false} zoomSnap={1} zoomDelta={1}>
+      <MapContainer center={UI.usCenter} zoom={UI.usZoom} className="h-full w-full" preferCanvas={false} zoomControl={false} zoomSnap={1} zoomDelta={1}>
         {cooperativeZoom && <CooperativeWheel onBlocked={flashZoomHint} />}
         <VectorBasemap />
-        <TexasSpotlight />
-        <Counties />
+        <StateSpotlight state={region} />
+        {region === "TX" && <Counties />}
+        <FitRegion region={region} />
         <FitBounds projects={projects} ids={highlightIds} request={fitRequest} />
         {ordered.map((p) => {
           const parentKey = p.parent ?? UNRESOLVED_PARENT;
@@ -341,7 +411,7 @@ export default function ProjectMap({ projects, selectedId, onSelect, activeParen
               ))}
             </div>
             <div className="ub-caption mt-3 border-t border-[#efefef] pt-2.5 text-[#afafaf]">
-              Each dot is one public-record project. Size reflects estimated MW (enlarged); color = evidence tier.
+              Each dot is one project from public records or the IM3 data-center atlas. Size reflects estimated MW (enlarged); color = evidence tier from the public records loaded for each state (deepest in Texas).
             </div>
             {unlocated > 0 && (
               <div className="ub-caption mt-1 font-medium text-[#5e5e5e]">

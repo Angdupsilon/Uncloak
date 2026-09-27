@@ -1,6 +1,10 @@
 "use client";
 import { TIER_COLORS, TIER_LABELS, UNRESOLVED_PARENT } from "@/lib/constants";
 import { describeEvent, fmtDate, fmtMW, fmtPct, fmtUSD } from "@/lib/format";
+import { countyLabel } from "@/lib/geo";
+import { describeRegions, EIA861_URL } from "@/lib/regions";
+import { coverageNote, factorCoverage, factorNote } from "@/lib/coverage";
+import { backtestNote, estimateNote, fmtRange, itLoad } from "@/lib/estimates";
 import { useJson } from "@/lib/useJson";
 import type { EvidenceEvent, FactorConfig, Timeline } from "@/lib/types";
 import StageClip from "@/components/StageClip";
@@ -54,7 +58,7 @@ export default function ProjectPanel({
   factors: FactorConfig[];
   onClose: () => void;
 }) {
-  const { data, loading, error } = useJson<Timeline>(projectId != null ? `/api/projects/${projectId}/timeline?as_of=${asOf}` : null);
+  const { data, error } = useJson<Timeline>(projectId != null ? `/api/projects/${projectId}/timeline?as_of=${asOf}` : null);
 
   if (projectId == null) {
     return (
@@ -82,7 +86,7 @@ export default function ProjectPanel({
     );
   }
 
-  if (!data || data.project.project_id !== projectId) {
+  if (!data?.project || data.project.project_id !== projectId) {
     return (
       <div className="flex h-full items-center justify-center gap-2 text-sm text-[var(--slate)]">
         <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--rw-hairline)] border-t-[var(--ink)]" />
@@ -95,6 +99,11 @@ export default function ProjectPanel({
   const scored = p.probability != null;
   const events = data.events;
   const satisfied = factors.filter((factor) => !!p.factors?.[factor.key]).length;
+  const osmOperator = p.resolved_by === "OSM_OPERATOR";
+  const entityName = p.llc_name?.replace(/ \(OSM operator\)$/, "") ?? null;
+  const atlasOnly = events.length > 0 && events.every((e) => e.event_type === "site_mapped");
+  const grid = describeRegions(data.regions ?? [], p.state, p.county_fips ?? null);
+  const modeled = p.sourced_mw == null && p.mw_est == null ? itLoad(data.estimates) : null;
 
   // Stage is derived from the same as-of factors the checklist uses, so it
   // advances in step with the date slider rather than on its own clock.
@@ -105,7 +114,10 @@ export default function ProjectPanel({
   });
 
   return (
-    <div className={`flex h-full flex-col bg-white transition-opacity ${loading ? "opacity-70" : ""}`}>
+    // Keep the previous, complete project snapshot visible while the next
+    // timeline loads. Playback changes the date frequently, so fading this
+    // whole panel for each request reads as a distracting blink.
+    <div className="flex h-full flex-col bg-white">
       <header className="z-10 shrink-0 border-b border-[var(--rw-hairline)] bg-white/95 px-5 py-4 backdrop-blur">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -122,7 +134,17 @@ export default function ProjectPanel({
                 <path d="M8 14s4.5-3.4 4.5-7.75a4.5 4.5 0 1 0-9 0C3.5 10.6 8 14 8 14Z" />
                 <circle cx="8" cy="6.25" r="1.5" />
               </svg>
-              <span className="truncate">{[p.city, p.county && `${p.county} County`].filter(Boolean).join(", ") || "Location unknown"}</span>
+              <span className="truncate">{[p.city, p.county && countyLabel(p.county, p.state), p.state].filter(Boolean).join(", ")}</span>
+            </div>
+            <div className="mt-2">
+              <span
+                title={grid.detail}
+                className={`inline-flex max-w-full items-center gap-1 truncate rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                  grid.status === "tagged" || grid.status === "several" ? "bg-sky-50 text-sky-800 ring-1 ring-inset ring-sky-200" : "bg-slate-100 text-slate-500"
+                }`}
+              >
+                <span className="font-normal text-slate-500">Grid operator</span> {grid.value}
+              </span>
             </div>
           </div>
           <button
@@ -147,9 +169,9 @@ export default function ProjectPanel({
             <div className="pt-1">
               <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                 <div className="min-w-0">
-                  <div className="ub-eyebrow">Registered entity</div>
-                  <div className="mt-1 truncate text-[15px] text-[var(--ink)]" title={p.llc_name ?? "Unknown LLC"}>
-                    {p.llc_name ?? "Unknown LLC"}
+                  <div className="ub-eyebrow">{osmOperator ? "Operator tag" : "Registered entity"}</div>
+                  <div className="mt-1 truncate text-[15px] text-[var(--ink)]" title={entityName ?? "Unknown LLC"}>
+                    {entityName ?? (atlasOnly ? "No operator mapped" : "Unknown LLC")}
                   </div>
                 </div>
                 <div className="grid h-7 w-7 place-items-center rounded-full bg-[var(--rw-hairline)] text-[var(--slate)]">→</div>
@@ -161,7 +183,11 @@ export default function ProjectPanel({
                 </div>
               </div>
               <div className="mt-3 pt-4 text-[13px] text-[var(--slate)]">
-                {p.resolved_by ? `Ownership resolved via ${p.resolved_by}` : "Parent company has not been resolved"}
+                {osmOperator
+                  ? "Operator named in OpenStreetMap, not a registered-entity record"
+                  : p.resolved_by
+                    ? `Ownership resolved via ${p.resolved_by}`
+                    : "Parent company has not been resolved"}
               </div>
             </div>
           </section>
@@ -182,13 +208,22 @@ export default function ProjectPanel({
                 detail={scored ? TIER_LABELS[p.tier!] : "Not scored"}
                 color={scored ? TIER_COLORS[p.tier!] : undefined}
               />
-              <MetricCard
-                label={p.sourced_mw != null ? `${p.capacity_type ?? "Sourced"} load` : "Modeled load"}
-                value={fmtMW(p.sourced_mw ?? p.mw_est)}
-                detail={p.sourced_mw != null ? "Public-source figure" : "From registered cost"}
-              />
+              {modeled ? (
+                <MetricCard label="Modeled IT load" value={fmtRange(modeled)} detail="Uncloak estimate (modeled)" />
+              ) : (
+                <MetricCard
+                  label={p.sourced_mw != null ? `${p.capacity_type ?? "Sourced"} load` : "Estimated load"}
+                  value={fmtMW(p.sourced_mw ?? p.mw_est)}
+                  detail={p.sourced_mw != null ? "Public-source figure" : "From registered cost"}
+                />
+              )}
               <MetricCard label="Registered cost" value={fmtUSD(p.total_cost)} />
             </div>
+            {modeled && (
+              <p className="mt-2 text-[11px] leading-4 text-slate-500">
+                Modeled IT load: {estimateNote(modeled)} {backtestNote(modeled)} Not a record and not scored.
+              </p>
+            )}
           </section>
 
           <section>
@@ -205,6 +240,15 @@ export default function ProjectPanel({
                   {p.status_observed_at ? ` · observed ${fmtDate(p.status_observed_at)}` : ""}
                 </span>
               </div>
+              <div className="mt-2">
+                <div className="flex justify-between gap-4">
+                  <span className="shrink-0 text-[var(--slate)]">Grid operator</span>
+                  <span className="text-right font-medium text-[var(--graphite)]">{grid.value}</span>
+                </div>
+                <p className="mt-1 text-[12px] leading-4 text-[var(--slate)]">
+                  {grid.detail} Lookup only, not a measurement. <SourceLink url={EIA861_URL} label="EIA-861" />
+                </p>
+              </div>
               <div className="mt-2 flex justify-between gap-4">
                 <span className="text-[var(--slate)]">Location quality</span>
                 <span className="text-right font-medium text-[var(--graphite)]">
@@ -217,10 +261,20 @@ export default function ProjectPanel({
 
           <section>
             <SectionHeading detail={scored ? `${satisfied} of ${factors.length} signals · ${p.score} pts` : "Not scored yet"}>Evidence signals</SectionHeading>
+            {p.state !== "TX" ? (
+              <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[12px] leading-4 text-amber-900">{coverageNote(p.state)}</p>
+            ) : (
+              atlasOnly && (
+                <p className="mb-2 rounded-lg bg-amber-50 px-3 py-2 text-[12px] leading-4 text-amber-900">
+                  Mapped from the IM3 data-center atlas only. No Texas public record has been matched to this site yet.
+                </p>
+              )
+            )}
             <div className="overflow-hidden bg-white">
               {factors.map((factor, index) => {
                 const ok = !!p.factors?.[factor.key];
                 const event = ok ? evidenceFor(factor, events) : null;
+                const note = ok ? null : factorNote(factorCoverage(factor.key, p.state), p.state);
                 return (
                   <div
                     key={factor.key}
@@ -236,6 +290,7 @@ export default function ProjectPanel({
                     <div className="min-w-0">
                       <div className={`text-xs leading-5 ${ok ? "font-medium text-[var(--graphite)]" : "text-[var(--slate)]"}`}>{factor.rule}</div>
                       {event?.source_url && <div className="mt-0.5 text-[12px]"><SourceLink url={event.source_url} label="View evidence" /></div>}
+                      {note && <div className="mt-0.5 text-[12px] text-[var(--slate)]">{note}</div>}
                     </div>
                     <span className={`rounded-md px-1.5 py-0.5 text-[12px] font-semibold tabular-nums ${ok ? "bg-[var(--rw-hairline)] text-[var(--ink)]" : "bg-white text-[var(--slate)]"}`}>
                       +{factor.points}

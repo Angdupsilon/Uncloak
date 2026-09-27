@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { fmtDate, fmtMW, fmtUSD } from "@/lib/format";
-import { fmtDistance, KM_PER_MI } from "@/lib/geo";
+import { countyLabel, fmtDistance, KM_PER_MI } from "@/lib/geo";
 import { orgHref, siteHref } from "@/lib/slug";
 import type { NearbyResult, NearbySite } from "@/lib/types";
 import SiteMapLazy from "./SiteMapLazy";
@@ -16,7 +16,10 @@ function whatItIs(s: NearbySite): string {
   else if (s.certified_at) bits.push(`State-registered data center (${fmtDate(s.certified_at)})`);
   if (s.tdlr_registrations) bits.push(`${s.tdlr_registrations} construction registration${s.tdlr_registrations === 1 ? "" : "s"}${s.total_cost != null ? `, ${fmtUSD(s.total_cost)}` : ""}`);
   if (s.mw_est != null) bits.push(`~${fmtMW(s.mw_est)} estimated`);
-  return bits.join(" · ") || "Listed in public records; no cost or registration details";
+  if (bits.length) return bits.join(" · ");
+  return s.sources.length && s.sources.every((x) => x === "OSM")
+    ? "Mapped in the IM3 data-center atlas (OpenStreetMap); no public record matched yet"
+    : "Listed in public records; no cost or registration details";
 }
 
 export default function NearResults({ data }: { data: NearbyResult }) {
@@ -48,7 +51,7 @@ export default function NearResults({ data }: { data: NearbyResult }) {
                     </span>
                   </div>
                   <div className="rw-meta mt-1">
-                    Facility · {[s.city, s.county && `${s.county} County`].filter(Boolean).join(", ") || "Location on map"} ·{" "}
+                    Facility · {[s.city, s.county && countyLabel(s.county, s.state), s.state].filter(Boolean).join(", ")} ·{" "}
                     {s.parent ? (
                       <Link href={orgHref(s.parent)} className="rw-link !font-medium">
                         {s.parent}

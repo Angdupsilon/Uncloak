@@ -7,6 +7,7 @@ import DateSlider from "@/components/DateSlider";
 import DashboardSearch from "@/components/DashboardSearch";
 import ParentFilter from "@/components/ParentFilter";
 import ProjectPanel from "@/components/ProjectPanel";
+import StateSelect from "@/components/StateSelect";
 import SummaryBar from "@/components/SummaryBar";
 import { useJson } from "@/lib/useJson";
 import type { AskResponse, ParentRow, Project, ScoringConfig, Summary } from "@/lib/types";
@@ -21,11 +22,17 @@ export default function Dashboard({
   today,
   initialParent = null,
   initialSiteId = null,
+  initialState = null,
+  initialRecordsOnly = false,
   embedded = false,
 }: {
   today: string;
   initialParent?: string | null;
   initialSiteId?: number | null;
+  /** USPS code to focus the map on; null shows the whole country. */
+  initialState?: string | null;
+  /** Start with atlas-only sites (no public record yet) hidden. */
+  initialRecordsOnly?: boolean;
   /** Rendered inside a public profile: no page header, no floating Ask launcher, fixed height. */
   embedded?: boolean;
 }) {
@@ -34,14 +41,21 @@ export default function Dashboard({
   const [selectedId, setSelectedId] = useState<number | null>(initialSiteId);
   const [activeParents, setActiveParents] = useState<Set<string>>(() => new Set(initialParent ? [initialParent] : []));
   const [highlight, setHighlight] = useState<number[] | null>(null);
+  const [region, setRegion] = useState<string | null>(initialState);
   const [fitRequest, setFitRequest] = useState(0);
+  const [recordsOnly, setRecordsOnly] = useState(initialRecordsOnly);
 
   const config = useJson<ScoringConfig>("/api/config");
   const summary = useJson<Summary>(`/api/summary?as_of=${asOf}`);
   const projects = useJson<{ as_of: string; projects: Project[] }>(`/api/projects?as_of=${asOf}`);
-  const parents = useJson<{ parents: ParentRow[] }>(`/api/parents?as_of=${asOf}`);
+  const parents = useJson<{ parents: ParentRow[] }>(
+    `/api/parents?as_of=${asOf}${region ? `&state=${region}` : ""}${recordsOnly ? "&records=1" : ""}`,
+  );
 
-  const projectList = useMemo(() => projects.data?.projects ?? [], [projects.data]);
+  const loadedProjects = useMemo(() => projects.data?.projects ?? [], [projects.data]);
+  // "Public-record sites only" hides atlas-only sites: those whose only evidence is the IM3 atlas mapping.
+  const allProjects = useMemo(() => (recordsOnly ? loadedProjects.filter((p) => p.has_records) : loadedProjects), [loadedProjects, recordsOnly]);
+  const projectList = useMemo(() => (region ? allProjects.filter((p) => p.state === region) : allProjects), [allProjects, region]);
   const showingSample = projectList.some((p) => p.is_sample);
 
   const toggleParent = useCallback((name: string) => {
@@ -91,7 +105,7 @@ export default function Dashboard({
           <span className="h-5 w-px bg-[#e2e2e2]" aria-hidden />
           <div className="min-w-0">
             <p className="text-[14px] font-medium leading-4 text-black">Advanced dashboard</p>
-            <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">Texas data-center load · requested vs. verified</p>
+            <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">U.S. data-center records · ERCOT load requested vs. verified</p>
           </div>
         </div>
         <nav aria-label="Dashboard navigation" className="flex shrink-0 items-center gap-1 text-[13px] font-medium">
@@ -121,12 +135,13 @@ export default function Dashboard({
         {/* Summary rail: one reconciliation panel down the left, so the map
             keeps the full column height. */}
         <div className="flex w-[280px] shrink-0 flex-col">
-          <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
+          <SummaryBar summary={summary.data} error={summary.error} region={region} />
         </div>
 
         <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)]">
           <ProjectMap
             projects={projectList}
+            region={region}
             selectedId={selectedId}
             onSelect={setSelectedId}
             activeParents={activeParents}
@@ -175,6 +190,42 @@ export default function Dashboard({
           loading={summary.loading || projects.loading || parents.loading}
           onChange={setAsOf}
         />
+        <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
+        <StateSelect
+          projects={allProjects}
+          value={region}
+          onChange={(code) => {
+            setRegion(code);
+            setActiveParents(new Set());
+            setHighlight(null);
+          }}
+        />
+        <button
+          type="button"
+          role="switch"
+          aria-checked={recordsOnly}
+          onClick={() => {
+            setRecordsOnly((v) => !v);
+            setHighlight(null);
+          }}
+          title="Hide sites whose only record is the IM3 data-center atlas (OpenStreetMap) mapping"
+          className="flex shrink-0 items-center gap-2 text-[13px] text-[#5e5e5e]"
+        >
+          <span
+            aria-hidden
+            className={`relative h-5 w-9 rounded-full transition-colors ${recordsOnly ? "bg-black" : "bg-[#d4d4d4]"}`}
+          >
+            <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${recordsOnly ? "translate-x-4" : "translate-x-0.5"}`} />
+          </span>
+          <span className="text-left leading-4">
+            <span className="block font-medium text-black">Public-record sites only</span>
+            <span className="block text-[11px]">
+              {recordsOnly
+                ? `${allProjects.length.toLocaleString()} of ${loadedProjects.length.toLocaleString()} sites`
+                : `${(loadedProjects.length - loadedProjects.filter((p) => p.has_records).length).toLocaleString()} atlas-only shown`}
+            </span>
+          </span>
+        </button>
         <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
         <div className="min-w-0 flex-1">
           <ParentFilter

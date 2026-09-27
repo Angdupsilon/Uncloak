@@ -33,11 +33,36 @@ export function fmtDistance(km: number): string {
 export const RADIUS_MI = [10, 25, 50, 100] as const;
 export const DEFAULT_RADIUS_MI = 25;
 
-/** Texas bounding box (slightly padded): [minLat, minLon, maxLat, maxLon]. */
-export const TX_BOX = [25.7, -106.8, 36.6, -93.4] as const;
+/** Boxes covering the U.S. (slightly padded): [minLat, minLon, maxLat, maxLon]. */
+const US_BOXES = [
+  [24.3, -125, 49.5, -66.8], // contiguous states and DC
+  [51, -180, 71.5, -129], // Alaska
+  [18.8, -160.5, 22.4, -154.6], // Hawaii
+  [17.8, -67.4, 18.6, -65.2], // Puerto Rico
+] as const;
 
-export function inTexasBox(lat: number, lon: number): boolean {
-  return lat >= TX_BOX[0] && lat <= TX_BOX[2] && lon >= TX_BOX[1] && lon <= TX_BOX[3];
+export function inUSBox(lat: number, lon: number): boolean {
+  return US_BOXES.some((b) => lat >= b[0] && lat <= b[2] && lon >= b[1] && lon <= b[3]);
+}
+
+export const STATE_NAMES: Record<string, string> = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado", CT: "Connecticut",
+  DE: "Delaware", DC: "District of Columbia", FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
+  IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri", MT: "Montana",
+  NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+  NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania",
+  PR: "Puerto Rico", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee", TX: "Texas",
+  UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+};
+
+/** "Loudoun" + VA -> "Loudoun County"; Louisiana parishes, Puerto Rico municipios and
+ *  independent cities / planning regions keep their own wording. */
+export function countyLabel(county: string, state: string | null | undefined): string {
+  if (/ (city|Region)$/.test(county) || state === "DC" || county === "District of Columbia") return county;
+  if (state === "LA") return `${county} Parish`;
+  if (state === "PR") return `${county} Municipio`;
+  return `${county} County`;
 }
 
 /** "30.27,-97.74" -> [30.27, -97.74]; anything else -> null. */

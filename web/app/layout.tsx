@@ -27,9 +27,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Uncloak: Texas data-center public records",
+  title: "Uncloak: U.S. data-center records",
   description:
-    "Search who is building data centers in Texas and where. Company and site profiles built from state public records, with every figure linked to its source.",
+    "Search who is building data centers in the U.S. and where. Company and site profiles built from public records and mapped sites, with every figure linked to its source.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

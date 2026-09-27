@@ -53,11 +53,14 @@ export function KindChip({ kind }: { kind: SearchKind }) {
 export default function SearchBox({
   size = "lg",
   defaultValue = "",
-  placeholder = "Search a company or place, or ask a question",
+  placeholder = "Search a company, place or address, or ask a question",
+  showSubmitButton = true,
 }: {
   size?: "lg" | "sm";
   defaultValue?: string;
   placeholder?: string;
+  /** Header search keeps the finder compact; Enter still submits the form. */
+  showSubmitButton?: boolean;
 }) {
   const router = useRouter();
   const id = useId();
@@ -183,7 +186,7 @@ export default function SearchBox({
           <path d="m13.5 13.5 4 4" strokeLinecap="round" />
         </svg>
         <label htmlFor={`${id}-input`} className="sr-only">
-          Search organizations, sites, entities and places, or ask a question about Texas data centers
+          Search organizations, sites, entities and places, or ask a question about U.S. data centers
         </label>
         <input
           ref={inputRef}
@@ -206,13 +209,15 @@ export default function SearchBox({
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          className={`mr-3 min-w-0 flex-1 bg-transparent text-black outline-none placeholder:text-slate-400 ${lg ? "py-2 text-[17px]" : "py-1.5 text-[14px]"}`}
+          className={`ub-search-input min-w-0 flex-1 bg-transparent text-black placeholder:text-slate-400 ${lg ? "py-2 text-[17px]" : "py-1.5 text-[14px]"}`}
         />
         {loading && <span aria-hidden className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-black" />}
         <GrokVoice onPartialTranscript={(value) => { setQ(value); setOpen(false); }} onTranscript={submitVoice} className={lg ? "" : "!h-8 !w-8"} />
-        <button type="submit" className={lg ? "ub-pill" : "ub-pill !px-4 !py-2 !text-[14px]"}>
-          Search
-        </button>
+        {showSubmitButton && (
+          <button type="submit" className={lg ? "ub-pill" : "ub-pill !px-4 !py-2 !text-[14px]"}>
+            Search
+          </button>
+        )}
       </form>
 
       <div aria-live="polite" className="sr-only">
@@ -238,7 +243,7 @@ export default function SearchBox({
             <span className="inline-flex shrink-0 items-center rounded-full bg-black px-2 py-0.5 text-[11px] font-semibold text-white">Ask</span>
             <span className="min-w-0">
               <span className="block text-[15px] font-medium text-black">Ask Uncloak</span>
-              <span className="block text-[13px] text-slate-600">Analyze this question from the Texas data-center records</span>
+              <span className="block text-[13px] text-slate-600">Analyze this question from the data-center records</span>
             </span>
           </li>
         )}

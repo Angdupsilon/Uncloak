@@ -26,8 +26,8 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
         <PrimaryNav />
         <div className="ml-auto flex shrink-0 items-center gap-2">
           {search ? (
-            <div className="hidden w-[340px] xl:block">
-              <SearchBox size="sm" defaultValue={query} placeholder="Google, Abilene…" />
+            <div className="hidden w-[240px] xl:block">
+              <SearchBox size="sm" defaultValue={query} placeholder="Search records" showSubmitButton={false} />
             </div>
           ) : (
             <Link
@@ -59,7 +59,8 @@ export function SiteFooter({ updated }: { updated?: string | null }) {
             <span className="gs-wordmark text-[30px] font-bold tracking-[-1.2px]">Uncloak</span>
           </Link>
           <p className="mt-3 max-w-sm text-white/70">
-            Explore Texas public records. Figures link to sources; missing data stays marked unavailable.
+            An independent research tool built from public records (deepest in Texas) and mapped data-center sites. Every figure links to the record it came from. Missing data is labeled
+            unavailable, never shown as zero.
           </p>
           {updated && <p className="mt-3 text-[13px] text-white/50">Scores last computed {updated}.</p>}
         </div>

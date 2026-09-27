@@ -4,9 +4,10 @@
 // kind:
 //   documented  copied or summed straight from a public record
 //   derived     calculated by Uncloak from documented values (method on /methodology)
+//   modeled     a statistical estimate, always a low-high range with its method version and backtest
 //   context     background that helps interpret a number; not a measurement of this site
 
-export type MetricKind = "documented" | "derived" | "context";
+export type MetricKind = "documented" | "derived" | "modeled" | "context";
 
 export interface MetricDef {
   label: string;
@@ -40,11 +41,47 @@ export const SOURCES = {
     url: "https://records.tceq.texas.gov/",
     what: "Environmental permit filings (for example, backup generators) linked to a site.",
   },
+  VA_DEQ: {
+    name: "Virginia Department of Environmental Quality, issued air permits for data centers",
+    short: "Virginia DEQ",
+    url: "https://www.deq.virginia.gov/news-info/shortcuts/permits/air/issued-air-permits-for-data-centers",
+    what: "Air permits DEQ has issued to data centers, mostly for backup diesel generators, with the permit document for each.",
+  },
+  IL_DCEO: {
+    name: "Illinois DCEO, Data Center Investment Program annual reports",
+    short: "Illinois DCEO",
+    url: "https://dceo.illinois.gov/aboutdceo/reportsrequiredbystatute.html",
+    what: "Data centers with a signed memorandum of understanding and sales-tax exemption certificate, with the MOU year, city, investment commitment and jobs.",
+  },
+  MN_DEED: {
+    name: "Minnesota DEED, list of designated qualified data centers",
+    short: "Minnesota DEED",
+    url: "https://mn.gov/deed/business/financing-business/tax-credits/data-center-credit/",
+    what: "Data centers certified for Minnesota's data-center sales-tax exemption, with company, city and type. No certification dates or addresses are published.",
+  },
+  IN_IEDC: {
+    name: "Indiana IEDC Transparency Portal, data center sales tax exemption contracts",
+    short: "Indiana IEDC",
+    url: "https://transparencyportal.iedc.in.gov/searchtaxgrantloancontracts",
+    what: "Executed data-center sales-tax exemption contracts (fund type DATA), with recipient, city, county, contract date and investment.",
+  },
+  WI_DOR: {
+    name: "Wisconsin Department of Revenue, certified qualified data centers",
+    short: "Wisconsin DOR",
+    url: "https://www.revenue.wi.gov/Pages/FAQS/ExemptionforQualifiedDataCenter.aspx",
+    what: "Data centers certified by WEDC for Wisconsin's data-center sales and use tax exemption, with certification date and location.",
+  },
   ERCOT: {
     name: "ERCOT large-load interconnection reports",
     short: "ERCOT",
     url: "https://www.ercot.com/",
     what: "Statewide totals for large electricity loads asking to connect to the Texas grid.",
+  },
+  OSM: {
+    name: "IM3 Open Source Data Center Atlas (PNNL), built from OpenStreetMap",
+    short: "IM3 atlas (OSM)",
+    url: "https://data.msdlive.org/records/65g71-a4731",
+    what: "Mapped data-center buildings and campuses in every state, with the OpenStreetMap operator tag and footprint area. A map layer, not a public record: it places a site and names an operator, and earns no evidence points.",
   },
 } as const;
 
@@ -52,21 +89,21 @@ export type SourceKey = keyof typeof SOURCES;
 
 export const METRICS = {
   sites: {
-    label: "Sites in Texas records",
+    label: "Sites in our records",
     unit: "sites",
     kind: "documented",
-    source: "Texas Comptroller registry and TDLR construction filings, linked to this organization through registered entities",
-    meaning: "How many distinct data-center sites in our Texas public records are linked to this organization.",
+    source: "Texas Comptroller registry and TDLR construction filings (Texas), and the IM3 data-center atlas operator tag (all states), linked to this organization",
+    meaning: "How many distinct data-center sites in our records are linked to this organization.",
     caveat:
       "Counts only sites we could find in these records and link to the organization. Projects filed under code names, or whose ownership we could not resolve, are not included.",
-    local: "Shows where the organization has a documented physical presence in Texas.",
+    local: "Shows where the organization has a documented or mapped physical presence.",
   },
   counties: {
-    label: "Texas counties",
+    label: "Counties",
     unit: "counties",
     kind: "documented",
     source: "Site addresses and county fields from the Comptroller registry, TDLR filings and the reviewed location list",
-    meaning: "How many different Texas counties the organization's recorded sites are in.",
+    meaning: "How many different counties the organization's recorded sites are in.",
     caveat: "Sites without a published location can't be placed in a county, so the true number may be higher.",
     local: "Shows which local communities host the organization's documented facilities.",
   },
@@ -107,6 +144,16 @@ export const METRICS = {
     caveat:
       "Not a measured or requested load. The real power draw can be much higher or lower. Available only where a construction cost is registered.",
     local: "Data centers use electricity continuously. Large new loads are part of what grid planners and utilities must serve, but this estimate says nothing about local rates or reliability.",
+  },
+  it_mw_modeled: {
+    label: "Modeled IT load",
+    unit: "megawatts (MW), a 10th-90th percentile range",
+    kind: "modeled",
+    source: "Uncloak model: floor area (or the atlas building footprint) × the MW per square foot seen at Texas data centers with both a registered floor area and a construction cost",
+    meaning:
+      "A range for how much IT load a building of this size typically has, based on Texas data centers whose floor area and construction cost are both on record.",
+    caveat:
+      "A statistical estimate, not a record. The training MW is itself cost-derived, an atlas footprint is ground coverage rather than floor area (so multi-storey buildings come out low), and the range is wide on purpose. It never feeds the evidence index.",
   },
   evidence: {
     label: "Evidence index",
@@ -182,12 +229,14 @@ export type MetricKey = keyof typeof METRICS;
 export const KIND_LABEL: Record<MetricKind, string> = {
   documented: "Documented",
   derived: "Uncloak estimate",
+  modeled: "Uncloak estimate (modeled)",
   context: "Context",
 };
 
 export const KIND_HELP: Record<MetricKind, string> = {
   documented: "Taken or summed directly from a public record.",
   derived: "Calculated by Uncloak from public records. See Methodology.",
+  modeled: "A statistical range from an Uncloak model, with its method version and backtest error. Never a record, never scored.",
   context: "Background for interpretation. Not a measurement of this organization or site.",
 };
 
@@ -200,5 +249,8 @@ export const PROGRAM_HELP: Record<string, string> = {
 export const RESOLVED_BY_LABEL: Record<string, string> = {
   COMPTROLLER: "Named on the Texas Comptroller registry record",
   TDLR_TENANT: "Named as tenant on a TDLR construction registration",
+  TDLR_OWNER: "Named as owner on a TDLR construction registration",
+  OSM_OPERATOR: "Named as operator in OpenStreetMap (IM3 data-center atlas), not a registered-entity record",
+  STATE_REGISTRY: "Named in the company text of a state data-center incentive registry",
   MANUAL: "Linked by manual review of a cited source",
 };
