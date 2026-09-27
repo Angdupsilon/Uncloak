@@ -111,17 +111,6 @@ python etl/score.py --project 12 --as-of 2025-06-01   # score one project as of 
 python etl/check_integrity.py                         # read-only audit of the database (exit 1 on failure)
 ```
 
-### 4. Web
-
-```bash
-cd web
-npm install
-npm run dev    # http://localhost:3000
-```
-
-Optional: put a Texas county GeoJSON at `web/public/tx_counties.geojson` for county outlines.
-The map works without it.
-
 ## How to add a project
 
 1. `data/seed/parents.csv`: add the parent company if it's new (`name,color_hex`).
