@@ -127,10 +127,11 @@ export default async function Home() {
 
                 <section aria-labelledby="read-h">
                   <SectionTitle id="read-h">How to read this site</SectionTitle>
-                  <ul className="space-y-4">
+                  {/* One shared grid so the badge column fits the widest badge ("Uncloak estimate (modeled)"). */}
+                  <ul className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-4">
                     {(["documented", "derived", "modeled", "context"] as MetricKind[]).map((k) => (
-                      <li key={k} className="flex gap-3">
-                        <div className="w-[128px] shrink-0 pt-0.5">
+                      <li key={k} className="col-span-2 grid grid-cols-subgrid">
+                        <div className="pt-0.5">
                           <KindBadge kind={k} />
                         </div>
                         <p className="text-[14px] leading-6 text-[var(--hairline-mid)]">
@@ -139,8 +140,8 @@ export default async function Home() {
                         </p>
                       </li>
                     ))}
-                    <li className="flex gap-3">
-                      <div className="w-[128px] shrink-0 pt-0.5 text-[13px] font-semibold text-slate-500">Unavailable</div>
+                    <li className="col-span-2 grid grid-cols-subgrid">
+                      <div className="pt-0.5 text-[13px] font-semibold text-slate-500">Unavailable</div>
                       <p className="text-[14px] leading-6 text-[var(--hairline-mid)]">
                         The records we have don&apos;t report it. It is never shown as zero.
                       </p>
