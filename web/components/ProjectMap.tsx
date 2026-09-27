@@ -87,6 +87,15 @@ export function stateBounds(f: StateFeature): [[number, number], [number, number
   return [[minLat, minLon], [maxLat, maxLon]];
 }
 
+/** MapLibre's vector basemap needs WebGL2 (missing on old devices, locked-down or headless browsers). */
+function hasWebGL2(): boolean {
+  try {
+    return !!document.createElement("canvas").getContext("webgl2");
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Spotlight mask: a world-sized polygon with the area in focus punched out as a hole,
  * drawn over the basemap. Everything outside recedes, so a wide panel that unavoidably
@@ -112,7 +121,9 @@ export function StateSpotlight({ state = null }: { state?: string | null }) {
         type: "FeatureCollection",
         features: [
           { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [world, ...focus.flatMap((f) => outerRings(f.geometry))] } },
-          ...focus.map((f) => ({ type: "Feature" as const, properties: { outline: true }, geometry: f.geometry })),
+          // In the national view the basemap draws the state lines (see VectorBasemap);
+          // outline them here only when it can't render. A single state keeps its outline.
+          ...(state || !hasWebGL2() ? focus : []).map((f) => ({ type: "Feature" as const, properties: { outline: true }, geometry: f.geometry })),
         ],
       } as FeatureCollection);
     });
@@ -160,6 +171,9 @@ function FitRegion({ region }: { region: string | null }) {
   return null;
 }
 
+/** Liberty's state/province border layer (OSM admin levels 3-6). */
+const STATE_LINES = "boundary_3";
+
 /**
  * Vector basemap via MapLibre GL, bridged into Leaflet so every existing layer
  * (markers, spotlight mask, tooltips, fitBounds) keeps working untouched.
@@ -181,30 +195,36 @@ export function VectorBasemap() {
     // (and the shared chunk it imports) from public/ sidesteps the bundler.
     setWorkerUrl("/maplibre-gl-worker.mjs");
 
-    // MapLibre throws without WebGL2 (old devices, locked-down or headless browsers), which
-    // would take the whole page down. Skip the basemap; markers and outlines still render.
-    let webgl2 = false;
-    try {
-      webgl2 = !!document.createElement("canvas").getContext("webgl2");
-    } catch {}
-    if (!webgl2) return;
+    // MapLibre throws without WebGL2, which would take the whole page down.
+    // Skip the basemap; markers and outlines still render.
+    if (!hasWebGL2()) return;
 
     const layer = maplibreGL({ style: "https://tiles.openfreemap.org/styles/liberty" });
     layer.addTo(map);
 
-    // Place labels ship small for a full-screen map; this dashboard shows the
-    // whole state in a panel, so bump every symbol layer's text size.
     const gl = layer.getMaplibreMap();
-    const enlarge = () => {
+    const restyle = () => {
+      // Place labels ship small for a full-screen map; this dashboard shows the
+      // whole state in a panel, so bump every symbol layer's text size.
       for (const lyr of gl.getStyle()?.layers ?? []) {
         if (lyr.type !== "symbol") continue;
         const size = gl.getLayoutProperty(lyr.id, "text-size");
         if (size == null) continue;
         gl.setLayoutProperty(lyr.id, "text-size", scaleTextSize(size));
       }
+      // State lines come from the basemap, so they follow its own coastlines and
+      // country borders. Drawing our Census outlines over them as well left two
+      // slightly offset sets of borders. Liberty only shows them from zoom 5,
+      // dashed; show them at national zoom too, as solid hairlines.
+      if (gl.getLayer(STATE_LINES)) {
+        gl.setLayerZoomRange(STATE_LINES, 0, 24);
+        gl.setPaintProperty(STATE_LINES, "line-dasharray", undefined);
+        gl.setPaintProperty(STATE_LINES, "line-color", "rgba(0, 0, 0, 0.4)");
+        gl.setPaintProperty(STATE_LINES, "line-width", ["interpolate", ["linear"], ["zoom"], 3, 0.6, 7, 1, 11, 2]);
+      }
     };
-    if (gl.isStyleLoaded()) enlarge();
-    else gl.once("styledata", enlarge);
+    if (gl.isStyleLoaded()) restyle();
+    else gl.once("styledata", restyle);
 
     return () => {
       map.removeLayer(layer);
