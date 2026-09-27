@@ -53,7 +53,7 @@ export default function DateSlider({
   };
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-3 lg:min-w-[400px]">
+    <div className="flex min-w-0 flex-1 items-center gap-3 lg:w-[380px] lg:flex-none">
       <button
         onClick={togglePlay}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-[#282828]"

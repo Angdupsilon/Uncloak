@@ -53,6 +53,8 @@ export default function ParentFilter({
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [clipped, setClipped] = useState(0);
 
   // Close the overflow panel on outside click or Escape.
   useEffect(() => {
@@ -90,6 +92,26 @@ export default function ParentFilter({
     return needle ? directory.filter((p) => p.name.toLowerCase().includes(needle)) : directory;
   }, [parents, q]);
 
+  // Count the inline chips that wrapped out of view, whenever the row resizes or its chips change.
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+    const measure = () => {
+      const top = row.getBoundingClientRect().top;
+      let hidden = 0;
+      for (const chip of row.children as HTMLCollectionOf<HTMLElement>) {
+        // Wrapped chips are out of sight, so keep them out of the tab order too.
+        chip.inert = chip.getBoundingClientRect().top - top > 4;
+        if (chip.inert) hidden += 1;
+      }
+      setClipped(hidden);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(row);
+    return () => observer.disconnect();
+  }, [inline]);
+
   if (!parents) {
     return <div className="text-[14px] text-[#afafaf]">{loading ? "Loading parents…" : "No parent data"}</div>;
   }
@@ -106,20 +128,22 @@ export default function ParentFilter({
       >
         All
       </button>
-      <div className="flex min-w-0 items-center gap-2 overflow-hidden">
+      {/* One row high: chips that don't fit wrap onto a hidden second row instead of being cut
+          mid-name, and are counted in "+N more". */}
+      <div ref={rowRef} className="flex h-8 min-w-0 flex-1 flex-wrap items-center gap-2 overflow-hidden">
         {inline.map((p) => (
           <ParentPill key={p.name} p={p} on={active.has(p.name)} onToggle={onToggle} />
         ))}
       </div>
 
-      {overflow.length > 0 && (
+      {overflow.length + clipped > 0 && (
         <button
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-haspopup="dialog"
           className="shrink-0 rounded-full bg-[#efefef] px-3 py-1.5 text-[14px] font-medium leading-5 text-black transition-colors hover:bg-[#e2e2e2]"
         >
-          +{overflow.length} more
+          +{overflow.length + clipped} more
         </button>
       )}
 

@@ -47,71 +47,73 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
     }
   }
 
-  if (!open) {
-    return (
+  // Wide screens: the launcher sits at the end of the controls bar and the chat opens just above it.
+  // Narrower screens: the launcher floats bottom-right and the chat opens as a bottom sheet.
+  return (
+    <div className="contents lg:relative lg:block lg:shrink-0">
       <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-[1100] ub-pill shadow-[var(--shadow-float)] sm:bottom-6 sm:right-6"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="fixed bottom-4 right-4 z-[1100] ub-pill shadow-[var(--shadow-float)] sm:bottom-6 sm:right-6 lg:static lg:!px-4 lg:!py-2 lg:!text-[14px] lg:shadow-none"
       >
         ✦ Ask Uncloak
       </button>
-    );
-  }
-
-  return (
-    <div className="fixed inset-x-3 bottom-3 z-[1100] flex h-[min(480px,80svh)] flex-col sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[480px] sm:w-[380px] overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
-      <div className="flex items-center justify-between border-b border-[#efefef] px-4 py-3 text-black">
-        <div className="text-sm font-semibold">✦ Ask Uncloak</div>
-        <div className="flex items-center gap-2">
-          <GrokVoice asOf={asOf} onResult={onResult} />
-          <button onClick={() => setOpen(false)} className="text-lg leading-none text-[#afafaf] hover:text-black" aria-label="Collapse">–</button>
-        </div>
-      </div>
-      <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-sm">
-        {msgs.length === 0 && (
-          <div className="space-y-2">
-            <div className="text-xs text-[#5e5e5e]">
-              Answers come only from Uncloak&apos;s database as of the selected date. Try:
+      {open && (
+        <div className="fixed inset-x-3 bottom-3 z-[1250] flex h-[min(480px,80svh)] flex-col sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[480px] sm:w-[380px] lg:absolute lg:bottom-full lg:right-0 lg:mb-3 lg:h-[min(480px,calc(100svh-10rem))] overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
+          <div className="flex items-center justify-between border-b border-[#efefef] px-4 py-3 text-black">
+            <div className="text-sm font-semibold">✦ Ask Uncloak</div>
+            <div className="flex items-center gap-2">
+              <GrokVoice asOf={asOf} onResult={onResult} />
+              <button onClick={() => setOpen(false)} className="text-lg leading-none text-[#afafaf] hover:text-black" aria-label="Collapse">–</button>
             </div>
-            {EXAMPLES.map((q) => (
-              <button key={q} onClick={() => ask(q)} className="block w-full rounded-xl border border-[#e2e2e2] px-3 py-2 text-left text-xs text-black transition-colors hover:border-[#e2e2e2] hover:bg-[#f3f3f3]">
-                {q}
-              </button>
-            ))}
           </div>
-        )}
-        {msgs.map((m, i) => (
-          <div key={i} className={m.role === "user" ? "text-right" : ""}>
-            <div className={`inline-block max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-left leading-relaxed ${m.role === "user" ? "rounded-br-md bg-black text-white" : "rounded-bl-md bg-[#efefef] text-black"}`}>
-              {m.text}
-            </div>
-            {m.tools && m.tools.length > 0 && (
-              <div className="mt-1 font-mono text-[10px] text-[#afafaf]">
-                {m.tools.map((t) => `${t.name}(${JSON.stringify(t.args)})`).join(" → ")}
+          <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3 text-sm">
+            {msgs.length === 0 && (
+              <div className="space-y-2">
+                <div className="text-xs text-[#5e5e5e]">
+                  Answers come only from Uncloak&apos;s database as of the selected date. Try:
+                </div>
+                {EXAMPLES.map((q) => (
+                  <button key={q} onClick={() => ask(q)} className="block w-full rounded-xl border border-[#e2e2e2] px-3 py-2 text-left text-xs text-black transition-colors hover:border-[#e2e2e2] hover:bg-[#f3f3f3]">
+                    {q}
+                  </button>
+                ))}
               </div>
             )}
-            {m.matched != null && <div className="text-[11px] text-black">Map filtered to {m.matched} project(s)</div>}
+            {msgs.map((m, i) => (
+              <div key={i} className={m.role === "user" ? "text-right" : ""}>
+                <div className={`inline-block max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-left leading-relaxed ${m.role === "user" ? "rounded-br-md bg-black text-white" : "rounded-bl-md bg-[#efefef] text-black"}`}>
+                  {m.text}
+                </div>
+                {m.tools && m.tools.length > 0 && (
+                  <div className="mt-1 font-mono text-[10px] text-[#afafaf]">
+                    {m.tools.map((t) => `${t.name}(${JSON.stringify(t.args)})`).join(" → ")}
+                  </div>
+                )}
+                {m.matched != null && <div className="text-[11px] text-black">Map filtered to {m.matched} project(s)</div>}
+              </div>
+            ))}
+            {busy && <div className="text-xs text-[#afafaf]">Thinking…</div>}
           </div>
-        ))}
-        {busy && <div className="text-xs text-[#afafaf]">Thinking…</div>}
-      </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          ask(input);
-        }}
-        className="flex gap-2 border-t border-[#e2e2e2] p-2.5"
-      >
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about sites, companies, grid queues…"
-          className="flex-1 rounded-xl border border-[#e2e2e2] px-3 py-2 text-sm outline-none transition-colors placeholder:text-[#afafaf] focus:border-teal-600"
-        />
-        <button disabled={busy || !input.trim()} className="ub-pill !px-5 disabled:opacity-35">
-          Ask
-        </button>
-      </form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              ask(input);
+            }}
+            className="flex gap-2 border-t border-[#e2e2e2] p-2.5"
+          >
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask about sites, companies, grid queues…"
+              className="flex-1 rounded-xl border border-[#e2e2e2] px-3 py-2 text-sm outline-none transition-colors placeholder:text-[#afafaf] focus:border-teal-600"
+            />
+            <button disabled={busy || !input.trim()} className="ub-pill !px-5 disabled:opacity-35">
+              Ask
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

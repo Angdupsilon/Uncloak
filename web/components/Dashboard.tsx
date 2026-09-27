@@ -177,10 +177,10 @@ export default function Dashboard({
         </div>
       </main>
 
-      {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
+      {/* Controls bar: time · area and record filter · companies · Ask (full page only). */}
       <footer
         className={`flex rounded-xl border border-[#e2e2e2] bg-white shadow-[var(--shadow-card)] ${
-          embedded ? "items-center gap-8 px-5 py-3" : "flex-col items-stretch gap-4 p-4 lg:flex-row lg:items-center lg:gap-8 lg:px-5 lg:py-3 lg:pr-[420px]"
+          embedded ? "items-center gap-6 px-5 py-3" : "flex-col items-stretch gap-4 p-4 lg:flex-row lg:items-center lg:gap-6 lg:px-5 lg:py-3"
         }`}
       >
         <DateSlider
@@ -190,7 +190,7 @@ export default function Dashboard({
           loading={summary.loading || projects.loading || parents.loading}
           onChange={setAsOf}
         />
-        <div className={`h-8 w-px shrink-0 bg-[var(--border-soft)] ${embedded ? "" : "hidden lg:block"}`} />
+        <div aria-hidden className={`h-8 w-px shrink-0 bg-[#e2e2e2] ${embedded ? "" : "hidden lg:block"}`} />
         <StateSelect
           projects={allProjects}
           value={region}
@@ -226,7 +226,7 @@ export default function Dashboard({
             </span>
           </span>
         </button>
-        <div className={`h-8 w-px shrink-0 bg-[var(--border-soft)] ${embedded ? "" : "hidden lg:block"}`} />
+        <div aria-hidden className={`h-8 w-px shrink-0 bg-[#e2e2e2] ${embedded ? "" : "hidden lg:block"}`} />
         <div className="min-w-0 flex-1">
           <ParentFilter
             parents={parents.data?.parents ?? null}
@@ -236,9 +236,8 @@ export default function Dashboard({
             loading={parents.loading}
           />
         </div>
+        {!embedded && <AskGridSight asOf={asOf} onResult={onAsk} />}
       </footer>
-
-      {!embedded && <AskGridSight asOf={asOf} onResult={onAsk} />}
       </div>
     </div>
     </>
