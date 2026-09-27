@@ -8,7 +8,7 @@ import SitesTable from "@/components/public/SitesTable";
 import Tabs from "@/components/public/Tabs";
 import TrendChart from "@/components/public/TrendChart";
 import { SourceLink } from "@/components/public/Source";
-import { BigStat, Breadcrumbs, ContextNote, EmptyState, ErrorState, SampleBadge, SampleBanner, StatBand } from "@/components/public/ui";
+import { BigStat, Breadcrumbs, ContextNote, EmptyState, ErrorState, PAGE_WIDTH, SampleBadge, SampleBanner, StatBand } from "@/components/public/ui";
 import { getOrgIndex, getOrgProfile, resolveOrgSlug } from "@/lib/publicQueries";
 import { todayUtc } from "@/lib/queries";
 import { fmtDate, fmtMW, fmtUSD } from "@/lib/format";
@@ -53,7 +53,7 @@ export default async function OrgPage(props: PageProps<"/org/[slug]">) {
     <>
       <SiteHeader />
       {data.ok && data.profile && <SampleBanner show={data.profile.sites.some((s) => s.is_sample)} />}
-      <main id="main" className="px-4 py-8 sm:px-8">
+      <main id="main" className={`${PAGE_WIDTH} py-8`}>
         {!data.ok || !data.profile ? <ErrorState /> : <OrgBody p={data.profile} orgs={data.orgs} today={asOf} />}
       </main>
       <SiteFooter updated={data.ok && data.profile?.computed_at ? fmtDate(data.profile.computed_at) : null} />
@@ -157,11 +157,11 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
             </StatBand>
           </section>
 
-          {/* The advanced dashboard, already filtered to this organization. */}
+          {/* The Atlas, already filtered to this organization. */}
           <section aria-labelledby="dash-h" className="mt-16">
             <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="ub-eyebrow">Advanced dashboard</p>
+                <p className="ub-eyebrow">Atlas</p>
                 <h2 id="dash-h" className="rw-heading-md mt-2">
                   {p.name} on the map
                 </h2>

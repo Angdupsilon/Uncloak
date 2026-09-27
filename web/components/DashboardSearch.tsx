@@ -46,12 +46,12 @@ export default function DashboardSearch({ projects, loading, onSearch, onSelect 
         Search
       </button>
       {open && (
-        <section id="dashboard-search" aria-label="Search dashboard" className="absolute right-0 top-full z-[2000] mt-3 w-[min(400px,calc(100vw-2rem))] rounded-2xl border border-[#e2e2e2] bg-white p-4 shadow-[var(--shadow-float)]">
-          <form role="search" aria-label="Search dashboard records" onSubmit={(event) => {
+        <section id="dashboard-search" aria-label="Search the Atlas" className="absolute right-0 top-full z-[2000] mt-3 w-[min(400px,calc(100vw-2rem))] rounded-2xl border border-[#e2e2e2] bg-white p-4 shadow-[var(--shadow-float)]">
+          <form role="search" aria-label="Search Atlas records" onSubmit={(event) => {
             event.preventDefault();
             onSearch(words.length ? matches.map((p) => p.project_id) : null);
           }}>
-            <label htmlFor="dashboard-search-input" className="mb-2 block text-[14px] text-black">Search this dashboard</label>
+            <label htmlFor="dashboard-search-input" className="mb-2 block text-[14px] text-black">Search the Atlas</label>
             <div className="flex items-center gap-2 rounded-full border border-[#d4d4d4] px-3 py-1 focus-within:border-slate-400">
               <input id="dashboard-search-input" autoFocus value={query} onChange={(event) => setQuery(event.target.value)}
                 placeholder="Company, site, city or county"

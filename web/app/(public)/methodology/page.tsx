@@ -206,7 +206,7 @@ export default async function Methodology() {
                   The index is points ÷ 100. Levels: {TIER_LABELS.verified} at {data.ok ? data.config.tier_thresholds.verified * 100 : 70}% or more,{" "}
                   {TIER_LABELS.likely} at {data.ok ? data.config.tier_thresholds.likely * 100 : 40}% or more, otherwise {TIER_LABELS.low}. A score dated D
                   uses only evidence dated on or before D, so history can be replayed week by week in the{" "}
-                  <Link href="/dashboard" className="rw-link">advanced dashboard</Link>.
+                  <Link href="/dashboard" className="rw-link">Atlas</Link>.
                   {data.ok && data.config.computed_at && <> Scores were last computed {fmtDate(data.config.computed_at)}.</>}
                 </p>
               </Section>
@@ -393,10 +393,10 @@ export default async function Methodology() {
 
 function ErcotSnapshot({ summary }: { summary: Awaited<ReturnType<typeof getSummary>> }) {
   const queue = summary.ercot;
-  if (!queue) return <p className="rw-meta mt-1">No ERCOT queue figure is available for the current dashboard date.</p>;
+  if (!queue) return <p className="rw-meta mt-1">No ERCOT queue figure is available for the current Atlas date.</p>;
   return (
     <div className="mt-3 rounded-lg bg-[var(--canvas-soft)] px-3 py-2.5 text-[13px] leading-5 text-[var(--ink-soft)]">
-      <p className="font-medium text-black">Latest figures used in this dashboard</p>
+      <p className="font-medium text-black">Latest figures used in the Atlas</p>
       <dl className="mt-1 grid grid-cols-1 gap-x-3 sm:grid-cols-[1fr_auto]">
         {queue.gw_requested != null && <SnapshotRow label="Large loads requesting connection" value={fmtGW(queue.gw_requested)} date={queue.ts} url={queue.source_url} />}
         {queue.gw_approved != null && <SnapshotRow label="Approved to energize" value={fmtGW(queue.gw_approved)} date={queue.approved_ts} url={queue.approved_source_url} />}

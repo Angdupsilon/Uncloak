@@ -71,7 +71,7 @@ export default async function OrgIndex() {
                 </div>
                 <p className="rw-meta mt-4">
                   {data.unlinked} sites aren&apos;t linked to any organization yet and aren&apos;t counted above. They still appear in search, nearby
-                  results and the advanced dashboard. <Link href="/methodology#linking" className="rw-link">How linking works</Link>
+                  results and the Atlas. <Link href="/methodology#linking" className="rw-link">How linking works</Link>
                 </p>
               </>
             )}

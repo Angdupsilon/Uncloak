@@ -1,5 +1,5 @@
 "use client";
-// The advanced dashboard, filtered to one organization, inside its public profile.
+// The Atlas, filtered to one organization, inside its public profile.
 // It needs a wide screen (≥1024px); narrower screens get a link to the full-page version.
 import Link from "next/link";
 import { Component, useSyncExternalStore, type ReactNode } from "react";
@@ -25,7 +25,7 @@ class DashboardBoundary extends Component<{ href: string; children: ReactNode },
     if (!this.state.failed) return this.props.children;
     return (
       <div className="rounded-lg bg-[#f7f8fa] p-6 text-[15px] text-[#404040]">
-        The interactive dashboard couldn&apos;t load here.{" "}
+        The Atlas couldn&apos;t load here.{" "}
         <Link href={this.props.href} className="rw-link">
           Open it full-page
         </Link>
@@ -45,7 +45,7 @@ export default function EmbeddedDashboard({ today, parent, href }: { today: stri
   if (!wide) {
     return (
       <div className="rounded-lg bg-[#f7f8fa] p-6 text-[15px] text-[#404040]">
-        The interactive dashboard needs a wider screen.{" "}
+        The embedded Atlas needs a wider screen.{" "}
         <Link href={href} className="rw-link">
           Open it full-page
         </Link>
