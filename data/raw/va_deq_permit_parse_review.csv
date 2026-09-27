@@ -1,0 +1,76 @@
+filename,registration_no_in_pdf,issue_date_in_pdf,permit_no,status,basis,detail_source
+11541-3.pdf,11541,2008-05-16,11541-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+11790_DC_Permit.pdf,11790,2016-08-23,11790-1,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+2152707_DC_TV_Permit.pdf,21527,2024-04-24,21527-7,needs_equipment_review,no complete unambiguous generator equipment row parsed,"facility_address: DEQ permit p. 3, p. 5"
+2152715_DC_Permit.pdf,21527,2023-09-19,21527-15,parsed,parsed,facility_address: DEQ permit p. 4; generator_count and generator_mw_total: DEQ permit p. 6: 15 x 2.5 MW; p. 6: 11 x 2.5 MW; p. 6: 3 x 1 MW; p. 6: 3 x 1.5 MW; p. 6: 20 x 2 MW; p. 6: 60 x 2.5 MW; p. 6: 4 x 2 MW; p. 6: 1 x 0.75 MW; p. 6: 40 x 3 MW; p. 6: 2 x 1.75 MW; p. 6: 1 x 0.8 MW; p. 6: 5 x 2.5 MW
+3014202_DC_Permit.pdf,30142,2025-02-12,30142-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+41064_DC_Permit.pdf,41064,2018-08-10,41064-8,parsed,parsed,facility_address: DEQ permit p. 3; generator_count and generator_mw_total: DEQ permit p. 5: 3 x 2.5 MW; p. 5: 6 x 2.25 MW; p. 5: 6 x 2.5 MW; p. 5: 2 x 1.5 MW; p. 5: 4 x 2.5 MW; p. 5: 2 x 1.5 MW; p. 5: 3 x 2.5 MW
+51232_DC_Permit.pdf,51232,2024-06-24,51232-16,needs_equipment_review,p. 5 has an alternative generator capacity; no complete unambiguous generator equipment row parsed,"facility_address: DEQ permit p. 3, p. 1"
+52173_DC_Permit.pdf,,,,unreadable,PDF has zero pages,
+522219_DC_Permit.pdf,52221,2026-01-12,52221-9,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+52281_DC_Permit.pdf,52281,2026-01-22,52281-10,needs_equipment_review,no complete unambiguous generator equipment row parsed,multiple facility-address candidates in permit; none selected
+52299_DC_Permit.pdf,52299,2011-05-06,,needs_document_identification,registration number/date do not identify exactly one DEQ-list row,
+52403_DC_Permit.pdf,52403,2021-02-09,52403-9,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 2020 x 2.446 MW; p. 4: 2012 x 1.645 MW; p. 4: 2017 x 0.563 MW
+524326_DC_Permit.pdf,52432,2026-04-09,52432-6,needs_equipment_review,p. 5 has an alternative generator capacity; no complete unambiguous generator equipment row parsed,
+52629_DC_Permit.pdf,52629,2018-07-03,,needs_document_identification,registration number/date do not identify exactly one DEQ-list row,
+52820_DC_Permit.pdf,52820,2023-09-05,52820-3,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 4: 40 x 3 MW; p. 4: 2 x 0.5 MW; p. 4: 100 x 3 MW
+52903_DC_Permit.pdf,52903,2023-09-19,52903-4,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 4: 52 x 3.1 MW; p. 4: 3 x 0.5 MW; p. 4: 1 x 0.75 MW; p. 4: 80 x 3.1 MW
+52949_DC_Permit.pdf,52949,2023-09-28,52949-2,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+52973_DC_Permit.pdf,52973,2025-07-23,52973-2,needs_equipment_review,no complete unambiguous generator equipment row parsed,"facility_address: DEQ permit p. 1, p. 3"
+53071_DC_Permit.pdf,53071,2023-07-12,53071-1,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 4: 40 x 3.1 MW; p. 4: 2 x 0.5 MW
+53072_DC_Permit.pdf,53072,2023-07-13,53072-1,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 4: 20 x 3 MW; p. 4: 1 x 0.5 MW
+53086_DC_Permit.pdf,53086,2025-04-22,53086-2,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 5: 130 x 3 MW; p. 5: 5 x 0.5 MW
+531972_DC_Permit.pdf,53197,2026-07-21,53197-2,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+53198_DC_Permit.pdf,53198,2025-05-01,53198-1,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 5: 110 x 3 MW; p. 5: 4 x 0.5 MW
+5325901_DC_Permit.pdf,53259,2026-04-22,53259-1,needs_equipment_review,p. 4 has an alternative generator capacity; no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+5326601_DC_Permit.pdf,53266,2026-05-07,53266-1,needs_equipment_review,p. 4 has an alternative generator capacity; no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+60353_DC_Permit.pdf,60353,2015-08-07,60353-5,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 4
+7180403_DC_Permit.pdf,71804,2009-02-27,71804-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 10
+7180404_DC_Permit.pdf,71804,2016-11-09,71804-4,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 5 x 0.9 MW; p. 4: 3 x 1.365 MW
+72296_DC_Permit.pdf,72296,2013-01-31,72296-5,needs_equipment_review,multi-row equipment table has no independently stated total to check extraction completeness,
+72367_DC_Permit.pdf,72367,2020-02-26,72367-4,needs_equipment_review,equipment table has an additional uncounted generator row,facility_address: DEQ permit p. 3
+72368_DC_Permit.pdf,72368,2009-08-28,72368-4,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 1 x 2 MW; p. 4: 1 x 2 MW
+72374_DC_Permit.pdf,72374,2014-03-27,72374-4,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+723759_DC_Permit.pdf,72375,2026-03-10,72375-9,parsed,parsed,"facility_address: DEQ permit p. 1, p. 3; generator_count and generator_mw_total: DEQ permit p. 5: 4 x 2.25 MW; p. 5: 5 x 3 MW; p. 5: 2 x 2 MW; p. 5: 3 x 2 MW; p. 5: 4 x 2 MW; p. 5: 1 x 0.275 MW; p. 5: 3 x 2 MW; p. 5: 1 x 0.275 MW"
+73158_DC_Permit.pdf,73158,2003-09-16,73158-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+73160_DC_Permit.pdf,73160,2019-10-30,73160-6,needs_equipment_review,multi-row equipment table has no independently stated total to check extraction completeness,facility_address: DEQ permit p. 1
+73162_DC_Permit.pdf,73162,2010-03-05,73162-3,parsed,parsed,facility_address: DEQ permit p. 3; generator_count and generator_mw_total: DEQ permit p. 4: 12 x 2.06 MW; p. 4: 6 x 2.06 MW
+73170_DC_Permit.pdf,73170,2000-11-22,73170-1,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+73180_DC_Permit.pdf,73180,2008-08-07,73180-4,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+73199_DC_Permit.pdf,73199,2009-04-28,73199-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+7320002_DC_Permit.pdf,73200,2006-10-19,73200-2,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+7320003_DC_Permit.pdf,73200,2007-10-18,73200-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+73230_DC_Permit.pdf,73230,2009-01-09,73230-2,parsed,parsed,"facility_address: DEQ permit p. 1, p. 3; generator_count and generator_mw_total: DEQ permit p. 4: 4 x 1 MW"
+73233_DC_Permit.pdf,73233,2024-03-19,73233-8,needs_equipment_review,equipment table has an additional uncounted generator row,
+73240_DC_Permit.pdf,73240,2024-09-20,,needs_document_identification,registration number/date do not identify exactly one DEQ-list row,
+73293_DC_Permit.pdf,73293,2010-08-12,73293-2,parsed,parsed,facility_address: DEQ permit p. 3; generator_count and generator_mw_total: DEQ permit p. 4: 1 x 1.5 MW; p. 4: 1 x 1.5 MW; p. 4: 1 x 1.5 MW; p. 4: 1 x 1.5 MW
+73294_DC_Permit.pdf,73294,2024-10-11,73294-16,parsed,parsed,"facility_address: DEQ permit p. 3, p. 17; generator_count and generator_mw_total: DEQ permit p. 19: 1 x 2 MW"
+73341_DC_Permit.pdf,73341,2008-07-25,73341-2,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 1 x 2 MW
+73355_DC_Permit.pdf,73355,2025-05-19,73355-21,parsed,parsed,facility_address: DEQ permit p. 3; generator_count and generator_mw_total: DEQ permit p. 4: 2 x 2.5 MW
+73363_DC_Permit.pdf,73363,2014-07-16,73363-2,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+733693_DC_Permit.pdf,73369,2025-09-16,73369-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+7337012_DC_Permit.pdf,73370,2013-08-27,73370-12,parsed,parsed,facility_address: DEQ permit p. 84; generator_count and generator_mw_total: DEQ permit p. 68: 28 x 2.25 MW
+7337015_DC_Permit.pdf,73370,2016-12-07,73370-15,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+7337016_DC_Permit.pdf,73370,2017-08-23,73370-16,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+73567_DC_Permit.pdf,73567,2007-11-07,73567-1,needs_equipment_review,no complete unambiguous generator equipment row parsed,multiple facility-address candidates in permit; none selected
+7364301_DC_Permit.pdf,73643,2007-12-19,73643-1,needs_equipment_review,no complete unambiguous generator equipment row parsed,"facility_address: DEQ permit p. 1, p. 3"
+7364303_DC_Permit.pdf,73643,2009-08-28,73643-3,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+7364304_DC_Permit.pdf,73643,2010-04-29,73643-4,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+7364305_DC_Permit.pdf,73643,2011-10-13,73643-5,needs_equipment_review,no complete unambiguous generator equipment row parsed,
+7367012_DC_Permit.pdf,73670,2014-01-29,,needs_document_identification,registration number/date do not identify exactly one DEQ-list row,
+7367014_DC_Permit.pdf,73670,2025-03-14,73670-14,needs_equipment_review,equipment table has an additional uncounted generator row,facility_address: DEQ permit p. 27
+73683_DC_Permit.pdf,73683,2021-08-24,73683-12,parsed,parsed,facility_address: DEQ permit p. 3; generator_count and generator_mw_total: DEQ permit p. 5: 3 x 2 MW; p. 5: 1 x 2.5 MW; p. 5: 7 x 2.05 MW; p. 5: 3 x 2.5 MW; p. 5: 3 x 2.5 MW
+7371701_DC_Permit.pdf,73717,2009-01-15,73717-1,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 1 x 1.025 MW; p. 4: 1 x 1.025 MW; p. 4: 1 x 0.9 MW; p. 4: 1 x 1.025 MW
+7371703_DC_Permit.pdf,73717,2019-05-29,73717-3,needs_equipment_review,equipment table has an additional uncounted generator row,
+7374123_DC_Permit.pdf,73741,2026-01-20,73741-23,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 5: 1 x 3 MW
+73743_DC_Permit.pdf,73743,2025-08-04,73743-7,parsed,parsed,facility_address: DEQ permit p. 3; generator_count and generator_mw_total: DEQ permit p. 5: 12 x 3 MW; p. 5: 2 x 1 MW; p. 5: 26 x 3 MW; p. 5: 1 x 0.75 MW; p. 5: 6 x 2 MW; p. 5: 3 x 2 MW; p. 5: 5 x 2 MW
+73757_DC_Permit.pdf,73757,2024-07-30,73757-6,needs_equipment_review,no complete unambiguous generator equipment row parsed,facility_address: DEQ permit p. 3
+73798_DC_Permit.pdf,73798,2011-01-28,,needs_document_identification,registration number/date do not identify exactly one DEQ-list row,
+73809_DC_Permit.pdf,73809,2010-06-03,73809-1,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 1 x 0.5 MW; p. 4: 1 x 0.5 MW; p. 4: 1 x 0.3 MW
+73813_DC_Permit.pdf,73813,2011-01-26,73813-1,needs_equipment_review,multi-row equipment table has no independently stated total to check extraction completeness,
+73823_DC_Permit.pdf,73823,2014-11-17,73823-2,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 13: 1 x 1.6 MW
+73853_DC_Permit.pdf,73853,2024-08-27,73853-13,needs_equipment_review,multi-row equipment table has no independently stated total to check extraction completeness,multiple facility-address candidates in permit; none selected
+73860_DC_Permit.pdf,73860,2025-01-30,73860-16,needs_equipment_review,multi-row equipment table has no independently stated total to check extraction completeness,multiple facility-address candidates in permit; none selected
+73868_DC_Permit.pdf,73868,2011-04-14,73868-1,parsed,parsed,generator_count and generator_mw_total: DEQ permit p. 4: 1 x 0.75 MW
+73935_DC_Permit.pdf,73935,2024-12-03,73935-7,needs_equipment_review,multi-row equipment table has no independently stated total to check extraction completeness,facility_address: DEQ permit p. 3
+7394606_DC_Permit.pdf,73946,2024-10-01,73946-6,parsed,multiple facility-address candidates in permit; none selected,multiple facility-address candidates in permit; none selected; generator_count and generator_mw_total: DEQ permit p. 5: 14 x 3.5 MW
