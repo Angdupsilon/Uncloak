@@ -43,7 +43,7 @@ export default async function AskPage(props: PageProps<"/ask">) {
           <p className="ub-eyebrow">Ask Uncloak</p>
           <h1 className="rw-display-sm mt-3">Answers from the records</h1>
           <p className="mt-3 max-w-2xl text-[17px] leading-7 text-[var(--body)]">
-            Ask about data-center projects and companies across the U.S., Texas permits, or the ERCOT queue. Answers use only the public-record data behind Uncloak.
+            Ask about data-center projects and companies across the U.S., state permits and registries, or grid load queues. Answers use only the public-record data behind Uncloak.
           </p>
           <div className="mt-8 max-w-3xl">
             <SearchBox size="lg" defaultValue={question} placeholder="Ask a question about U.S. data centers…" />
@@ -51,7 +51,7 @@ export default async function AskPage(props: PageProps<"/ask">) {
 
           {!result ? (
             <div className="mt-12">
-              <EmptyState title="Ask a question">For example: “Which projects around Dallas look least certain?”</EmptyState>
+              <EmptyState title="Ask a question">For example: “Which sites in Loudoun County, Virginia look least certain?”</EmptyState>
             </div>
           ) : (
             <div className="mt-12 grid max-w-5xl gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)]">
@@ -84,7 +84,7 @@ function OrganizationCard({ organization }: { organization: Organization }) {
       <p className="rw-meta">Organization in the records</p>
       <h2 className="mt-2 text-[21px] font-medium leading-7 text-black">{organization.name}</h2>
       <p className="mt-3 text-[14px] leading-5 text-[var(--body)]">
-        {organization.sites.toLocaleString()} {organization.sites === 1 ? "site" : "sites"} linked in Texas public records
+        {organization.sites.toLocaleString()} {organization.sites === 1 ? "site" : "sites"} linked in our records
         {organization.mw_total != null ? ` · ${fmtMW(organization.mw_total)} estimated` : ""}.
       </p>
       <div className="mt-5 flex flex-col items-stretch gap-2">

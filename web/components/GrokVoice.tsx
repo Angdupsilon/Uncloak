@@ -124,18 +124,18 @@ export default function GrokVoice({ asOf = "", onResult, onTranscript, onPartial
             reasoning: { effort: "high" },
             instructions: onTranscript
               ? "Transcribe the user's search accurately. Do not answer it."
-              : "You are the voice for Uncloak, a Texas data-center public-records tool. For every factual question, call ask_uncloak and base your answer only on its result. Be concise, natural, and transparent about missing data. Never invent a site, company, number, or source.",
+              : "You are the voice for Uncloak, a U.S. data-center public-records tool. For every factual question, call ask_uncloak and base your answer only on its result. Be concise, natural, and transparent about missing data. Never invent a site, company, number, or source.",
             // We commit turns ourselves after a sustained pause. Server VAD was
             // ending turns early for natural mid-sentence pauses.
             turn_detection: null,
             audio: {
-              input: { format: { type: "audio/pcm", rate: 24000 }, transport: "binary", transcription: { model: "grok-transcribe", language_hint: "en", keyterms: ["Uncloak", "ERCOT", "TDLR", "TCEQ", "data center"] } },
+              input: { format: { type: "audio/pcm", rate: 24000 }, transport: "binary", transcription: { model: "grok-transcribe", language_hint: "en", keyterms: ["Uncloak", "ERCOT", "PJM", "TDLR", "TCEQ", "Loudoun", "data center"] } },
               output: { format: { type: "audio/pcm", rate: 24000 }, transport: "binary" },
             },
             tools: onTranscript ? [] : [{
               type: "function",
               name: "ask_uncloak",
-              description: "Answer a question using Uncloak's read-only Texas data-center database and update the dashboard map when relevant.",
+              description: "Answer a question using Uncloak's read-only U.S. data-center database and update the dashboard map when relevant.",
               parameters: { type: "object", properties: { question: { type: "string" } }, required: ["question"] },
             }],
           },

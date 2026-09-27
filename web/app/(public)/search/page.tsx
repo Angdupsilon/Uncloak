@@ -46,7 +46,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
 
           <div className="mt-12">
             {!res ? (
-              <EmptyState title="Type at least two characters">Try a company (Google, Anthropic), a city (Abilene), a county (Ellis County) or a ZIP code.</EmptyState>
+              <EmptyState title="Type at least two characters">Try a company (Google, Anthropic), a city (Abilene), a county (Loudoun County) or a ZIP code.</EmptyState>
             ) : !res.ok ? (
               <ErrorState />
             ) : (
@@ -54,7 +54,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
                 {real.length === 0 && (
                   <div className="mb-10">
                     <EmptyState title={`No organizations, sites or entities match “${q}”`}>
-                      The records cover data-center sites in Texas public records and the IM3 data-center atlas. Check the spelling, try a shorter name, or search the place instead. Many sites are
+                      The records cover data-center sites in state public records (deepest in Texas) and the IM3 data-center atlas across the U.S. Check the spelling, try a shorter name, or search the place instead. Many sites are
                       filed under LLC names, so a company can appear under a different name.
                     </EmptyState>
                   </div>

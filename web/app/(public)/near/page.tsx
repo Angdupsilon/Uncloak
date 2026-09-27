@@ -87,8 +87,8 @@ export default async function NearPage(props: PageProps<"/near">) {
                   Abilene
                 </Link>
                 ,{" "}
-                <Link href="/near?q=Ellis%20County%2C%20TX&county=Ellis" className="rw-link">
-                  Ellis County
+                <Link href="/near?q=Loudoun%20County%2C%20VA&county=Loudoun" className="rw-link">
+                  Loudoun County, VA
                 </Link>{" "}
                 or{" "}
                 <Link href="/near?q=78725" className="rw-link">

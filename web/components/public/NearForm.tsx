@@ -36,7 +36,7 @@ export default function NearForm({ q, radius, lat, lon }: { q: string; radius: n
             id={`${id}-q`}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="e.g. Abilene, 78725, or 1102 McKinzie Rd, Corpus Christi"
+            placeholder="e.g. Ashburn, VA, 78725, or 1102 McKinzie Rd, Corpus Christi"
             autoComplete="off"
             className="w-full border-0 border-b border-[var(--rw-hairline-soft,#c9ccd1)] bg-transparent py-3 text-[17px] text-black outline-none placeholder:text-[#939393] focus:border-black"
           />

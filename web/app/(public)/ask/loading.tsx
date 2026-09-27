@@ -12,7 +12,7 @@ export default function AskLoading() {
             <span aria-hidden className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-[#d5d5d5] border-t-black" />
             <div>
               <p className="text-[17px] font-medium text-black">Generating an answer from the records…</p>
-              <p className="mt-1 text-[14px] leading-5 text-[var(--body)]">Uncloak is checking the relevant Texas public-record data and sources.</p>
+              <p className="mt-1 text-[14px] leading-5 text-[var(--body)]">Uncloak is checking the relevant public-record data and sources.</p>
             </div>
           </div>
           <div aria-hidden className="mt-8 animate-pulse space-y-3 border-t border-[var(--hairline)] pt-6">

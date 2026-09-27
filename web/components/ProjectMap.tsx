@@ -248,6 +248,37 @@ function Counties() {
   return <GeoJSON data={data} style={{ color: "#000000", weight: 0.5, fill: false, opacity: 0.18 }} interactive={false} />;
 }
 
+const PARENT_FIT_MAX_ZOOM = 7;
+/** Sites in focus never draw smaller than this, so a lone small site is still easy to spot. */
+const FOCUS_MIN_RADIUS_PX = 8;
+
+/**
+ * Frame the sites of the parents in focus whenever that selection changes (and
+ * once their sites first load, for deep links like /org/anthropic). Date and
+ * data refreshes don't refit, so a pan/zoom the viewer made sticks.
+ */
+function FitParents({ projects, active }: { projects: Project[]; active: Set<string> }) {
+  const map = useMap();
+  const fitted = useRef<string | null>(null);
+  const key = [...active].sort().join("|");
+  useEffect(() => {
+    if (!key) {
+      fitted.current = null;
+      return;
+    }
+    if (fitted.current === key) return;
+    const pts = projects
+      .filter((p) => active.has(p.parent ?? UNRESOLVED_PARENT) && p.lat != null && p.lon != null)
+      .map((p) => [p.lat!, p.lon!] as [number, number]);
+    if (!pts.length) return;
+    fitted.current = key;
+    // Capped wider than a search fit: a parent with one or two sites should still
+    // show the surrounding region, not a single county.
+    map.fitBounds(latLngBounds(pts), { padding: [UI.fitPaddingPx, UI.fitPaddingPx], maxZoom: PARENT_FIT_MAX_ZOOM });
+  }, [key, active, projects, map]);
+  return null;
+}
+
 function FitBounds({ projects, ids, request }: { projects: Project[]; ids: number[] | null; request: number }) {
   const map = useMap();
   useEffect(() => {
@@ -306,8 +337,13 @@ export default function ProjectMap({ projects, region = null, selectedId, onSele
   const located = projects.filter((p) => p.lat != null && p.lon != null);
   const unlocated = projects.length - located.length;
 
-  // Draw bigger circles first so small ones stay clickable.
-  const ordered = [...located].sort((a, b) => (b.mw_est ?? 0) - (a.mw_est ?? 0));
+  const isDimmed = (p: Project) =>
+    (activeParents.size > 0 && !activeParents.has(p.parent ?? UNRESOLVED_PARENT)) || (highlight !== null && !highlight.has(p.project_id));
+  const filtering = activeParents.size > 0 || highlight !== null;
+  // Draw every site in focus above the dimmed rest, so a filtered parent's sites
+  // aren't buried under other operators' markers; within each group, bigger
+  // circles first so small ones stay clickable.
+  const ordered = [...located].sort((a, b) => Number(isDimmed(b)) - Number(isDimmed(a)) || (b.mw_est ?? 0) - (a.mw_est ?? 0));
 
   return (
     <div className="gs-map relative h-full w-full overflow-hidden bg-[#aad3df]">
@@ -318,21 +354,24 @@ export default function ProjectMap({ projects, region = null, selectedId, onSele
         {region === "TX" && <Counties />}
         <FitRegion region={region} />
         <FitBounds projects={projects} ids={highlightIds} request={fitRequest} />
+        <FitParents projects={projects} active={activeParents} />
         {ordered.map((p) => {
-          const parentKey = p.parent ?? UNRESOLVED_PARENT;
-          const dimmed = (activeParents.size > 0 && !activeParents.has(parentKey)) || (highlight !== null && !highlight.has(p.project_id));
+          const dimmed = isDimmed(p);
           const opacity = dimmed ? UI.dimmedOpacity : 1;
           const selected = p.project_id === selectedId;
           return (
             <CircleMarker
-              key={p.project_id}
+              // Re-keyed on focus change: Leaflet stacks SVG paths in insertion
+              // order, so a marker must be re-added to move above the dimmed ones.
+              key={`${p.project_id}:${dimmed ? "d" : "f"}`}
               center={[p.lat!, p.lon!]}
-              radius={radiusFor(p.mw_est)}
+              radius={filtering && !dimmed ? Math.max(FOCUS_MIN_RADIUS_PX, radiusFor(p.mw_est)) : radiusFor(p.mw_est)}
               pathOptions={{
-                // Parent ownership is available in the project details and filters;
-                // keeping markers un-stroked lets evidence tier remain the sole map
-                // encoding, including when a project is selected.
-                stroke: false,
+                // Evidence tier stays the fill colour. While a filter is on, sites
+                // in focus get a dark ring so they separate from the dimmed rest.
+                stroke: filtering && !dimmed,
+                color: "#111111",
+                weight: 1.5,
                 opacity,
                 fillColor: TIER_COLORS_MAP[p.tier],
                 // A higher base opacity makes stacked markers visibly deepen,

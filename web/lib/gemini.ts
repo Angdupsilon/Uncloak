@@ -13,7 +13,7 @@ import {
 } from "./queries";
 import type { AskResponse } from "./types";
 
-const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage. Coverage is national. ERCOT figures cover Texas. Evidence-score factors are public-record types: Texas has all of them, Illinois, Minnesota, Indiana and Wisconsin have a state incentive registry, and elsewhere a site can score 0 because those record types are not loaded there, not because evidence was checked and failed. it_mw_modeled is a modeled range (low-high), never a record: always call it "an Uncloak estimate (modeled)" and give its range, not one number. Sites whose only record is "site_mapped" come from the IM3 data-center atlas (OpenStreetMap); say so when you cite one.`;
+const SYSTEM_PROMPT = `You are Uncloak's analyst. Answer only from tool results. Never state a number, project, company, or date that did not appear in a tool result. If tools return nothing, say so. Keep answers under 80 words. Probabilities are an uncalibrated evidence index; call them "evidence scores." When a question refers to a set of projects, call filter_projects so the map can show them. "Phantom load" means phantom_gw: queue load ERCOT has not approved to energize. Never call shadow_gw phantom: it is the gap between the queue and what our public records have matched so far, which mostly reflects our data coverage. Coverage is national. ERCOT figures cover Texas. Evidence-score factors are public-record types: Texas has all of them, Illinois, Minnesota, Indiana and Wisconsin have a state incentive registry, Virginia has DEQ air permits (matched to only a few sites so far), and elsewhere a site can score 0 because those record types are not loaded there, not because evidence was checked and failed. it_mw_modeled is a modeled range (low-high), never a record: always call it "an Uncloak estimate (modeled)" and give its range, not one number. Sites whose only record is "site_mapped" come from the IM3 data-center atlas (OpenStreetMap); say so when you cite one.`;
 
 const MAX_ROUNDS = 4;
 const MAX_PROJECTS_TO_MODEL = 40;
@@ -35,7 +35,7 @@ export const TOOL_DECLARATIONS: FunctionDeclaration[] = [
         min_cost_usd: { type: "number", description: "Minimum total registered construction cost in USD" },
         max_probability: { type: "number", description: "Maximum evidence score, 0-1" },
         min_probability: { type: "number", description: "Minimum evidence score, 0-1" },
-        has_permit: { type: "boolean", description: "true = has a TCEQ (environmental/air) permit filed; false = no permit filed" },
+        has_permit: { type: "boolean", description: "true = has a state air permit filed (TCEQ in Texas, DEQ in Virginia); false = no permit filed" },
         as_of: asOfProp,
       },
     },
@@ -114,7 +114,7 @@ export async function runTool(call: FunctionCall, dashboardAsOf: string, state: 
           tier: p.tier,
           mw_est: p.mw_est,
           total_registered_cost_usd: p.total_cost,
-          has_tceq_permit: p.has_permit,
+          has_air_permit: p.has_permit,
           is_sample: p.is_sample,
         })),
       };

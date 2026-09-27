@@ -8,7 +8,7 @@ import { Container, ErrorState, KindBadge } from "@/components/public/ui";
 import { query } from "@/lib/db";
 import { getConfig, getEstimateMethods, getSummary, todayUtc } from "@/lib/queries";
 import { fmtDate, fmtGW, fmtUSD } from "@/lib/format";
-import { METRICS, SOURCES, type MetricKind, type SourceKey } from "@/lib/metrics";
+import { METRICS, REFERENCE_SOURCES, SOURCES, type MetricKind, type SourceKey } from "@/lib/metrics";
 import { TIER_LABELS } from "@/lib/constants";
 
 export const metadata: Metadata = { title: "Methodology · Uncloak" };
@@ -59,8 +59,9 @@ export default async function Methodology() {
           <p className="ub-eyebrow">Methodology</p>
           <h1 className="rw-display-sm mt-3">How Uncloak works, and what it can&apos;t tell you</h1>
           <p className="rw-subtitle mt-5 max-w-3xl">
-            Uncloak assembles public records about data-center sites (deepest in Texas) and mapped data-center sites across the U.S., links them to
-            the organizations behind them, and shows what each record documents. This page explains every step and its limits.
+            Uncloak assembles public records about data-center sites (deepest in Texas, with state registries and permits in Illinois, Minnesota, Indiana,
+            Wisconsin and Virginia) and mapped data-center sites across the U.S., links them to the organizations behind them, and shows what each record
+            documents. This page explains every step and its limits.
           </p>
 
           <div className="mt-14 grid gap-12 lg:grid-cols-[220px_1fr]">
@@ -82,6 +83,7 @@ export default async function Methodology() {
 
               <Section id="sources" title="Sources">
                 <p>Every site, date and dollar figure comes from one of these public records. Each record on a site page links to its original filing.</p>
+                <h3 className="text-[17px] font-medium text-black">Records and mapped sites</h3>
                 <ul className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
                   {(Object.keys(SOURCES) as SourceKey[]).map((k) => {
                     const st = data.ok ? data.stats.find((x) => x.source === k) : undefined;
@@ -102,6 +104,22 @@ export default async function Methodology() {
                       </li>
                     );
                   })}
+                </ul>
+                <h3 className="pt-4 text-[17px] font-medium text-black">Grid, reference and lookup data</h3>
+                <p className="text-[15px]">
+                  These don&apos;t document a site. They give grid context, place a site on the map or the grid, or supply a benchmark for a derived value, and
+                  add no evidence points.
+                </p>
+                <ul className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
+                  {Object.values(REFERENCE_SOURCES).map((src) => (
+                    <li key={src.short} className="py-4">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <span className="text-black">{src.name}</span>
+                        <SourceLink url={src.url} label="Visit source" />
+                      </div>
+                      <p className="mt-1 text-[14px]">{src.what}</p>
+                    </li>
+                  ))}
                 </ul>
               </Section>
 
@@ -292,8 +310,9 @@ export default async function Methodology() {
                   <li>
                     Public records are deepest in Texas (Comptroller, TDLR, TCEQ, ERCOT). Illinois (DCEO Data Center Investment Program), Minnesota
                     (DEED qualified data centers), Indiana (IEDC exemption contracts) and Wisconsin (DOR certified data centers) add state incentive
-                    registries, and Virginia DEQ&apos;s data-center air-permit list is loaded but not yet
-                    matched to sites. Elsewhere, sites come from the IM3 Open Source Data Center Atlas, which maps data-center buildings from OpenStreetMap.
+                    registries. Virginia DEQ&apos;s data-center air-permit list is loaded, but a permit joins a mapped site only when the permit document
+                    places the facility within 250 m of a site whose operator the permit names; the rest are held for review, so most Virginia sites don&apos;t
+                    show a permit yet. Elsewhere, sites come from the IM3 Open Source Data Center Atlas, which maps data-center buildings from OpenStreetMap.
                     Those sites have a location, footprint and operator tag but no public record yet, so they score 0 on the evidence index. Each checklist
                     item says when its record type isn&apos;t published in a state, which is different from a record that was checked and found missing.
                     Company headquarters aren&apos;t in this dataset.
@@ -302,7 +321,10 @@ export default async function Methodology() {
                     The atlas covers well-mapped buildings, not every data center, and has no sites in Alaska, Delaware, Hawaii, Rhode Island or Vermont.
                     In Texas, 14 atlas sites that may duplicate an existing registry project are held back for review.
                   </li>
-                  <li>ERCOT figures, found capacity and the queue timeline cover Texas projects with public records only.</li>
+                  <li>
+                    ERCOT figures, found capacity and the weekly queue comparison cover Texas projects with public records only. Georgia Power and PJM load
+                    reports are shown as published, with their own scope, and are never added to ERCOT or compared with site records.
+                  </li>
                   <li>
                     The TDLR data comes from a keyword search for &ldquo;data center&rdquo;. Code-named projects whose filings don&apos;t use those words can be
                     missing.
