@@ -69,15 +69,16 @@ export default function ParentFilter({
     };
   }, [open]);
 
-  // getParents already sorts by evidence-weighted MW, so the head of the list
-  // is the top N. Any selected parent outside that head is pinned inline too,
-  // so a selection never hides behind "More".
+  // getParents already sorts by evidence-weighted MW. Selected parents lead the
+  // bar, then the top unselected ones fill it to N. Leading matters: the bar
+  // clips on narrow layouts (the embedded org dashboard), so a selection placed
+  // after the top N was cut off and read as hidden behind "More".
   const { inline, overflow } = useMemo(() => {
     const rows = parents ?? [];
-    const head = rows.slice(0, INLINE_LIMIT);
-    const headNames = new Set(head.map((p) => p.name));
-    const pinned = rows.filter((p) => active.has(p.name) && !headNames.has(p.name));
-    return { inline: [...head, ...pinned], overflow: rows.filter((p) => !headNames.has(p.name)) };
+    const selected = rows.filter((p) => active.has(p.name));
+    const rest = rows.filter((p) => !active.has(p.name));
+    const fill = rest.slice(0, Math.max(0, INLINE_LIMIT - selected.length));
+    return { inline: [...selected, ...fill], overflow: rest.slice(fill.length) };
   }, [parents, active]);
 
   // The directory is a complete company picker, including the companies that
@@ -93,8 +94,6 @@ export default function ParentFilter({
     return <div className="text-[14px] text-[#afafaf]">{loading ? "Loading parents…" : "No parent data"}</div>;
   }
   if (!parents.length) return <div className="text-[14px] text-[#afafaf]">No parents as of this date</div>;
-
-  const hiddenActive = overflow.filter((p) => active.has(p.name)).length;
 
   return (
     <div ref={wrapRef} className="relative flex min-w-0 items-center gap-2">
@@ -118,11 +117,9 @@ export default function ParentFilter({
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-haspopup="dialog"
-          className={`shrink-0 rounded-full px-3 py-1.5 text-[14px] font-medium leading-5 transition-colors ${
-            hiddenActive > 0 ? "bg-black text-white" : "bg-[#efefef] text-black hover:bg-[#e2e2e2]"
-          }`}
+          className="shrink-0 rounded-full bg-[#efefef] px-3 py-1.5 text-[14px] font-medium leading-5 text-black transition-colors hover:bg-[#e2e2e2]"
         >
-          {hiddenActive > 0 ? `${hiddenActive} more selected` : `+${overflow.length} more`}
+          +{overflow.length} more
         </button>
       )}
 
