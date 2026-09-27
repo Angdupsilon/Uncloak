@@ -64,7 +64,7 @@ export default async function Methodology() {
             documents. This page explains every step and its limits.
           </p>
 
-          <div className="mt-14 grid gap-12 lg:grid-cols-[220px_1fr]">
+          <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[220px_minmax(0,1fr)]">
             <nav aria-label="On this page" className="lg:sticky lg:top-6 lg:self-start">
               <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-[var(--slate)]">On this page</p>
               <ul className="mt-3 space-y-2 text-[14px]">
@@ -162,7 +162,7 @@ export default async function Methodology() {
                       ["context", "Background that helps interpret a finding, like statewide grid figures. Not a measurement of the organization or site you're viewing."],
                     ] as [MetricKind, string][]
                   ).map(([k, text]) => (
-                    <div key={k} className="grid gap-2 sm:grid-cols-[150px_1fr]">
+                    <div key={k} className="grid grid-cols-1 gap-2 sm:grid-cols-[150px_1fr]">
                       <dt>
                         <KindBadge kind={k} />
                       </dt>
@@ -182,7 +182,7 @@ export default async function Methodology() {
                   advancing. It&apos;s <strong className="font-semibold text-black">uncalibrated</strong>, and it isn&apos;t a probability that anything will be built.
                 </p>
                 {data.ok && data.config.factors.length > 0 && (
-                  <div className="overflow-x-auto">
+                  <div className="relative overflow-x-auto">
                     <table className="w-full min-w-[420px] border-y border-[var(--hairline)] text-left text-[15px]">
                       <caption className="sr-only">Evidence checklist</caption>
                       <thead className="text-[13px] text-[var(--slate)]">
@@ -397,7 +397,7 @@ function ErcotSnapshot({ summary }: { summary: Awaited<ReturnType<typeof getSumm
   return (
     <div className="mt-3 rounded-lg bg-[var(--canvas-soft)] px-3 py-2.5 text-[13px] leading-5 text-[var(--ink-soft)]">
       <p className="font-medium text-black">Latest figures used in this dashboard</p>
-      <dl className="mt-1 grid gap-x-3 sm:grid-cols-[1fr_auto]">
+      <dl className="mt-1 grid grid-cols-1 gap-x-3 sm:grid-cols-[1fr_auto]">
         {queue.gw_requested != null && <SnapshotRow label="Large loads requesting connection" value={fmtGW(queue.gw_requested)} date={queue.ts} url={queue.source_url} />}
         {queue.gw_approved != null && <SnapshotRow label="Approved to energize" value={fmtGW(queue.gw_approved)} date={queue.approved_ts} url={queue.approved_source_url} />}
         {queue.gw_observed_peak != null && <SnapshotRow label="Observed energized peak" value={fmtGW(queue.gw_observed_peak)} date={queue.peak_ts} url={queue.peak_source_url} />}
@@ -411,7 +411,7 @@ function SnapshotRow({ label, value, date, url }: { label: string; value: string
   return (
     <div className="contents">
       <dt>{label}</dt>
-      <dd className="text-right tabular-nums text-black">
+      <dd className="mb-1.5 tabular-nums text-black sm:mb-0 sm:text-right">
         {value} {date && <SourceLink url={url} label={fmtDate(date)} className="ml-1 text-[12px]" />}
       </dd>
     </div>

@@ -48,7 +48,7 @@ export default function SitesTable({ sites, showOrg = false, caption }: { sites:
   ];
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-[var(--hairline)] bg-white">
+    <div className="relative overflow-x-auto rounded-lg border border-[var(--hairline)] bg-white">
       <table className="w-full min-w-[720px] border-collapse text-left text-[14px]">
         <caption className="sr-only">{caption}. Column headers are buttons that sort the table.</caption>
         <thead className="bg-[var(--canvas-softer)] text-[12px] text-[var(--body)]">

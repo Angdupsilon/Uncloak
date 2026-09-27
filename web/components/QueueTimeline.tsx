@@ -340,7 +340,7 @@ export default function QueueTimeline({
   );
 
   return (
-    <section className={`ub-card shrink-0 overflow-hidden ${isPage ? "px-6 py-5" : "px-4 py-3"}`}>
+    <section className={`ub-card shrink-0 overflow-hidden ${isPage ? "px-4 py-5 sm:px-6" : "px-4 py-3"}`}>
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
         {!isPage && (
         <button
@@ -390,9 +390,9 @@ export default function QueueTimeline({
           <div>{current ? <StageBars w={current} /> : null}</div>
 
           <div className="flex min-w-0 flex-col">
-            <div className="ub-caption flex items-center justify-between text-[#5e5e5e]">
+            <div className="ub-caption flex items-start justify-between gap-3 text-[#5e5e5e]">
               <span>How each stage has changed · click a week to jump there</span>
-              <label className="flex items-center gap-1.5">
+              <label className="flex shrink-0 items-center gap-1.5 whitespace-nowrap">
                 <input type="checkbox" checked={log} onChange={(e) => setLog(e.target.checked)} />
                 Log scale
               </label>

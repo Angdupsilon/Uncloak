@@ -2,7 +2,7 @@
 // Spare-capacity explorer: use filters, a ranked list, the map, and a slide-over plant card.
 // The list is the accessible source of truth; the map repeats it.
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PlantCard from "@/components/public/PlantCard";
 import { MapBoundary } from "@/components/public/SiteMapLazy";
 import { Unavailable } from "@/components/public/ui";
@@ -35,6 +35,7 @@ function landLabel(acres: number | null) {
 export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   // "All plants" lists every plant; those without output data sort last and read Unavailable.
   const ranked = useMemo(() => {
@@ -71,8 +72,8 @@ export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
         </span>
       </div>
 
-      <div className="mt-5 grid gap-6 lg:grid-cols-[minmax(0,460px)_1fr]">
-        <div className="max-h-[640px] overflow-y-auto rounded-lg border border-[var(--hairline)]">
+      <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,460px)_1fr]">
+        <div className="relative max-h-[min(640px,70svh)] overflow-y-auto rounded-lg border border-[var(--hairline)] lg:max-h-[640px]">
           <table className="w-full table-fixed text-left text-[13px]">
             <caption className="sr-only">Plants ranked by spare connection capacity. Select a plant to open its details.</caption>
             <colgroup>
@@ -80,7 +81,7 @@ export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
               <col />
               <col className="w-[76px]" />
               <col className="w-[80px]" />
-              <col className="w-[64px]" />
+              <col className="w-0 sm:w-[64px]" />
             </colgroup>
             <thead className="sticky top-0 bg-white text-[12px] text-[var(--slate)]">
               <tr className="border-b border-[var(--hairline)]">
@@ -88,7 +89,7 @@ export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
                 <th scope="col" className="px-1 py-2.5 font-medium">Plant</th>
                 <th scope="col" className="px-1 py-2.5 text-right font-medium">Connection</th>
                 <th scope="col" className="px-1 py-2.5 text-right font-medium">{filter === "all" ? "Free 80%" : "Fits"}</th>
-                <th scope="col" className="py-2.5 pl-1 pr-3 text-right font-medium">Land</th>
+                <th scope="col" className="hidden py-2.5 pl-1 pr-3 text-right font-medium sm:table-cell">Land</th>
               </tr>
             </thead>
             <tbody>
@@ -100,7 +101,11 @@ export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
                     <td className="py-2.5 pl-3 pr-1 tabular-nums text-[var(--stone)]">{i + 1}</td>
                     <td className="px-1 py-2.5">
                       <button
-                        onClick={() => setSelectedId(p.plant_id)}
+                        onClick={() => {
+                          setSelectedId(p.plant_id);
+                          // Stacked layout: the details open over the map below the table, so bring it into view.
+                          if (window.matchMedia("(max-width: 1023px)").matches) mapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }}
                         aria-pressed={selected}
                         className="block w-full truncate text-left font-medium text-black hover:underline hover:underline-offset-4"
                       >
@@ -110,13 +115,15 @@ export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
                         <span aria-hidden className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: TECH_COLORS[p.technology] }} />
                         <span className="truncate">{TECH_LABELS[p.technology]}</span>
                       </div>
+                      {/* Phones drop the Land column, so its value moves under the plant name. */}
+                      <div className="text-[12px] text-[var(--slate)] sm:hidden">Land: {landLabel(p.open_acres)}</div>
                     </td>
                     <td className="px-1 py-2.5 text-right tabular-nums">{fmtMW(p.connection_mw)}</td>
                     <td className="px-1 py-2.5 text-right font-medium tabular-nums">
                       {v == null ? <Unavailable why="No hourly output loaded for this plant" /> : fmtMW(v)}
                       {filter === "all" && v != null && p.technology === "solar" && <div className="text-[11px] font-normal text-[var(--stone)]">mostly night</div>}
                     </td>
-                    <td className="py-2.5 pl-1 pr-3 text-right text-[var(--graphite)]">{landLabel(p.open_acres)}</td>
+                    <td className="hidden py-2.5 pl-1 pr-3 text-right text-[var(--graphite)] sm:table-cell">{landLabel(p.open_acres)}</td>
                   </tr>
                 );
               })}
@@ -125,7 +132,7 @@ export default function SpareCapacityExplorer({ plants }: { plants: Plant[] }) {
           {ranked.length === 0 && <p className="px-4 py-8 text-center text-[14px] text-[var(--graphite)]">No plants pass this screen.</p>}
         </div>
 
-        <div className="relative h-[520px] overflow-hidden rounded-lg lg:h-[640px]">
+        <div ref={mapRef} className="relative h-[min(560px,85svh)] scroll-mt-4 overflow-hidden rounded-lg lg:h-[640px]">
           <MapBoundary>
             <PlantMap plants={plants} selectedId={selectedId} onSelect={setSelectedId} matchIds={matchIds} />
           </MapBoundary>

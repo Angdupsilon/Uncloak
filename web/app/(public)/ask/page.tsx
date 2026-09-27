@@ -54,7 +54,7 @@ export default async function AskPage(props: PageProps<"/ask">) {
               <EmptyState title="Ask a question">For example: “Which sites in Loudoun County, Virginia look least certain?”</EmptyState>
             </div>
           ) : (
-            <div className="mt-12 grid max-w-5xl gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)]">
+            <div className="mt-12 grid grid-cols-1 max-w-5xl gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(260px,1fr)]">
               <section className="rounded-xl border border-[var(--hairline)] bg-white p-6 shadow-[var(--shadow-card)]" aria-labelledby="answer-h">
                 <p className="rw-meta">Question</p>
                 <h2 id="answer-h" className="mt-2 text-[22px] font-medium leading-8 text-black">

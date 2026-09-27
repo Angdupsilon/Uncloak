@@ -86,24 +86,16 @@ export default function Dashboard({
 
   return (
     <>
-    {!embedded && (
-    <div role="note" className="bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900 lg:hidden">
-      The advanced dashboard is designed for wide screens and scrolls sideways here.{" "}
-      <Link href="/" className="font-medium underline">
-        Search and profiles
-      </Link>{" "}
-      work on any screen.
-    </div>
-    )}
-    <div className={embedded ? "flex h-[780px] min-w-[1000px] flex-col text-black" : "flex h-screen min-w-[1040px] flex-col text-black"}>
+    {/* Below 1024px the dashboard stacks (map, then summary, then controls) and the page scrolls. */}
+    <div className={embedded ? "flex h-[780px] min-w-[1000px] flex-col text-black" : "flex min-h-svh flex-col text-black lg:h-screen lg:min-w-[1040px]"}>
       {!embedded && (
-      <header className="flex h-16 shrink-0 items-center justify-between border-b border-[#e2e2e2] bg-white px-5">
+      <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-[#e2e2e2] bg-white px-4 sm:px-5">
         <div className="flex min-w-0 items-center gap-4">
           <Link href="/" className="gs-wordmark shrink-0 text-[28px] font-bold leading-none tracking-[-1.1px] text-black" aria-label="Uncloak home">
             Uncloak
           </Link>
-          <span className="h-5 w-px bg-[#e2e2e2]" aria-hidden />
-          <div className="min-w-0">
+          <span className="hidden h-5 w-px bg-[#e2e2e2] sm:block" aria-hidden />
+          <div className="hidden min-w-0 sm:block">
             <p className="text-[14px] font-medium leading-4 text-black">Advanced dashboard</p>
             <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">U.S. data-center records · ERCOT load requested vs. verified</p>
           </div>
@@ -122,7 +114,7 @@ export default function Dashboard({
       </header>
       )}
 
-      <div className={embedded ? "flex min-h-0 flex-1 flex-col gap-4" : "flex min-h-0 flex-1 flex-col gap-4 p-5"}>
+      <div className={embedded ? "flex min-h-0 flex-1 flex-col gap-4" : "flex min-h-0 flex-1 flex-col gap-3 p-3 pb-20 sm:gap-4 sm:p-5 sm:pb-20 lg:pb-5"}>
 
       {showingSample && (
         <div className="flex items-center gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-900">
@@ -131,14 +123,18 @@ export default function Dashboard({
         </div>
       )}
 
-      <main className="flex min-h-0 flex-1 gap-4">
+      <main className={embedded ? "flex min-h-0 flex-1 gap-4" : "flex min-h-0 flex-1 flex-col gap-3 sm:gap-4 lg:flex-row"}>
         {/* Summary rail: one reconciliation panel down the left, so the map
             keeps the full column height. */}
-        <div className="flex w-[280px] shrink-0 flex-col">
+        <div className={embedded ? "flex w-[280px] shrink-0 flex-col" : "order-2 flex w-full shrink-0 flex-col lg:order-none lg:w-[280px]"}>
           <SummaryBar summary={summary.data} error={summary.error} region={region} />
         </div>
 
-        <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)]">
+        <div
+          className={`relative min-w-0 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)] ${
+            embedded ? "flex-1" : "order-1 h-[70svh] min-h-[420px] flex-none lg:order-none lg:h-auto lg:min-h-0 lg:flex-1"
+          }`}
+        >
           <ProjectMap
             projects={projectList}
             region={region}
@@ -182,7 +178,11 @@ export default function Dashboard({
       </main>
 
       {/* pr-[420px] keeps the controls clear of the floating Ask launcher. */}
-      <footer className={`flex items-center gap-8 rounded-xl border border-[#e2e2e2] bg-white px-5 py-3 shadow-[var(--shadow-card)] ${embedded ? "" : "pr-[420px]"}`}>
+      <footer
+        className={`flex rounded-xl border border-[#e2e2e2] bg-white shadow-[var(--shadow-card)] ${
+          embedded ? "items-center gap-8 px-5 py-3" : "flex-col items-stretch gap-4 p-4 lg:flex-row lg:items-center lg:gap-8 lg:px-5 lg:py-3 lg:pr-[420px]"
+        }`}
+      >
         <DateSlider
           start={config.data?.backfill_start ?? null}
           end={today}
@@ -190,7 +190,7 @@ export default function Dashboard({
           loading={summary.loading || projects.loading || parents.loading}
           onChange={setAsOf}
         />
-        <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
+        <div className={`h-8 w-px shrink-0 bg-[var(--border-soft)] ${embedded ? "" : "hidden lg:block"}`} />
         <StateSelect
           projects={allProjects}
           value={region}
@@ -226,7 +226,7 @@ export default function Dashboard({
             </span>
           </span>
         </button>
-        <div className="h-8 w-px shrink-0 bg-[var(--border-soft)]" />
+        <div className={`h-8 w-px shrink-0 bg-[var(--border-soft)] ${embedded ? "" : "hidden lg:block"}`} />
         <div className="min-w-0 flex-1">
           <ParentFilter
             parents={parents.data?.parents ?? null}

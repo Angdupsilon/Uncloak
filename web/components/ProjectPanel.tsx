@@ -159,7 +159,7 @@ export default function ProjectPanel({
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="relative min-h-0 flex-1 overflow-y-auto">
         {/* One faint rule between sections. Note the literal colour: an opacity
             modifier on an arbitrary CSS variable (divide-[var(--x)]/70) does not
             compute in Tailwind, and silently falls back to a black border. */}
