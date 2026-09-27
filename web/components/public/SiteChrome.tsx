@@ -1,16 +1,17 @@
 import Link from "next/link";
 import SearchBox from "./SearchBox";
-import PrimaryNav from "./PrimaryNav";
-import { Container } from "./ui";
+import PrimaryNav, { MobileNav } from "./PrimaryNav";
+import { Container, PAGE_WIDTH } from "./ui";
 import { SOURCES } from "@/lib/metrics";
 
 /**
  * Nav bar per DESIGN.md: wordmark left, centred links, right cluster of a quiet grey pill
- * and one black pill. Profile pages add the compact search in the right cluster.
+ * and one black pill. Profile pages add the compact search in the right cluster. Below 1024px
+ * the links collapse into a menu sheet and the black pill stays visible as the persistent action.
  */
 export function SiteHeader({ search = true, query = "" }: { search?: boolean; query?: string }) {
   return (
-    <header className="bg-white">
+    <header className="relative z-[2100] bg-white">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[3000] focus:rounded-full focus:bg-black focus:px-4 focus:py-2 focus:text-white"
@@ -18,10 +19,10 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
         Skip to content
       </a>
       {/* ≥1024: wordmark · centred navigation · search + button.
-          <1024: wordmark + button on top, grouped navigation underneath. */}
-      <div className="flex min-h-16 w-full flex-wrap items-center gap-x-6 gap-y-1 px-4 py-3 sm:px-8 xl:gap-x-8">
+          <1024: wordmark, then the button and a menu toggle that opens the navigation as a sheet. */}
+      <div className={`${PAGE_WIDTH} flex h-16 items-center gap-6 sm:h-[72px] xl:gap-8`}>
         <Link href="/" className="shrink-0" aria-label="Uncloak home">
-          <span className="gs-wordmark text-[30px] font-bold leading-10 tracking-[-1.2px] text-black sm:text-[34px] sm:tracking-[-1.4px]">Uncloak</span>
+          <span className="gs-wordmark text-[28px] font-bold leading-10 tracking-[-1.1px] text-black sm:text-[34px] sm:tracking-[-1.4px]">Uncloak</span>
         </Link>
         <PrimaryNav />
         <div className="ml-auto flex shrink-0 items-center gap-2">
@@ -41,6 +42,7 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
             <span className="xl:hidden">Dashboard</span>
             <span className="hidden xl:inline">Advanced dashboard</span>
           </Link>
+          <MobileNav search={search} query={query} />
         </div>
       </div>
     </header>
@@ -50,7 +52,7 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
 export function SiteFooter({ updated }: { updated?: string | null }) {
   return (
     <footer className="mt-24 bg-[#030303] text-white">
-      <Container className="grid gap-10 py-16 text-[15px] leading-6 md:grid-cols-[1.4fr_1fr_1fr]">
+      <Container className="grid grid-cols-1 gap-10 py-16 text-[15px] leading-6 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)]">
         <div>
           <Link href="/" className="inline-flex items-center gap-2.5" aria-label="Uncloak home">
             <svg aria-hidden viewBox="0 0 256 256" className="h-7 w-7 fill-current">

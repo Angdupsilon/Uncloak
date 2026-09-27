@@ -305,7 +305,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
         </section>
       )}
 
-      <div className="mt-16 grid gap-10 lg:grid-cols-2">
+      <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-2">
         <section aria-labelledby="matter-h">
           <h2 id="matter-h" className="ub-display-sm mb-3 text-black">
             Why this might matter to you
@@ -377,7 +377,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
         </section>
       </div>
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-[1.1fr_1fr]">
+      <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <section aria-labelledby="loc-h">
           <SectionTitle id="loc-h">Location</SectionTitle>
           {located ? (
@@ -439,7 +439,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
                 <div className="mb-2 flex items-center gap-2 text-[12px] text-[var(--body)]">
                   Texas Comptroller registry entry <KindBadge kind="documented" />
                 </div>
-                <dl className="grid gap-2 sm:grid-cols-3">
+                <dl className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                   {(["owner", "occupant", "operator"] as const).map((role) => (
                     <div key={role}>
                       <dt className="text-[12px] capitalize text-[var(--body)]">{role}</dt>
@@ -457,7 +457,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
         <SectionTitle id="ev-h" aside={plural(events.length, "record")}>
           Evidence history
         </SectionTitle>
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <div>
             {factors.length > 0 && (
               <div className="rounded-lg border border-[var(--hairline)] bg-white">
@@ -518,7 +518,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
         </div>
       </section>
 
-      <div className="mt-12 grid gap-8 md:grid-cols-2">
+      <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
         {p.siblings.length > 0 && s.parent && (
           <section aria-labelledby="sib-h">
             <SectionTitle id="sib-h" aside={<Link href={orgHref(s.parent)} className="rw-link">{s.parent} profile →</Link>}>

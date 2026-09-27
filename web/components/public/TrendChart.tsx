@@ -49,7 +49,7 @@ export default function TrendChart({ points, name }: { points: OrgTrendPoint[]; 
       )}
       <details className="rounded-xl border border-[var(--hairline)] bg-white p-4">
         <summary className="cursor-pointer text-[14px] font-semibold text-black">Show this trend as a table</summary>
-        <div className="mt-3 overflow-x-auto">
+        <div className="relative mt-3 overflow-x-auto">
           <table className="w-full min-w-[420px] text-left text-[13px]">
             <caption className="sr-only">Weeks when the number of {name} sites or their estimated power changed</caption>
             <thead className="text-[var(--body)]">

@@ -30,7 +30,7 @@ export default function NearResults({ data }: { data: NearbyResult }) {
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <div className="order-2 lg:order-1">
         <ol className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]" aria-label="Nearby sites, closest first">
           {data.sites.map((s, i) => (

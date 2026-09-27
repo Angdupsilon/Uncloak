@@ -5,7 +5,7 @@ import LocateButton from "@/components/public/LocateButton";
 import HeroReel from "@/components/public/HeroReel";
 import OrgRanking from "@/components/public/OrgRanking";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
-import { Container, ErrorState, KindBadge, SampleBanner, SectionTitle } from "@/components/public/ui";
+import { Container, ErrorState, KindBadge, PAGE_WIDTH, SampleBanner, SectionTitle } from "@/components/public/ui";
 import { SourceLink } from "@/components/public/Source";
 import { getOrgIndex, getSites } from "@/lib/publicQueries";
 import { getSummary, todayUtc } from "@/lib/queries";
@@ -42,10 +42,10 @@ export default async function Home() {
       {data.ok && <SampleBanner show={data.sites.some((s) => s.is_sample)} />}
       <main id="main">
         {/* Inset cinematic panel (DESIGN.md hero-photo): content anchored bottom-left. */}
-        <section className="px-4 sm:px-8">
-          <div className="relative flex min-h-[560px] flex-col justify-end rounded-2xl text-white sm:min-h-[min(calc(100svh-5.5rem),860px)]">
+        <section className={PAGE_WIDTH}>
+          <div className="relative flex min-h-[520px] flex-col justify-end rounded-2xl text-white sm:min-h-[min(calc(100svh-5.5rem),860px)]">
             <HeroReel />
-            <div className="relative px-6 pb-10 pt-24 sm:px-12 sm:pb-14 lg:px-16 lg:pb-16">
+            <div className="relative px-5 pb-8 pt-20 sm:px-12 sm:pb-14 sm:pt-24 lg:px-16 lg:pb-16">
               <p className="text-[13px] font-medium uppercase tracking-[0.35px] text-white/60">U.S. data-center records</p>
               <h1 className="mt-4 max-w-4xl text-[40px] font-medium leading-[1.05] tracking-[-1.2px] text-white sm:text-[64px] sm:tracking-[-1.8px]">
                 Who’s building data centers in the U.S.?
@@ -82,7 +82,7 @@ export default async function Home() {
           ) : (
             <>
               <SectionTitle aside={`As of ${fmtDate(asOf)}`}>At a glance</SectionTitle>
-              <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] md:grid-cols-3">
                 <Glance
                   value={data.sites.length.toLocaleString()}
                   label="data-center sites on record"
@@ -108,7 +108,7 @@ export default async function Home() {
 
               <Features summary={data.summary} orgs={data.orgs} />
 
-              <div className="mt-24 grid gap-16 lg:grid-cols-[1.2fr_1fr]">
+              <div className="mt-24 grid grid-cols-1 gap-16 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
                 <section aria-labelledby="orgs-h">
                   <SectionTitle id="orgs-h" aside={<Link href="/org" className="rw-link">All organizations →</Link>}>
                     Organizations with the most sites
@@ -174,9 +174,10 @@ function Glance({
   source: React.ReactNode;
 }) {
   return (
-    <div className="bg-white p-6 sm:p-8">
-      <div className="flex items-start justify-between gap-2">
-        <div className="whitespace-nowrap text-[48px] font-normal leading-none tracking-[-2px] text-black sm:text-[56px] 2xl:text-[64px]">{value}</div>
+    <div className="bg-white p-6 lg:p-8">
+      {/* Three across from md up: the badge sits above the number until the columns are wide enough to share a row. */}
+      <div className="flex items-start justify-between gap-2 md:flex-col-reverse md:justify-start md:gap-4 xl:flex-row xl:justify-between xl:gap-2">
+        <div className="whitespace-nowrap text-[48px] font-normal leading-none tracking-[-2px] text-black md:text-[44px] lg:text-[52px] xl:text-[56px] 2xl:text-[64px]">{value}</div>
         <KindBadge kind={kind} />
       </div>
       <div className="mt-4 text-[16px] leading-6 text-black">{label}</div>
@@ -296,7 +297,7 @@ function Features({ summary, orgs }: { summary: Summary; orgs: Orgs }) {
       <h2 id="features-h" className="rw-heading-md mt-2">
         Public records, made readable
       </h2>
-      <ul className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
+      <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((c) => (
           <li key={c.title}>
             <Link href={c.href} className="group block">

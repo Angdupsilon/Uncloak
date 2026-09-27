@@ -55,11 +55,16 @@ export default function SearchBox({
   size = "lg",
   defaultValue = "",
   placeholder = "Search a company, place or address, or ask a question",
+  compactPlaceholder = "Search or ask",
+  mediumPlaceholder = "Search a company or place, or ask a question",
   showSubmitButton = true,
 }: {
   size?: "lg" | "sm";
   defaultValue?: string;
   placeholder?: string;
+  /** The large box shows these instead of `placeholder` on phones and tablets, where the long one gets cut off. */
+  compactPlaceholder?: string;
+  mediumPlaceholder?: string;
   /** Header search keeps the finder compact; Enter still submits the form. */
   showSubmitButton?: boolean;
 }) {
@@ -73,6 +78,20 @@ export default function SearchBox({
   const [res, setRes] = useState<{ term: string; hits: SearchHit[]; error: string | null }>({ term: "", hits: [], error: null });
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const [screen, setScreen] = useState<"phone" | "tablet" | "wide">("wide");
+
+  useEffect(() => {
+    const phone = window.matchMedia("(max-width: 639px)");
+    const tablet = window.matchMedia("(max-width: 1023px)");
+    const update = () => setScreen(phone.matches ? "phone" : tablet.matches ? "tablet" : "wide");
+    update();
+    phone.addEventListener("change", update);
+    tablet.addEventListener("change", update);
+    return () => {
+      phone.removeEventListener("change", update);
+      tablet.removeEventListener("change", update);
+    };
+  }, []);
 
   const term = q.trim();
   // "Google?", "Anthropic." and "Look up Anthropic" are all company lookups:
@@ -179,7 +198,7 @@ export default function SearchBox({
           submit();
         }}
         className={`rw-search flex items-center gap-2 rounded-full border border-[var(--hairline)] bg-white shadow-[var(--shadow-card)] focus-within:border-slate-400 ${
-          lg ? "py-2 pl-5 pr-2" : "py-1 pl-4 pr-1"
+          lg ? "py-1.5 pl-4 pr-1.5 sm:py-2 sm:pl-5 sm:pr-2" : "py-1 pl-4 pr-1"
         }`}
       >
         <svg aria-hidden viewBox="0 0 20 20" className={`${lg ? "h-5 w-5" : "h-4 w-4"} shrink-0 text-slate-500`} fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -202,7 +221,8 @@ export default function SearchBox({
           autoComplete="off"
           spellCheck={false}
           value={q}
-          placeholder={placeholder}
+          placeholder={!lg || screen === "wide" ? placeholder : screen === "phone" ? compactPlaceholder : mediumPlaceholder}
+          enterKeyHint="search"
           onChange={(e) => {
             setQ(e.target.value);
             setOpen(true);
@@ -215,8 +235,13 @@ export default function SearchBox({
         {loading && <span aria-hidden className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-black" />}
         <GrokVoice onPartialTranscript={(value) => { setQ(value); setOpen(false); }} onTranscript={submitVoice} className={lg ? "" : "!h-8 !w-8"} />
         {showSubmitButton && (
-          <button type="submit" className={lg ? "ub-pill" : "ub-pill !px-4 !py-2 !text-[14px]"}>
-            Search
+          <button type="submit" aria-label="Search" className={lg ? "ub-pill max-sm:!h-10 max-sm:!w-10 max-sm:!p-0" : "ub-pill !px-4 !py-2 !text-[14px]"}>
+            <span className={lg ? "hidden sm:inline" : ""}>Search</span>
+            {lg && (
+              <svg aria-hidden viewBox="0 0 20 20" className="h-[18px] w-[18px] sm:hidden" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 10h12M11 5l5 5-5 5" />
+              </svg>
+            )}
           </button>
         )}
       </form>

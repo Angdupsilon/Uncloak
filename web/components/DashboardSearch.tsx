@@ -46,7 +46,7 @@ export default function DashboardSearch({ projects, loading, onSearch, onSelect 
         Search
       </button>
       {open && (
-        <section id="dashboard-search" aria-label="Search dashboard" className="absolute right-0 top-full z-[2000] mt-3 w-[400px] rounded-2xl border border-[#e2e2e2] bg-white p-4 shadow-[var(--shadow-float)]">
+        <section id="dashboard-search" aria-label="Search dashboard" className="absolute right-0 top-full z-[2000] mt-3 w-[min(400px,calc(100vw-2rem))] rounded-2xl border border-[#e2e2e2] bg-white p-4 shadow-[var(--shadow-float)]">
           <form role="search" aria-label="Search dashboard records" onSubmit={(event) => {
             event.preventDefault();
             onSearch(words.length ? matches.map((p) => p.project_id) : null);

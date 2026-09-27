@@ -83,7 +83,7 @@ export default function PlantCard({ plantId, onClose }: { plantId: string | null
         </button>
       </header>
 
-      <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-5">
+      <div className="relative min-h-0 flex-1 space-y-6 overflow-y-auto px-5 py-5">
         <section className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)]">
           <Stat metric="plant_connection" value={fmtMW(p.connection_mw)} />
           <Stat metric="hours_over_half" value={p.share_over_half == null ? null : fmtPct(p.share_over_half)} />

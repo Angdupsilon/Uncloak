@@ -51,7 +51,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-[1100] ub-pill shadow-[var(--shadow-float)]"
+        className="fixed bottom-4 right-4 z-[1100] ub-pill shadow-[var(--shadow-float)] sm:bottom-6 sm:right-6"
       >
         ✦ Ask Uncloak
       </button>
@@ -59,7 +59,7 @@ export default function AskGridSight({ asOf, onResult }: { asOf: string; onResul
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[1100] flex h-[480px] w-[380px] flex-col overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
+    <div className="fixed inset-x-3 bottom-3 z-[1100] flex h-[min(480px,80svh)] flex-col sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[480px] sm:w-[380px] overflow-hidden rounded-2xl border border-[#e2e2e2] bg-white shadow-[0_20px_40px_-12px_rgb(16_24_40/0.22)]">
       <div className="flex items-center justify-between border-b border-[#efefef] px-4 py-3 text-black">
         <div className="text-sm font-semibold">✦ Ask Uncloak</div>
         <div className="flex items-center gap-2">

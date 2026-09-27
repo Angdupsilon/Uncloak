@@ -127,7 +127,7 @@ export default function ParentFilter({
         <div
           role="dialog"
           aria-label="All parent companies"
-          className="ub-card absolute bottom-full right-0 z-[1300] mb-3 w-[340px] overflow-hidden !shadow-[var(--shadow-float)]"
+          className="ub-card absolute bottom-full right-0 z-[1300] mb-3 w-[min(340px,calc(100vw-3.5rem))] overflow-hidden !shadow-[var(--shadow-float)]"
         >
           <div className="border-b border-[#efefef] p-3">
             <input

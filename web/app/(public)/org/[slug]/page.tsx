@@ -174,7 +174,7 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
             <EmbeddedDashboard today={today} parent={p.name} href={dashboardHref} />
           </section>
 
-          <div className="mt-16 grid gap-10 lg:grid-cols-2">
+          <div className="mt-16 grid grid-cols-1 gap-10 lg:grid-cols-2">
             <section aria-labelledby="matter-h">
               <h2 id="matter-h" className="rw-heading-sm mb-4">
                 Why this might matter to you
@@ -274,7 +274,7 @@ function OrgBody({ p, orgs, today }: { p: OrgProfile; orgs: Awaited<ReturnType<t
                   content: (
                     <ul className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
                       {p.entities.map((e) => (
-                        <li key={e.llc_name} className="grid gap-1 py-4 text-[14px] md:grid-cols-[1fr_1fr_auto] md:items-center md:gap-4">
+                        <li key={e.llc_name} className="grid grid-cols-1 gap-1 py-4 text-[14px] md:grid-cols-[1fr_1fr_auto] md:items-center md:gap-4">
                           <div className="text-black">{e.llc_name}</div>
                           <div className="rw-meta">
                             {e.resolved_by ? (RESOLVED_BY_LABEL[e.resolved_by] ?? e.resolved_by) : "Link basis not recorded"}
@@ -347,7 +347,7 @@ function Compare({ p, orgs, mw }: { p: OrgProfile; orgs: Awaited<ReturnType<type
   const rows = inTop ? top : [...top, orgs.find((o) => o.name === p.name)!].filter(Boolean);
   const max = Math.max(...rows.map((o) => o.sites), 1);
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <dl className="space-y-4 text-[15px]">
         <div>
           <dt className="text-[13px] text-[var(--body)]">Share of all sites linked to an organization</dt>

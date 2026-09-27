@@ -148,7 +148,7 @@ export default function SummaryBar({
     // next as-of snapshot is fetched. Do not fade that response on every
     // playback tick: rapidly toggling opacity made both the copy and waffle
     // appear to blink even though there was usable content on screen.
-    <div className="ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4">
+    <div className="ub-card relative flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4">
       <RegionSelect regions={reports.data?.regions ?? []} value={reportRegion} onChange={setReportRegion} />
       {reportRegion !== "ERCO" ? (
         reports.data && reports.data.region === reportRegion ? (

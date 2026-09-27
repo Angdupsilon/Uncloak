@@ -40,14 +40,16 @@ export default async function OrgIndex() {
               <ErrorState />
             ) : (
               <>
-                <div className="overflow-x-auto border-y border-[var(--hairline)]">
-                  <table className="w-full min-w-[560px] text-left text-[15px]">
+                <div className="relative overflow-x-auto border-y border-[var(--hairline)]">
+                  <table className="w-full text-left text-[15px]">
                     <caption className="sr-only">Organizations as of {fmtDate(asOf)}</caption>
                     <thead className="text-[13px] text-[var(--slate)]">
                       <tr className="border-b border-[var(--hairline)]">
                         <th scope="col" className="py-3 pr-4 font-medium">Organization</th>
                         <th scope="col" className="py-3 pr-4 text-right font-medium">Sites</th>
-                        <th scope="col" className="py-3 text-right font-medium">Estimated power (Uncloak estimate)</th>
+                        <th scope="col" className="py-3 text-right font-medium">
+                          Estimated power<span className="sr-only sm:not-sr-only"> (Uncloak estimate)</span>
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[var(--hairline)]">
@@ -55,13 +57,13 @@ export default async function OrgIndex() {
                         <tr key={o.slug}>
                           <th scope="row" className="py-3 pr-4 font-normal">
                             <Link href={`/org/${o.slug}`} className="inline-flex items-center gap-2.5 text-black hover:underline hover:underline-offset-4">
-                              <span aria-hidden className="h-2.5 w-2.5 rounded-full" style={{ background: o.color ?? "#939393" }} />
+                              <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: o.color ?? "#939393" }} />
                               {o.name}
                             </Link>
                             {o.is_sample && <span className="ml-2 text-[11px] font-semibold uppercase text-amber-800">Sample</span>}
                           </th>
                           <td className="py-3 pr-4 text-right tabular-nums">{o.sites}</td>
-                          <td className="py-3 text-right tabular-nums">{o.mw_total != null ? fmtMW(o.mw_total) : <Unavailable why="No site has a registered construction cost" />}</td>
+                          <td className="whitespace-nowrap py-3 text-right tabular-nums">{o.mw_total != null ? fmtMW(o.mw_total) : <Unavailable why="No site has a registered construction cost" />}</td>
                         </tr>
                       ))}
                     </tbody>

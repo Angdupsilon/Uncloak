@@ -4,8 +4,11 @@ import type { ReactNode } from "react";
 import { KIND_HELP, KIND_LABEL, METRICS, type MetricKey, type MetricKind } from "@/lib/metrics";
 import { TIER_COLORS, TIER_LABELS, type Tier } from "@/lib/constants";
 
+/** Page column per DESIGN.md: content caps at 1280px on wide screens, with 16/32px gutters below that. */
+export const PAGE_WIDTH = "mx-auto w-full max-w-[1344px] px-4 sm:px-8";
+
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`w-full px-4 sm:px-8 ${className}`}>{children}</div>;
+  return <div className={`${PAGE_WIDTH} ${className}`}>{children}</div>;
 }
 
 export function Eyebrow({ children }: { children: ReactNode }) {
@@ -274,6 +277,6 @@ export function BigStat({
 
 export function StatBand({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 xl:grid-cols-4">{children}</div>
+    <div className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--hairline)] sm:grid-cols-2 xl:grid-cols-4">{children}</div>
   );
 }

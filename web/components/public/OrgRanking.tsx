@@ -28,7 +28,8 @@ export default function OrgRanking({ orgs, top = 8 }: { orgs: Org[]; top?: numbe
     <div onMouseLeave={() => setActive(null)}>
       <div aria-hidden className="mb-2 flex items-baseline justify-between gap-4 text-[13px]">
         <span className="text-[var(--body)]">Share of all {total.toLocaleString()} sites linked to a company</span>
-        <span className="truncate text-slate-400">
+        {/* Touch screens can't hover, so the hint only shows where it works. */}
+        <span className="hidden truncate text-slate-400 [@media(hover:hover)]:inline">
           {hovered ? `${hovered.name}: ${pct(hovered.sites)}` : "Hover a row"}
         </span>
       </div>
