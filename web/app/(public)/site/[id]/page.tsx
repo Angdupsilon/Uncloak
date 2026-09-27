@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import type { Metadata } from "next";
 import TimeMachine from "@/components/TimeMachine";
+import StageClip from "@/components/StageClip";
+import { stageFor } from "@/lib/stages";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
 import SiteMapLazy from "@/components/public/SiteMapLazy";
 import { SourceLink } from "@/components/public/Source";
@@ -78,6 +80,22 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
   const events = p.timeline?.events ?? [];
   const scores = p.timeline?.scores ?? [];
   const siteFactors = (p.timeline?.project.factors ?? {}) as Record<string, boolean>;
+
+  // Figures overlaid on the illustration. They come from the record, never the
+  // picture, and each is available as text elsewhere on this page.
+  const stageStats = [
+    s.mw_est != null ? { label: "Estimated load", value: fmtMW(s.mw_est), estimated: true } : null,
+    s.total_cost != null ? { label: "Registered cost", value: fmtUSD(s.total_cost) } : null,
+    s.score != null ? { label: "Evidence", value: `${s.score} / 100` } : null,
+  ].filter((x): x is { label: string; value: string; estimated?: boolean } => x !== null);
+
+  // Same derivation the dashboard panel uses, from the as-of factors and the
+  // TDLR status ladder, so both surfaces agree on where a site has got to.
+  const stage = stageFor({
+    factors: siteFactors,
+    currentStatus: p.timeline?.project.current_status ?? null,
+    hasAnyEvidence: (p.timeline?.events?.length ?? 0) > 0,
+  });
   const located = s.lat != null && s.lon != null;
   const place = [s.city, s.county && countyLabel(s.county, s.state), s.state].filter(Boolean).join(", ");
   const asOfLabel = `As of ${fmtDate(asOf)}`;
@@ -271,6 +289,21 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
           />
         </StatBand>
       </section>
+
+      {stage && (
+        <section aria-labelledby="stage-h" className="mt-16">
+          <h2 id="stage-h" className="ub-display-sm mb-3 text-black">
+            Project Time Machine
+          </h2>
+          <div className="max-w-[640px]">
+            <StageClip
+              stage={stage}
+              asOf={asOf}
+              stats={stageStats}
+            />
+          </div>
+        </section>
+      )}
 
       <div className="mt-16 grid gap-10 lg:grid-cols-2">
         <section aria-labelledby="matter-h">

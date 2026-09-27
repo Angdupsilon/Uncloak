@@ -5,6 +5,8 @@ __pycache__/
 *.pyc
 .DS_Store
 .claude/
+
+# Source downloads and API responses (etl/pull_power_plants.py)
 data/raw/cache/
 # Virginia DEQ permit PDFs (99 MB): verified by hash in manifest.csv, not stored in git
 data/raw/va_deq_permits_2026-09-26/*.pdf

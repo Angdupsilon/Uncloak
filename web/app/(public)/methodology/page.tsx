@@ -6,8 +6,8 @@ import SpareCapacityMethod from "@/components/public/SpareCapacityMethod";
 import { SourceLink } from "@/components/public/Source";
 import { Container, ErrorState, KindBadge } from "@/components/public/ui";
 import { query } from "@/lib/db";
-import { getConfig, getEstimateMethods, todayUtc } from "@/lib/queries";
-import { fmtDate, fmtUSD } from "@/lib/format";
+import { getConfig, getEstimateMethods, getSummary, todayUtc } from "@/lib/queries";
+import { fmtDate, fmtGW, fmtUSD } from "@/lib/format";
 import { METRICS, SOURCES, type MetricKind, type SourceKey } from "@/lib/metrics";
 import { TIER_LABELS } from "@/lib/constants";
 
@@ -15,15 +15,16 @@ export const metadata: Metadata = { title: "Methodology · Uncloak" };
 
 async function load(asOf: string) {
   try {
-    const [config, models, stats] = await Promise.all([
+    const [config, models, stats, summary] = await Promise.all([
       getConfig(asOf),
       getEstimateMethods(),
       query<{ source: string; records: number; first: Date | null; last: Date | null; retrieved: string | null }>(
         `SELECT source, COUNT(*) AS records, MIN(ts) AS first, MAX(ts) AS last, MAX(payload->>'retrieved') AS retrieved
          FROM evidence_events GROUP BY source ORDER BY COUNT(*) DESC`,
       ),
+      getSummary(asOf),
     ]);
-    return { ok: true as const, config, models, stats };
+    return { ok: true as const, config, models, stats, summary };
   } catch (err) {
     console.error("[gridsight methodology]", err);
     return { ok: false as const };
@@ -42,6 +43,7 @@ const TOC = [
   ["counting", "Avoiding double counting"],
   ["limits", "Coverage limits"],
   ["spare-capacity", "Spare connection capacity"],
+  ["illustrations", "Illustrations"],
   ["metrics", "Every metric, explained"],
 ] as const;
 
@@ -92,11 +94,11 @@ export default async function Methodology() {
                         <p className="mt-1 text-[14px]">{SOURCES[k].what}</p>
                         {st && (
                           <p className="rw-meta mt-1">
-                            {st.records.toLocaleString()} records dated {fmtDate(st.first?.toISOString())} to {fmtDate(st.last?.toISOString())}
+                            {st.records.toLocaleString()} evidence records linked in Uncloak, dated {fmtDate(st.first?.toISOString())} to {fmtDate(st.last?.toISOString())}
                             {st.retrieved && ` · snapshot retrieved ${fmtDate(st.retrieved)}`}
                           </p>
                         )}
-                        {k === "ERCOT" && <p className="rw-meta mt-1">Statewide queue figures, each shown with its own report date and link. Not tied to any one site.</p>}
+                        {k === "ERCOT" && data.ok && <ErcotSnapshot summary={data.summary} />}
                       </li>
                     );
                   })}
@@ -318,6 +320,26 @@ export default async function Methodology() {
                 <SpareCapacityMethod />
               </Section>
 
+              <Section id="illustrations" title="Illustrations">
+                <p>
+                  Some pages show a generated image of a construction stage: bare land, a graded site, steel going up, finished buildings. They are labeled{" "}
+                  <strong className="font-semibold text-black">AI illustration</strong> wherever they appear.
+                </p>
+                <p className="mt-3">
+                  One image per stage, generated once and reused across every site. Which one a site shows is decided by that site&apos;s own records, so it
+                  changes as the evidence does, including when you move the date back.
+                </p>
+                <p className="mt-3">
+                  They are not photographs of any site, never contribute to the evidence index, and no number here is derived from them. Prompt, model, date and
+                  file hash for each are recorded in{" "}
+                  <code className="rounded bg-[var(--canvas-soft)] px-1 py-0.5 text-[13px]">public/illustrations/manifest.json</code>.
+                </p>
+                <p className="mt-3">
+                  One stage, <strong className="font-semibold text-black">energized</strong>, is never shown: no source here reports that a site has begun
+                  drawing power. TDLR&apos;s &ldquo;project closed&rdquo; means a permit file was closed, not that the site is operating.
+                </p>
+              </Section>
+
               <Section id="metrics" title="Every metric, explained">
                 <dl className="divide-y divide-[var(--hairline)] border-y border-[var(--hairline)]">
                   {Object.entries(METRICS).map(([key, m]) => (
@@ -344,6 +366,33 @@ export default async function Methodology() {
       </main>
       <SiteFooter updated={data.ok && data.config.computed_at ? fmtDate(data.config.computed_at) : null} />
     </>
+  );
+}
+
+function ErcotSnapshot({ summary }: { summary: Awaited<ReturnType<typeof getSummary>> }) {
+  const queue = summary.ercot;
+  if (!queue) return <p className="rw-meta mt-1">No ERCOT queue figure is available for the current dashboard date.</p>;
+  return (
+    <div className="mt-3 rounded-lg bg-[var(--canvas-soft)] px-3 py-2.5 text-[13px] leading-5 text-[var(--ink-soft)]">
+      <p className="font-medium text-black">Latest figures used in this dashboard</p>
+      <dl className="mt-1 grid gap-x-3 sm:grid-cols-[1fr_auto]">
+        {queue.gw_requested != null && <SnapshotRow label="Large loads requesting connection" value={fmtGW(queue.gw_requested)} date={queue.ts} url={queue.source_url} />}
+        {queue.gw_approved != null && <SnapshotRow label="Approved to energize" value={fmtGW(queue.gw_approved)} date={queue.approved_ts} url={queue.approved_source_url} />}
+        {queue.gw_observed_peak != null && <SnapshotRow label="Observed energized peak" value={fmtGW(queue.gw_observed_peak)} date={queue.peak_ts} url={queue.peak_source_url} />}
+      </dl>
+      <p className="mt-2 text-[12px] leading-4 text-[var(--slate)]">These are statewide, aggregate figures, not site-level totals. They can come from different reports and dates, and the queue&apos;s planning horizon has changed over time.</p>
+    </div>
+  );
+}
+
+function SnapshotRow({ label, value, date, url }: { label: string; value: string; date: string | null; url: string | null }) {
+  return (
+    <div className="contents">
+      <dt>{label}</dt>
+      <dd className="text-right tabular-nums text-black">
+        {value} {date && <SourceLink url={url} label={fmtDate(date)} className="ml-1 text-[12px]" />}
+      </dd>
+    </div>
   );
 }
 

@@ -110,12 +110,10 @@ function Row({
 
 export default function SummaryBar({
   summary,
-  loading,
   error,
   region = null,
 }: {
   summary: Summary | null;
-  loading: boolean;
   error: string | null;
   /** USPS code of the state in focus on the map, or null for the whole country. */
   region?: string | null;
@@ -146,9 +144,11 @@ export default function SummaryBar({
   }));
 
   return (
-    <div
-      className={`ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}
-    >
+    // `useJson` deliberately preserves the last complete response while the
+    // next as-of snapshot is fetched. Do not fade that response on every
+    // playback tick: rapidly toggling opacity made both the copy and waffle
+    // appear to blink even though there was usable content on screen.
+    <div className="ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4">
       <RegionSelect regions={reports.data?.regions ?? []} value={reportRegion} onChange={setReportRegion} />
       {reportRegion !== "ERCO" ? (
         reports.data && reports.data.region === reportRegion ? (

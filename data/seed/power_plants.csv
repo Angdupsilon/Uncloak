@@ -1,0 +1,99 @@
+plant_id,name,owner,technology,fuel,connection_mw,region,county,lat,lon,operating_year,retirement_year,open_acres,fiber_within_2mi,water_nearby,output_source,source_url,is_sample
+298,Limestone,NRG Texas Power LLC,steam,Coal,1849.8,ERCOT,Limestone,31.4219,-96.2525,1985,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/298,False
+3439,Laredo,City of San Antonio - (TX),peaker,Natural gas,263.6,ERCOT,Webb,27.5667,-99.5089,2008,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3439,False
+3441,Nueces Bay,City of San Antonio - (TX),gas_cc,Natural gas,730.2,ERCOT,Nueces,27.819412,-97.4192,1972,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3441,False
+3443,Victoria,"Victoria WLE, LP",gas_cc,Natural gas,376.9,ERCOT,Victoria,28.7883,-97.01,1963,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3443,False
+3452,Lake Hubbard,Luminant Generation Company LLC,steam,Natural gas,927.5,ERCOT,Dallas,32.8358,-96.5458,1970,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3452,False
+3453,Mountain Creek,"Mountain Creek Power, LLC",steam,Natural gas,852.2,ERCOT,Dallas,32.7231,-96.9358,1956,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3453,False
+3460,Cedar Bayou,NRG Texas Power LLC,steam,Natural gas,1530.0,ERCOT,Chambers,29.75,-94.9256,1970,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3460,False
+3464,Greens Bayou,NRG Texas Power LLC,peaker,Natural gas,432.0,ERCOT,Harris,29.822201,-95.21943,1976,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3464,False
+3469,T H Wharton,NRG Texas Power LLC,gas_cc,Natural gas,1189.9,ERCOT,Harris,29.9417,-95.5306,1967,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3469,False
+3470,W A Parish,NRG Texas Power LLC,steam,Coal,4008.4,ERCOT,Fort Bend,29.4828,-95.6311,1958,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3470,False
+3490,Graham,Luminant Generation Company LLC,steam,Natural gas,634.7,ERCOT,Young,33.1344,-98.6117,1960,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3490,False
+3491,Handley,"Constellation Power, Inc",steam,Natural gas,1314.8,ERCOT,Tarrant,32.7283,-97.2192,1963,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3491,False
+3492,Morgan Creek,Luminant Generation Company LLC,peaker,Oil,536.4,ERCOT,Mitchell,32.3358,-100.9156,1988,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3492,False
+3494,Permian Basin,Luminant Generation Company LLC,peaker,Natural gas,447.0,ERCOT,Ward,31.5839,-102.9633,1988,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3494,False
+3504,Stryker Creek,Luminant Generation Company LLC,steam,Natural gas,713.4,ERCOT,Cherokee,31.93985,-94.98983,1958,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3504,False
+3507,Trinidad (TX),Luminant Generation Company LLC,steam,Natural gas,243.3,ERCOT,Henderson,32.124519,-96.10128,1965,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3507,False
+3548,Decker Creek,Austin Energy,peaker,Natural gas,206.0,ERCOT,Travis,30.3033,-97.6128,1988,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3548,False
+3559,Silas Ray,Brownsville Public Utilities Board,gas_cc,Natural gas,136.0,ERCOT,Cameron,25.9131,-97.5214,1959,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3559,False
+3576,Ray Olinger,City of Garland - (TX),steam,Natural gas,427.7,ERCOT,Collin,33.068055,-96.45248,1967,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3576,False
+3601,Sim Gideon,Lower Colorado River Authority,steam,Natural gas,623.0,ERCOT,Bastrop,30.1456,-97.2708,1965,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3601,False
+3609,Leon Creek,City of San Antonio - (TX),peaker,Natural gas,229.6,ERCOT,Bexar,29.3525,-98.5761,2004,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3609,False
+3611,O W Sommers,City of San Antonio - (TX),steam,Natural gas,892.0,ERCOT,Bexar,29.308056,-98.3242,1972,2029,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3611,False
+3612,V H Braunig,City of San Antonio - (TX),gas_cc,Natural gas,1236.0,ERCOT,Bexar,29.2567,-98.3825,1970,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3612,False
+3628,R W Miller,RW Miller Power LLC,steam,Natural gas,537.6,ERCOT,Palo Pinto,32.6581,-98.3103,1972,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3628,False
+3631,Sam Rayburn,"South Texas Electric Coop, Inc",gas_cc,Natural gas,192.8,ERCOT,Victoria,28.8947,-97.135,1991,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/3631,False
+4195,Powerlane Plant,City of Greenville - (TX),steam,Oil,112.2,ERCOT,Hunt,33.1707,-96.1264,1966,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/4195,False
+4266,Spencer,City of Garland - (TX),steam,Natural gas,126.5,ERCOT,Denton,33.1975,-97.1061,1966,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/4266,False
+4937,Thomas C Ferguson,Lower Colorado River Authority,gas_cc,Natural gas,574.6,ERCOT,Llano,30.558,-98.3721,2014,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/4937,False
+4939,Barney M Davis,City of San Antonio - (TX),gas_cc,Natural gas,1082.2,ERCOT,Nueces,27.6064,-97.3117,1974,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/4939,False
+50109,Paris Energy Center,Paris Generation LP,gas_cc,Natural gas,265.6,ERCOT,Lamar,33.6968,-95.5577,1989,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/50109,False
+50137,Texas Gulf Sulphur,Wharton County Generation LLC,peaker,Natural gas,101.9,ERCOT,Wharton,29.2639,-95.8997,1984,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/50137,False
+50815,"Odyssey Energy Altura Cogen, LLC",Odyssey Operating Services,gas_cc,Natural gas,643.6,ERCOT,Harris,29.8161,-95.10773,1985,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/50815,False
+52088,Texas City Power Plant,Texas City Cogeneration LLC,gas_cc,Natural gas,450.0,ERCOT,Galveston,29.378697,-94.94383,1987,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/52088,False
+52176,C R Wing Cogen Plant,"BHER Power Resources, Inc",peaker,Natural gas,169.8,ERCOT,Howard,32.273178,-101.4224,1987,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/52176,False
+54817,Johnson County,Johnson County Power LLC,gas_cc,Natural gas,282.6,ERCOT,Johnson,32.3994,-97.4078,1996,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/54817,False
+55015,Sweeny Cogen Facility,Sweeny Cogeneration LLC,peaker,Natural gas,572.0,ERCOT,Brazoria,29.0728,-95.745,1997,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55015,False
+55047,Pasadena Cogeneration,Pasadena Cogeneration LP,gas_cc,Natural gas,815.0,ERCOT,Harris,29.72475,-95.17648,1998,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55047,False
+55062,Tenaska Frontier Generation Station,Tenaska Frontier Partners Ltd,gas_cc,Natural gas,939.7,ERCOT,Grimes,30.5924,-95.9178,2000,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55062,False
+55086,Gregory Power Plant,Gregory Power Partners LLC,gas_cc,Natural gas,469.8,ERCOT,San Patricio,27.88929,-97.25842,2000,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55086,False
+55091,Midlothian Energy Facility,Midlothian Energy LLC,gas_cc,Natural gas,1734.0,ERCOT,Ellis,32.4302,-97.0537,2000,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55091,False
+55097,Lamar Power Project,LaFrontera Holdings LLC,gas_cc,Natural gas,1112.6,ERCOT,Lamar,33.6308,-95.59,2000,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55097,False
+55098,Frontera Energy Center,Frontera Generation Limited Partnership,gas_cc,Natural gas,529.0,ERCOT,Hidalgo,26.208,-98.3992,1999,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55098,False
+55123,Magic Valley Generating Station,Calpine Corp-Magic Valley,gas_cc,Natural gas,801.0,ERCOT,Hidalgo,26.3403,-98.19,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55123,False
+55132,Tenaska Gateway Generating Station,Tenaska Gateway Partners Ltd,gas_cc,Natural gas,939.6,ERCOT,Rusk,32.017826,-94.61974,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55132,False
+55137,Rio Nogales Power Project,City of San Antonio - (TX),gas_cc,Natural gas,1108.0,ERCOT,Guadalupe,29.593056,-97.97322,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55137,False
+55139,Wolf Hollow I LP,"Wolf Hollow I Power, LLC",gas_cc,Natural gas,788.4,ERCOT,Hood,32.33422,-97.73169,2003,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55139,False
+55144,Hays Energy Project,"Hays Energy, LLC",gas_cc,Natural gas,989.0,ERCOT,Hays,29.7806,-97.9894,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55144,False
+55153,Guadalupe Generating Station,Guadalupe Power Partners LP,gas_cc,Natural gas,1088.2,ERCOT,Guadalupe,29.6244,-98.1419,2000,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55153,False
+55154,Lost Pines 1 Power Project,Lower Colorado River Authority,gas_cc,Natural gas,609.0,ERCOT,Bastrop,30.1478,-97.2714,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55154,False
+55168,Bastrop Energy Center,"Bastrop Energy Partners, LP",gas_cc,Natural gas,618.7,ERCOT,Bastrop,30.1458,-97.55,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55168,False
+55172,Thad Hill Energy Center,"Thad Hill Energy Center, LLC",gas_cc,Natural gas,807.0,ERCOT,Bosque,31.8594,-97.3586,2000,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55172,False
+55187,Channelview Cogeneration Plant,EIF Channelview Cogeneration LLC,gas_cc,Natural gas,918.3,ERCOT,Harris,29.836952,-95.12174,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55187,False
+55206,Corpus Christi Energy Center,Corpus Christi Cogeneration LLC,gas_cc,Natural gas,593.3,ERCOT,Nueces,27.8139,-97.4283,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55206,False
+55215,Odessa-Ector Power Plant,LaFrontera Holdings LLC,gas_cc,Natural gas,1152.8,ERCOT,Ector,31.8403,-102.3264,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55215,False
+55223,Ennis Power Company LLC,Ennis Power Company LLC,gas_cc,Natural gas,418.0,ERCOT,Ellis,32.32,-96.675,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55223,False
+55226,Freestone Energy Center,Freestone Power Generation LLC,gas_cc,Natural gas,1036.0,ERCOT,Freestone,31.8907,-96.1131,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55226,False
+55230,Jack County,"Jack County Power, LLC",gas_cc,Natural gas,1280.0,ERCOT,Wise,33.101,-97.9574,2006,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55230,False
+55299,Channel Energy Center LLC,Channel Energy Center LLC,gas_cc,Natural gas,923.8,ERCOT,Harris,29.7189,-95.2319,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55299,False
+55320,Wise County Power LLC,Wise County Power Company LLC,gas_cc,Natural gas,821.7,ERCOT,Wise,33.0583,-97.9103,2004,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55320,False
+55327,Baytown Energy Center,Baytown Energy Center LLC,gas_cc,Natural gas,932.9,ERCOT,Chambers,29.7731,-94.9019,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55327,False
+55365,Exelon LaPorte Generating Station,"LaPorte Power, LLC",peaker,Natural gas,236.0,ERCOT,Harris,29.7028,-95.0718,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55365,False
+55464,Deer Park Energy Center,Deer Park Energy Center,gas_cc,Natural gas,1176.0,ERCOT,Harris,29.713414,-95.13451,2003,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55464,False
+55480,Forney Energy Center,LaFrontera Holdings LLC,gas_cc,Natural gas,1894.2,ERCOT,Kaufman,32.7563,-96.4916,2003,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/55480,False
+56349,Quail Run Energy Center,"Quail Run Energy Partners, LP",gas_cc,Natural gas,550.4,ERCOT,Ector,31.8414,-102.315,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/56349,False
+56350,Colorado Bend Energy Center,CER Colorado Bend Energy Partners LP,gas_cc,Natural gas,654.1,ERCOT,Wharton,29.2878,-96.0683,2002,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/56350,False
+56674,Winchester Power Park,Lower Colorado River Authority,peaker,Natural gas,242.0,ERCOT,Fayette,30.02547,-96.9945,2010,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/56674,False
+56806,Cedar Bayou 4,NRG Cedar Bayou Development Company LLC,gas_cc,Natural gas,535.5,ERCOT,Chambers,29.751645,-94.92312,2009,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/56806,False
+58001,Temple Power Station,Temple Generation Holdings LLC,gas_cc,Natural gas,1606.4,ERCOT,Bell,31.055833,-97.31722,2014,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/58001,False
+58005,Rayburn Energy Station LLC,Rayburn Energy Station LLC,gas_cc,Natural gas,803.2,ERCOT,Grayson,33.582573,-96.61789,2014,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/58005,False
+58378,Petra Nova Carbon Capture Cogen,Petra Nova Power I LLC,peaker,Natural gas,82.2,ERCOT,Fort Bend,29.475278,-95.63417,2013,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/58378,False
+58471,Ector County Energy Center,"Ector County Generation, LLC",peaker,Natural gas,358.8,ERCOT,Ector,32.069167,-102.5856,2015,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/58471,False
+59812,Wolf Hollow II,"Constellation Power, Inc",gas_cc,Natural gas,1231.2,ERCOT,Hood,32.337679,-97.73461,2017,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/59812,False
+60122,Colorado Bend II,"Constellation Power, Inc",gas_cc,Natural gas,1230.3,ERCOT,Wharton,29.289415,-96.0654,2017,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/60122,False
+60264,Bacliff,PHR Holdings LLC,peaker,Natural gas,427.2,ERCOT,Galveston,29.49233,-94.98483,2018,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/60264,False
+60459,Calhoun Port Comfort,"Peaker Power, LLC",peaker,Natural gas,121.0,ERCOT,Calhoun,28.64807,-96.54621,2017,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/60459,False
+60460,Chamon,"Peaker Power, LLC",peaker,Natural gas,121.0,ERCOT,Harris,29.883214,-95.11135,2017,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/60460,False
+60468,Friendswood Energy,Tejas Power Generation LLC,peaker,Natural gas,265.2,ERCOT,Harris,29.647267,-95.45152,2018,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/60468,False
+61241,Tres City Power LLC,Tres Power Victoria LLC,peaker,Natural gas,100.0,ERCOT,Victoria,28.7853,-97.0093,2020,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/61241,False
+61242,"Tres Port Power, LLC",Tres Power Victoria LLC,peaker,Natural gas,100.0,ERCOT,Victoria,28.69637,-96.9453,2019,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/61242,False
+6146,Martin Lake,Luminant Generation Company LLC,steam,Coal,2379.6,ERCOT,Rusk,32.2606,-94.5706,1977,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/6146,False
+6178,Coleto Creek,Coleto Creek Power LP,steam,Coal,622.4,ERCOT,Goliad,28.7128,-97.21417,1980,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/6178,False
+6179,Fayette Power Project,Lower Colorado River Authority,steam,Coal,1690.0,ERCOT,Fayette,29.9172,-96.7506,1979,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/6179,False
+6180,Oak Grove (TX),Luminant Generation Company LLC,steam,Coal,1795.4,ERCOT,Robertson,31.1803,-96.4866,2010,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/6180,False
+6183,San Miguel,"San Miguel Electric Coop, Inc",steam,Coal,410.0,ERCOT,Atascosa,28.7044,-98.4775,1982,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/6183,False
+61966,Victoria Port II,Victoria Port Power II,peaker,Natural gas,100.0,ERCOT,Victoria,28.698477,-96.94613,2022,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/61966,False
+6243,Dansby,City of Bryan - (TX),steam,Natural gas,203.2,ERCOT,Brazos,30.7217,-96.4608,1978,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/6243,False
+62548,SJRR (LIG),SJRR Power LLC,peaker,Natural gas,100.0,ERCOT,Harris,29.88193,-95.11148,2022,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/62548,False
+63335,HO Clarke Generating,City of San Antonio - (TX),peaker,Natural gas,484.0,ERCOT,Harris,29.64536,-95.45169,2021,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/63335,False
+63688,Topaz Generating,City of San Antonio - (TX),peaker,Natural gas,605.0,ERCOT,Galveston,29.426389,-94.97667,2021,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/63688,False
+64383,Braes Bayou Plant,ProEnergy Services,peaker,Natural gas,484.0,ERCOT,Fort Bend,29.480277,-95.62028,2022,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/64383,False
+65372,Mark One Power Station,City of San Antonio - (TX),peaker,Natural gas,484.0,ERCOT,Brazoria,29.227109,-95.43076,2022,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/65372,False
+65373,Brotman Power Station,ProEnergy Services,peaker,Natural gas,484.0,ERCOT,Brazoria,29.364128,-95.43507,2023,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/65373,False
+66604,Remy Jade Power Station,City of San Antonio - (TX),peaker,Natural gas,484.0,ERCOT,Harris,29.848372,-95.0164,2024,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/66604,False
+7030,Major Oak Power,"Major Oak Power, LLC",steam,Coal,349.2,ERCOT,Robertson,31.091925,-96.69503,1990,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/7030,False
+7097,J K Spruce,City of San Antonio - (TX),steam,Coal,1488.5,ERCOT,Bexar,29.309722,-98.3203,1992,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/7097,False
+7325,San Jacinto Steam Electric Station,NRG Texas Power LLC,peaker,Natural gas,176.4,ERCOT,Harris,29.694838,-95.04062,1995,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/7325,False
+7900,Sand Hill,Austin Energy,gas_cc,Natural gas,696.4,ERCOT,Travis,30.2098,-97.6129,2001,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/7900,False
+8063,DeCordova Steam Electric Station,Luminant Generation Company LLC,peaker,Natural gas,357.6,ERCOT,Hood,32.403056,-97.70056,1990,,,,,CAMPD,https://www.eia.gov/electricity/data/browser/#/plant/8063,False

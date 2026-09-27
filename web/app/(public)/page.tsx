@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import SearchBox from "@/components/public/SearchBox";
 import LocateButton from "@/components/public/LocateButton";
 import HeroVisual from "@/components/public/HeroVisual";
+import OrgRanking from "@/components/public/OrgRanking";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
 import { Container, ErrorState, KindBadge, SampleBanner, SectionTitle } from "@/components/public/ui";
 import { SourceLink } from "@/components/public/Source";
@@ -50,8 +51,8 @@ export default async function Home() {
                 Who is building data centers in the U.S., and where?
               </h1>
               <p className="mt-6 max-w-2xl text-[18px] leading-[1.5] text-white/85 sm:text-[21px]">
-                Search a company, a place or a ZIP code — or ask a question. Every answer and number links to its source. Texas has the
-                deepest public records; other states start from mapped sites.
+                Search a company, a place or a ZIP code, or ask a question. Every answer and number comes from the public record. Texas has
+                the deepest public records; other states start from mapped sites.
               </p>
               <div className="mt-8">
                 <div className="max-w-2xl">
@@ -118,21 +119,8 @@ export default async function Home() {
                   <SectionTitle id="orgs-h" aside={<Link href="/org" className="rw-link">All organizations →</Link>}>
                     Organizations with the most sites
                   </SectionTitle>
-                  <ol className="divide-y divide-[var(--hairline)] rounded-lg border border-[var(--hairline)] bg-white">
-                    {data.orgs.slice(0, 8).map((o, i) => (
-                      <li key={o.slug}>
-                        <Link href={`/org/${o.slug}`} className="flex items-center gap-4 px-4 py-3 hover:bg-[var(--canvas-softer)]">
-                          <span className="w-5 text-right text-[13px] tabular-nums text-slate-400">{i + 1}</span>
-                          <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: o.color ?? "#94a3b8" }} />
-                          <span className="min-w-0 flex-1 truncate text-[16px] text-black">{o.name}</span>
-                          <span className="text-[13px] tabular-nums text-[var(--body)]">
-                            {o.sites} site{o.sites === 1 ? "" : "s"}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ol>
-                  <p className="mt-2 text-[12px] leading-5 text-slate-500">
+                  <OrgRanking orgs={data.orgs} />
+                  <p className="mt-3 text-[12px] leading-5 text-slate-500">
                     Ranked by the number of sites linked to each organization in these records, not by size or investment.
                   </p>
                 </section>

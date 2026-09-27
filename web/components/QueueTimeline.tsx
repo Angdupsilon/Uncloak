@@ -73,7 +73,7 @@ function signedMW(gw: number | null) {
 }
 
 // ---------------------------------------------------------------------------
-// "When could I connect?" — only sourced figures; no invented per-project dates.
+// "When could I connect?" Only sourced figures; no invented per-project dates.
 // ---------------------------------------------------------------------------
 
 const SRC = {

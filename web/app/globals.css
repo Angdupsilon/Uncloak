@@ -227,16 +227,75 @@ body {
   box-shadow: none !important;
 }
 
-.gs-map .leaflet-tooltip.gs-tooltip {
+/* Marker hover tooltips, matched to components/ui/tooltip.tsx.
+   Leaflet owns these nodes imperatively, so the look is ported in CSS rather
+   than by wrapping markers in the Radix component - react-leaflet's path
+   components render null, so they cannot be a Radix trigger.
+   Scoped to .gs-map, which every map container carries, so the dashboard,
+   plant and site maps all match. */
+.gs-map .leaflet-tooltip {
+  --tt-surface: #111111;
+  --tt-foreground: #ffffff;
+
+  /* Wide enough that an LLC name plus its parent fits on one or two lines;
+     the 240px default broke almost every name awkwardly. */
+  max-width: 320px;
+  width: max-content;
   border: none !important;
-  border-radius: 12px !important;
-  background: #ffffff !important;
-  color: var(--ink) !important;
-  padding: 9px 11px !important;
-  box-shadow: var(--shadow-float) !important;
+  border-radius: 10px !important;
+  background: var(--tt-surface) !important;
+  color: var(--tt-foreground) !important;
+  padding: 9px 12px !important;
+  /* Matches .rw-meta: the site's small-text role. */
+  font-size: 13px !important;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.1px;
+  white-space: normal;
+  /* Long unbroken LLC names would otherwise blow past max-width. */
+  overflow-wrap: anywhere;
+  box-shadow: 0 4px 24px -4px rgb(0 0 0 / 0.25) !important;
+  /* Fade only. Leaflet positions tooltips with transform: translate3d(), so
+     animating transform here overrides that and the tooltip renders at the
+     origin before snapping into place. Opacity is the one safe property. */
+  animation: gs-tooltip-in 120ms ease-out;
 }
-.gs-map .leaflet-tooltip.gs-tooltip::before {
-  border-top-color: #ffffff !important;
+
+@keyframes gs-tooltip-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Recolour the arrow on all four sides; Leaflet draws it as a CSS triangle. */
+/* The markup inside these tooltips sets its own small type; let the container
+   own sizing so both maps read consistently. */
+.gs-map .leaflet-tooltip .text-xs {
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: -0.1px;
+}
+/* The site name: runway's heading weight, one step up, not bold. */
+.gs-map .leaflet-tooltip .font-semibold {
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -0.2px;
+}
+
+.gs-map .leaflet-tooltip-top::before {
+  border-top-color: var(--tt-surface) !important;
+}
+.gs-map .leaflet-tooltip-bottom::before {
+  border-bottom-color: var(--tt-surface) !important;
+}
+.gs-map .leaflet-tooltip-left::before {
+  border-left-color: var(--tt-surface) !important;
+}
+.gs-map .leaflet-tooltip-right::before {
+  border-right-color: var(--tt-surface) !important;
 }
 
 .gs-map .leaflet-control-attribution {
@@ -283,6 +342,13 @@ body {
 }
 .gs-halo--pulse {
   animation: gs-halo-pulse 2.4s ease-in-out infinite;
+}
+
+/* Ranking bars grow from the baseline once on load. */
+@keyframes gs-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
 }
 
 @keyframes gs-ping {
@@ -566,6 +632,14 @@ input[type="range"]:focus-visible::-webkit-slider-thumb {
 .rw :focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
+}
+
+/* The search field lives inside a pill that already owns the focus treatment.
+   Suppressing the inner outline keeps focus as one coherent control instead of
+   drawing an awkward rectangle through the pill. This follows the public-page
+   focus rule above it so its more-specific selector keeps the intended style. */
+.rw .ub-search-input:focus-visible {
+  outline: none;
 }
 .rw summary::marker {
   color: var(--ink);

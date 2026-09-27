@@ -26,8 +26,8 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
         <PrimaryNav />
         <div className="ml-auto flex shrink-0 items-center gap-2">
           {search ? (
-            <div className="hidden w-[260px] xl:block">
-              <SearchBox size="sm" defaultValue={query} placeholder="Search Google, Abilene…" />
+            <div className="hidden w-[240px] xl:block">
+              <SearchBox size="sm" defaultValue={query} placeholder="Search records" showSubmitButton={false} />
             </div>
           ) : (
             <Link

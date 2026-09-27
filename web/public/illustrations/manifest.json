@@ -1,0 +1,76 @@
+{
+  "assets": {
+    "filed": {
+      "stage": "filed",
+      "file": "filed.mp4",
+      "bytes": 15743938,
+      "sha256": "447918516de2a89b92f3de29efef7e4135b61ca2ca5ec63a160dd35754b2bd54",
+      "prompt": "An empty flat rural parcel of dry grass and scrub with a single dirt access road at one edge. No buildings, no equipment, undisturbed land. Slow aerial drone view, straight-on documentary framing, clear flat daylight, neutral colour grade, wide lens, rural Texas landscape, no text, no logos, no people.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T20:36:30+00:00",
+      "request_id": "52764fbb-f544-9016-89e3-5ee38f428f21",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "certified": {
+      "stage": "certified",
+      "file": "certified.mp4",
+      "bytes": 9410560,
+      "sha256": "71e9d0b1a46b06ae1ffbf8d0b96f672cb1be2d259eb9496923860ee3fa234a9f",
+      "prompt": "The same flat rural parcel now graded and cleared to bare earth, survey stakes and orange marker flags set out in a grid, a new gravel access road. No structures. Slow aerial drone view, straight-on documentary framing, clear flat daylight, neutral colour grade, wide lens, rural Texas landscape, no text, no logos, no people.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T20:37:15+00:00",
+      "request_id": "77d48d2d-c690-9729-af52-bf61a6163bf1",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "construction": {
+      "stage": "construction",
+      "file": "construction.mp4",
+      "bytes": 7082751,
+      "sha256": "0fa16a21193195193096a3f1c04d5d81876ba864f8660723b1026e20c32b5a67",
+      "prompt": "A large data-center construction site: the steel frame skeleton of two long rectangular buildings rising from a poured concrete slab, tower cranes, construction vehicles and material laydown areas. Slow aerial drone view, straight-on documentary framing, clear flat daylight, neutral colour grade, wide lens, rural Texas landscape, no text, no logos, no people.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T20:37:54+00:00",
+      "request_id": "72026daf-e7d4-95fd-8818-72b79eeaba66",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "complete": {
+      "stage": "complete",
+      "file": "complete.mp4",
+      "bytes": 5587554,
+      "sha256": "32dbcef38bde8cd97610d5b2cf701ad774102a139a54d035840c241d793e0521",
+      "prompt": "A finished data-center campus: two long windowless rectangular buildings with white roofs, rows of rooftop cooling units, empty parking, perimeter fence, landscaped berm. Slow aerial drone view, straight-on documentary framing, clear flat daylight, neutral colour grade, wide lens, rural Texas landscape, no text, no logos, no people.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T20:38:29+00:00",
+      "request_id": "8b33a45f-f101-92e7-a79e-6b54ae9bb194",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    },
+    "energized": {
+      "stage": "energized",
+      "file": "energized.mp4",
+      "bytes": 3290449,
+      "sha256": "d0e9c538d4decc2b57d83272c1ff3970a7fd0712fb65887bc3e647b0adb5bdd7",
+      "prompt": "A finished data-center campus with its electrical substation and transformer yard energised alongside the buildings, transmission lines leaving the site, exterior lighting on at dusk. Slow aerial drone view, straight-on documentary framing, clear flat daylight, neutral colour grade, wide lens, rural Texas landscape, no text, no logos, no people.",
+      "revised_prompt": null,
+      "model": "grok-imagine-video-1.5",
+      "endpoint": "https://api.x.ai/v1/videos/generations",
+      "generated_at": "2026-09-26T20:39:03+00:00",
+      "request_id": "3a00768a-4ce7-947f-9eef-55f9dc63516c",
+      "duration_s": 8,
+      "cost_usd_ticks": 6400000000
+    }
+  },
+  "updated_at": "2026-09-26T20:39:03+00:00",
+  "note": "Generic illustrations of construction stages, reused across all sites. Not photographs of any specific project."
+}
