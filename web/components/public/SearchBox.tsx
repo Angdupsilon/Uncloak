@@ -53,10 +53,13 @@ export default function SearchBox({
   size = "lg",
   defaultValue = "",
   placeholder = "Search a company, place or address, or ask a question",
+  showSubmitButton = true,
 }: {
   size?: "lg" | "sm";
   defaultValue?: string;
   placeholder?: string;
+  /** Header search keeps the finder compact; Enter still submits the form. */
+  showSubmitButton?: boolean;
 }) {
   const router = useRouter();
   const id = useId();
@@ -197,9 +200,11 @@ export default function SearchBox({
           className={`ub-search-input min-w-0 flex-1 bg-transparent text-black placeholder:text-slate-400 ${lg ? "py-2 text-[17px]" : "py-1.5 text-[14px]"}`}
         />
         {loading && <span aria-hidden className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-black" />}
-        <button type="submit" className={lg ? "ub-pill" : "ub-pill !px-4 !py-2 !text-[14px]"}>
-          Search
-        </button>
+        {showSubmitButton && (
+          <button type="submit" className={lg ? "ub-pill" : "ub-pill !px-4 !py-2 !text-[14px]"}>
+            Search
+          </button>
+        )}
       </form>
 
       <div aria-live="polite" className="sr-only">
