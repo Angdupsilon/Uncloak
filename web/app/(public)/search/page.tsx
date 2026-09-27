@@ -5,6 +5,7 @@ import SearchBox, { KindChip } from "@/components/public/SearchBox";
 import { SiteFooter, SiteHeader } from "@/components/public/SiteChrome";
 import { Container, EmptyState, ErrorState } from "@/components/public/ui";
 import { search } from "@/lib/publicQueries";
+import { lookupTerm } from "@/lib/searchTerm";
 import type { SearchHit, SearchKind } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Search · Uncloak" };
@@ -25,6 +26,15 @@ async function run(q: string) {
   }
 }
 
+/**
+ * Record a search that found no organization, site or entity, so coverage gaps
+ * show up in the server logs. Only the search text is kept, with digits masked
+ * so a street address or phone number is not stored; no IP or visitor data.
+ */
+function logUnmatched(q: string) {
+  console.info("[uncloak search:no-match]", JSON.stringify({ q: lookupTerm(q).replace(/\d/g, "#").slice(0, 120) }));
+}
+
 export default async function SearchPage(props: PageProps<"/search">) {
   await connection();
   const raw = (await props.searchParams).q;
@@ -32,6 +42,7 @@ export default async function SearchPage(props: PageProps<"/search">) {
   const res = q.length >= 2 ? await run(q) : null;
   // The "sites near …" suggestion is always present, so real matches are everything else.
   const real = res?.ok ? res.hits.filter((h) => h.kind !== "place" && h.kind !== "zip") : [];
+  if (res?.ok && real.length === 0) logUnmatched(q);
 
   return (
     <>

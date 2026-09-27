@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import type { SearchHit, SearchKind } from "@/lib/types";
 import GrokVoice from "@/components/GrokVoice";
+import { lookupTerm as toLookupTerm } from "@/lib/searchTerm";
 
 const KIND_LABEL: Record<SearchKind, string> = {
   org: "Organization",
@@ -74,9 +75,9 @@ export default function SearchBox({
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const term = q.trim();
-  // A trailing question mark is common for a company lookup ("Google?"). It
-  // should not prevent the record search from recognizing the company name.
-  const lookupTerm = term.replace(/[?!]+$/, "").trim();
+  // "Google?", "Anthropic." and "Look up Anthropic" are all company lookups:
+  // strip the punctuation and lead-in so the record search sees just the name.
+  const lookupTerm = toLookupTerm(term);
   const ready = lookupTerm.length >= 2;
   const loading = ready && res.term !== lookupTerm;
   const hits = ready && !loading ? res.hits : [];
@@ -139,7 +140,7 @@ export default function SearchBox({
     if (!query) return;
     setQ(query);
     setOpen(false);
-    router.push(`${isAnalyticalQuery(query) ? "/ask" : "/search"}?q=${encodeURIComponent(query.replace(/[?!]+$/, "").trim())}`);
+    router.push(`${isAnalyticalQuery(query) ? "/ask" : "/search"}?q=${encodeURIComponent(isAnalyticalQuery(query) ? query : toLookupTerm(query))}`);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
