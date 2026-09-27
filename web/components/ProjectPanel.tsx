@@ -54,7 +54,7 @@ export default function ProjectPanel({
   factors: FactorConfig[];
   onClose: () => void;
 }) {
-  const { data, loading, error } = useJson<Timeline>(projectId != null ? `/api/projects/${projectId}/timeline?as_of=${asOf}` : null);
+  const { data, error } = useJson<Timeline>(projectId != null ? `/api/projects/${projectId}/timeline?as_of=${asOf}` : null);
 
   if (projectId == null) {
     return (
@@ -105,7 +105,10 @@ export default function ProjectPanel({
   });
 
   return (
-    <div className={`flex h-full flex-col bg-white transition-opacity ${loading ? "opacity-70" : ""}`}>
+    // Keep the previous, complete project snapshot visible while the next
+    // timeline loads. Playback changes the date frequently, so fading this
+    // whole panel for each request reads as a distracting blink.
+    <div className="flex h-full flex-col bg-white">
       <header className="z-10 shrink-0 border-b border-[var(--rw-hairline)] bg-white/95 px-5 py-4 backdrop-blur">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">

@@ -104,7 +104,7 @@ function Row({
   );
 }
 
-export default function SummaryBar({ summary, loading, error }: { summary: Summary | null; loading: boolean; error: string | null }) {
+export default function SummaryBar({ summary, error }: { summary: Summary | null; error: string | null }) {
   if (error && !summary) {
     return <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-[#5e5e5e]">Summary unavailable: {error}</div>;
   }
@@ -128,9 +128,11 @@ export default function SummaryBar({ summary, loading, error }: { summary: Summa
   }));
 
   return (
-    <div
-      className={`ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4 transition-opacity duration-200 ${loading ? "opacity-60" : ""}`}
-    >
+    // `useJson` deliberately preserves the last complete response while the
+    // next as-of snapshot is fetched. Do not fade that response on every
+    // playback tick: rapidly toggling opacity made both the copy and waffle
+    // appear to blink even though there was usable content on screen.
+    <div className="ub-card flex h-full min-h-0 flex-col gap-3 overflow-y-auto px-4 py-4">
       {/* 1. The headline: how much requested load is still waiting on ERCOT. */}
       <section>
         <div className="ub-body-md-strong text-[#5e5e5e]">ERCOT approval status</div>

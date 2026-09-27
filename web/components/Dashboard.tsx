@@ -132,7 +132,7 @@ export default function Dashboard({
         {/* Summary rail: one reconciliation panel down the left, so the map
             keeps the full column height. */}
         <div className="flex w-[280px] shrink-0 flex-col">
-          <SummaryBar summary={summary.data} loading={summary.loading} error={summary.error} />
+          <SummaryBar summary={summary.data} error={summary.error} />
         </div>
 
         <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl bg-[#eaeaea] shadow-[var(--shadow-card)]">
