@@ -215,7 +215,7 @@ function SiteBody({ p, factors, asOf }: { p: SiteProfile; factors: FactorConfig[
           </p>
         </div>
         <Link href={dashboardHref} className="ub-pill-subtle !text-[14px]">
-          Open in advanced dashboard
+          Open in the Atlas
         </Link>
       </header>
 

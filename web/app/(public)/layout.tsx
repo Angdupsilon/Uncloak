@@ -1,5 +1,5 @@
 // Public research pages (search, profiles, nearby, methodology) use the editorial
-// RunwayML-inspired system in DESIGN.md, scoped under .rw so the advanced dashboard
+// RunwayML-inspired system in DESIGN.md, scoped under .rw so the Atlas
 // keeps its own look.
 import PageScroll from "@/components/public/PageScroll";
 

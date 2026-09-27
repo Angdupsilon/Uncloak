@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 import { KIND_HELP, KIND_LABEL, METRICS, type MetricKey, type MetricKind } from "@/lib/metrics";
 import { TIER_COLORS, TIER_LABELS, type Tier } from "@/lib/constants";
 
-/** Page column per DESIGN.md: content caps at 1280px on wide screens, with 16/32px gutters below that. */
-export const PAGE_WIDTH = "mx-auto w-full max-w-[1344px] px-4 sm:px-8";
+/** Page column: fills laptop and desktop screens, capping at 1536px of content on very wide monitors, with 16/32px gutters. */
+export const PAGE_WIDTH = "mx-auto w-full max-w-[1600px] px-4 sm:px-8";
 
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`${PAGE_WIDTH} ${className}`}>{children}</div>;

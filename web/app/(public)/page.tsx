@@ -146,7 +146,7 @@ export default async function Home() {
                       Read the methodology
                     </Link>
                     <Link href="/dashboard" className="ub-pill-subtle !text-[14px]">
-                      Open the advanced dashboard
+                      Open the Atlas
                     </Link>
                   </div>
                 </section>

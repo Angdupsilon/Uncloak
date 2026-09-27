@@ -132,7 +132,7 @@ const MOBILE_GROUPS: { label: string; items: NavItem[] }[] = [
     label: "Understand the data",
     items: [
       { href: "/methodology", label: "Methodology", description: "How every figure is sourced, linked and estimated" },
-      { href: "/dashboard", label: "Advanced dashboard", description: "Map, time machine and filters" },
+      { href: "/dashboard", label: "Atlas", description: "Map, time machine and filters" },
     ],
   },
 ];

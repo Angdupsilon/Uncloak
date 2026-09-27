@@ -92,7 +92,7 @@ function OrganizationCard({ organization }: { organization: Organization }) {
           View organization record
         </Link>
         <Link href={dashboardHref} className="ub-pill-subtle !w-full !text-[14px]">
-          Open in dashboard
+          Open in the Atlas
         </Link>
       </div>
     </aside>

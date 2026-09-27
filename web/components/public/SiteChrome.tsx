@@ -39,8 +39,7 @@ export function SiteHeader({ search = true, query = "" }: { search?: boolean; qu
             </Link>
           )}
           <Link href="/dashboard" className="inline-flex h-10 items-center whitespace-nowrap rounded-lg bg-[#1f1f1f] px-4 text-[15px] font-medium text-white hover:bg-black">
-            <span className="xl:hidden">Dashboard</span>
-            <span className="hidden xl:inline">Advanced dashboard</span>
+            Atlas
           </Link>
           <MobileNav search={search} query={query} />
         </div>
@@ -94,7 +93,7 @@ export function SiteFooter({ updated }: { updated?: string | null }) {
             </li>
             <li>
               <Link href="/dashboard" className="hover:underline hover:underline-offset-4">
-                Advanced dashboard and time machine
+                Atlas and time machine
               </Link>
             </li>
           </ul>

@@ -96,11 +96,11 @@ export default function Dashboard({
           </Link>
           <span className="hidden h-5 w-px bg-[#e2e2e2] sm:block" aria-hidden />
           <div className="hidden min-w-0 sm:block">
-            <p className="text-[14px] font-medium leading-4 text-black">Advanced dashboard</p>
+            <p className="text-[14px] font-medium leading-4 text-black">Atlas</p>
             <p className="truncate text-[12px] leading-4 text-[#5e5e5e]">U.S. data-center records · ERCOT load requested vs. verified</p>
           </div>
         </div>
-        <nav aria-label="Dashboard navigation" className="flex shrink-0 items-center gap-1 text-[13px] font-medium">
+        <nav aria-label="Atlas navigation" className="flex shrink-0 items-center gap-1 text-[13px] font-medium">
           <DashboardSearch projects={projectList} loading={projects.loading} onSelect={setSelectedId} onSearch={(ids) => {
             setHighlight(ids);
             setSelectedId(null);
