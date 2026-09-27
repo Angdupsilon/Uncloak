@@ -82,7 +82,7 @@ export default function ProjectPanel({
     );
   }
 
-  if (!data || data.project.project_id !== projectId) {
+  if (!data?.project || data.project.project_id !== projectId) {
     return (
       <div className="flex h-full items-center justify-center gap-2 text-sm text-[var(--slate)]">
         <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--rw-hairline)] border-t-[var(--ink)]" />
