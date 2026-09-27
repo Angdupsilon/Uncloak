@@ -225,13 +225,36 @@ Two errors in DEQ's own table are kept as published and noted in the `note` colu
 - Permits 74331-1 (Westfax 4-5A) and 74333-1 link the same document. It can't be attributed to either
   without reading it, so neither permit is matched from it.
 
-### Permit documents (pending)
+### Permit documents and details
 
-The permit PDFs (generator count and MW, facility address or coordinates) also answer scripted requests
-with 403 and were not downloaded. `etl/import_va_deq_air.py` reads them through
-`data/raw/va_deq_permit_details.csv` (`permit_no, facility_address, lat, lon, generator_count,
-generator_mw_total, detail_source, reviewed_by`) once they are read. Until then no permit is matched:
-the list names only a county, and the matching rule needs the operator plus a location within 250 m.
+The 194 PDFs were downloaded manually from the registration links on the DEQ page into
+`va_deq_permits_2026-09-26/`; no scripted request was made to DEQ's 403-protected CDN.
+`etl/parse_va_deq_permits.py` reads only those local files and writes
+`va_deq_permit_details.csv` (`permit_no, facility_address, lat, lon, generator_count,
+generator_mw_total, detail_source, reviewed_by`) plus `va_deq_permit_parse_review.csv`.
+
+The parser attributes a PDF to a published row only when the permit's printed registration-number
+stem and issue date identify exactly one list row. It found 177 such documents. One download
+(`52173_DC_Permit.pdf`) has zero pages; fifteen documents have a printed date that conflicts with
+the published-list date or no readable date; and one is a duplicate document. Those are retained
+in the parse-review CSV and never used to match a site.
+
+For the identified documents, 75 facility addresses were taken only from permit text that labels the
+location/facility (not a recipient or contact address), with the PDF page in `detail_source`. The
+42 addresses returned by the U.S. Census batch geocoder as exact address-level matches have its
+URL in the same field; the other 33 remain `Unavailable` coordinates. The parser records generator
+count and total MW only where it can verify a complete, unambiguous equipment table (112 permits);
+each contributing PDF page, count and per-unit MW is retained in `detail_source`. Multi-row tables
+without a stated completeness check, alternative capacities, and incomplete OCR remain blank and
+are flagged for review rather than summed.
+
+`reviewed_by` says `automated parser v1; source-text extraction (human review pending)`: it is not a
+claim of manual review. The parser retains no permit contact/recipient names. It creates an event
+only when the permit name states an atlas operator and the permit's own location is within 250 m of
+exactly one same-operator atlas site. This pass confirmed four: Digital Realty VA3 (permit 73162-3,
+134 m), CyrusOne NVA1/NVA2/NVA3 (74086-3, 156 m), CoreSite Reston VA3 (74130-2, 199 m), and
+Aligned IAD03 (74247-1, 131 m). Their source URLs remain the individual DEQ document links in the
+published permit-list CSV.
 
 ## `va_deq_review.csv`
 

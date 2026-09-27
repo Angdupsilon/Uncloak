@@ -42,7 +42,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def write_csv(path: Path, header: list[str], rows: list[dict[str, object]]) -> None:
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=header, extrasaction="ignore")
+        writer = csv.DictWriter(handle, fieldnames=header, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -326,5 +326,13 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, help="read only the first N sorted PDFs (for parser validation)")
     parser.add_argument("--start", type=int, default=0, help="zero-based sorted-PDF offset (for resumable local parsing)")
     parser.add_argument("--append", action="store_true", help="append this batch to existing detail and review CSVs")
+    parser.add_argument("--geocode-existing", action="store_true", help="geocode only already extracted stated addresses")
     args = parser.parse_args()
-    main(args.dir, args.file, args.no_geocode, args.limit, args.start, args.append)
+    if args.geocode_existing:
+        extracted = read_csv(DETAILS)
+        requested = sum(bool(row.get("facility_address")) and not bool(row.get("lat")) for row in extracted)
+        failures = geocode(extracted)
+        write_csv(DETAILS, DETAIL_HEADER, extracted)
+        print(f"geocoded existing details: {requested - len(failures)} address matches; {len(failures)} unavailable")
+    else:
+        main(args.dir, args.file, args.no_geocode, args.limit, args.start, args.append)
